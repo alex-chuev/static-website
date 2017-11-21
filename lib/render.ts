@@ -7,10 +7,8 @@ import { defaultOptions } from './default-options';
 import { Options } from '../interfaces/options';
 import { PartialOptions } from '../interfaces/partial-options';
 
-export function render(options: PartialOptions = defaultOptions) {
-  if (defaultOptions !== options) {
-    options = Object.assign({}, defaultOptions, options);
-  }
+export function render(partialOptions?: PartialOptions) {
+  let options: Options = prepareOptions(partialOptions);
 
   if (options.cleanDistFolder) {
     cleanDistFolder(options);
@@ -23,6 +21,17 @@ export function render(options: PartialOptions = defaultOptions) {
       saveFile(page, html, translation, options);
     });
   });
+}
+
+function prepareOptions(partialOptions: PartialOptions): Options {
+  if (partialOptions) {
+    return {
+      ...defaultOptions,
+      ...partialOptions,
+    };
+  } else {
+    return defaultOptions;
+  }
 }
 
 function cleanDistFolder(options: Options) {
