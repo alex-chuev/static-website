@@ -8,19 +8,26 @@ import { Options } from '../interfaces/options';
 import { PartialOptions } from '../interfaces/partial-options';
 
 export function render(partialOptions?: PartialOptions) {
-  let options: Options = prepareOptions(partialOptions);
+  const options = prepareOptions(partialOptions);
+  const pages = getPages(options);
 
   if (options.cleanDistFolder) {
     cleanDistFolder(options);
   }
 
-  getPages(options).forEach(page => {
-    options.translations.forEach(translation => {
+  if (pages.length) {
+    console.log(`Rendering ${pages.length} pages for ${options.translations.length} languages:`);
+  }
+
+  options.translations.forEach(translation => {
+    pages.forEach(page => {
       const html = options.renderer(path.join(options.pagesFolder, page), translation);
 
       saveFile(page, html, translation, options);
     });
   });
+
+  console.log(`Rendered ${pages.length * options.translations.length} files.`);
 }
 
 function prepareOptions(partialOptions: PartialOptions): Options {
@@ -53,6 +60,8 @@ function saveFile(page: string, html: string, translation: Translation, options:
     languagePart,
     page.replace('.' + options.pagesExtension, '.' + options.distExtension),
   );
+
+  console.log(`> ${distPath}`);
 
   fs.outputFileSync(distPath, html, options.distEncoding);
 }
