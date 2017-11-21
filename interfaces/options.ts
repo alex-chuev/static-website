@@ -1,4 +1,4 @@
-import { Translation } from '../../../interfaces/translation';
+import { Translation } from './translation';
 import { Renderer } from './renderer';
 
 export interface Options {

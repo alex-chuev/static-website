@@ -2,21 +2,25 @@
   "name": "static-website",
   "version": "1.0.0",
   "description": "Create a static multilingual website",
-  "main": "index.ts",
+  "repository": "https://github.com/alex-chuev/static-website.git",
+  "main": "dist/index.js",
   "dependencies": {
     "fs-extra": "^4.0.2",
     "glob": "^7.1.2",
-    "pug": "^2.0.0-rc.4"
+    "pug": "^2.0.0-rc.4",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^4.0.5",
     "@types/glob": "^5.0.33",
     "@types/node": "^8.0.53",
-    "@types/pug": "^2.0.4",
-    "ts-node": "^3.3.0",
-    "typescript": "^2.6.1"
+    "@types/pug": "^2.0.4"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "tsc",
+    "postinstall": "npm run build"
+  },
   "author": "Alex Chuev <alex@chuev.com>",
   "license": "ISC"
 }
