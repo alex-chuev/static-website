@@ -4,9 +4,9 @@ import { defaultRenderer } from './default-renderer';
 export const defaultOptions: Options = {
   translations: [],
   defaultTranslation: null,
-  pagesFolder: 'pagesFolder',
+  pagesFolder: 'pages',
   pagesExtension: 'pug',
-  distFolder: 'distFolder',
+  distFolder: 'dist',
   distExtension: 'html',
   distEncoding: 'utf-8',
   cleanDistFolder: true,
