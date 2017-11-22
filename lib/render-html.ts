@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import { Options } from '../interfaces/options';
-import { Translation } from '../interfaces/translation';
-import { Code } from '../interfaces/code';
+import { Options } from './interfaces/options';
+import { Translation } from './interfaces/translation';
+import { Code } from './interfaces/code';
 import { dist } from './utils/dist';
 
 export function renderHtml(page: string, translation: Translation, code: { css: Code, javascript: Code }, options: Options) {

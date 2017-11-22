@@ -1,10 +1,10 @@
 import * as glob from 'glob';
 
-import { Options } from '../interfaces/options';
+import { Options } from './interfaces/options';
 import { renderCss } from './render-css';
 import { renderJavascript } from './render-javascript';
 import { renderHtml } from './render-html';
-import { Code } from '../interfaces/code';
+import { Code } from './interfaces/code';
 
 export function renderPages(options: Options) {
   const pages = getPages(options);

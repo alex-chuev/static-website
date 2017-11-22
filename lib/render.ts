@@ -1,8 +1,8 @@
 import * as fs from 'fs-extra';
 
 import { defaultOptions } from './default-options';
-import { Options } from '../interfaces/options';
-import { PartialOptions } from '../interfaces/partial-options';
+import { Options } from './interfaces/options';
+import { PartialOptions } from './interfaces/partial-options';
 import { renderPages } from './render-pages';
 
 export function render(partialOptions?: PartialOptions) {

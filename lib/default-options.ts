@@ -1,4 +1,4 @@
-import { Options } from '../interfaces/options';
+import { Options } from './interfaces/options';
 import { defaultRenderer } from './default-renderer';
 
 export const defaultOptions: Options = {
