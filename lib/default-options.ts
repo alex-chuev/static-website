@@ -6,9 +6,12 @@ export const defaultOptions: Options = {
   defaultTranslation: null,
   pagesFolder: 'pages',
   pagesExtension: 'pug',
+  styleExtension: 'styl',
+  scriptExtension: 'ts',
   distFolder: 'dist',
-  distExtension: 'html',
+  htmlExtension: 'html',
   distEncoding: 'utf-8',
   cleanDistFolder: true,
   renderer: defaultRenderer,
+  verbose: true,
 };
