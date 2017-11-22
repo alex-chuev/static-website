@@ -23,7 +23,7 @@ export function renderPages(options: Options) {
   });
 
   if (options.verbose) {
-    console.log(`Rendered ${pages.length * options.translations.length} files.`);
+    console.log(`Rendered ${pages.length * options.translations.length} page files.`);
   }
 }
 
@@ -37,7 +37,7 @@ function getPages(options: Options) {
 }
 
 function removePageExtensions(pages: string[], options: Options): string[] {
-  const extensionRegexp = new RegExp(`/\.${options.pagesExtension}$/`);
+  const extensionRegexp = new RegExp(`\.${options.pagesExtension}$`);
 
   return pages.map(page => page.replace(extensionRegexp, ''));
 }

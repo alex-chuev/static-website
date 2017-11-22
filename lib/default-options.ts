@@ -14,4 +14,5 @@ export const defaultOptions: Options = {
   cleanDistFolder: true,
   renderer: defaultRenderer,
   verbose: true,
+  rootUrl: '/',
 };

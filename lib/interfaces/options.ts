@@ -14,4 +14,5 @@ export interface Options {
   cleanDistFolder: boolean,
   renderer: Renderer,
   verbose: boolean,
+  rootUrl: string,
 }

@@ -6,7 +6,7 @@ import { Code } from './interfaces/code';
 import { dist } from './utils/dist';
 
 export function renderHtml(page: string, translation: Translation, code: { css: Code, javascript: Code }, options: Options) {
-  const html = options.renderer(path.join(options.pagesFolder, page), {
+  const html = options.renderer(path.join(options.pagesFolder, `${page}.${options.pagesExtension}`), {
     ...translation,
     code,
   });

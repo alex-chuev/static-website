@@ -8,6 +8,7 @@
     "fs-extra": "^4.0.2",
     "glob": "^7.1.2",
     "pug": "^2.0.0-rc.4",
+    "stylus": "^0.54.5",
     "ts-node": "^3.3.0",
     "typescript": "^2.6.1"
   },
@@ -15,7 +16,8 @@
     "@types/fs-extra": "^4.0.5",
     "@types/glob": "^5.0.33",
     "@types/node": "^8.0.53",
-    "@types/pug": "^2.0.4"
+    "@types/pug": "^2.0.4",
+    "@types/stylus": "^0.48.28"
   },
   "scripts": {
     "build": "tsc",
