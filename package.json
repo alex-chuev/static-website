@@ -35,7 +35,7 @@
     "cli-init": "ts-node lib/cli/app init",
     "cli-build": "ts-node lib/cli/app build",
     "cli": "node dist/lib/cli/app.js init",
-    "postinstall": "npm run build"
+    "preinstall": "npm run build"
   },
   "bin": "dist/lib/cli/app.js",
   "author": "Alex Chuev <alex@chuev.com>",
