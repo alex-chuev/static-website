@@ -1,6 +1,7 @@
 import { Options } from './interfaces/options';
 import { compilePug } from './compilers/compile-pug';
 import { compileStylus } from './compilers/compile-stylus';
+import { compileTypescript } from './compilers/compile-typescript';
 
 export const defaultOptions: Options = {
   translations: [],
@@ -10,7 +11,13 @@ export const defaultOptions: Options = {
   pagesCompiler: compilePug,
   stylesExtension: 'styl',
   stylesCompiler: compileStylus,
-  scriptExtension: 'ts',
+  scriptsExtension: 'ts',
+  scriptsCompiler: compileTypescript,
+  scriptsCompilerOptions: {
+    compilerOptions: {
+      target: "es5",
+    }
+  },
   distFolder: 'dist',
   htmlExtension: 'html',
   distEncoding: 'utf-8',

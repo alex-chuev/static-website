@@ -1,6 +1,8 @@
 import { Translation } from './translation';
 import { PagesCompiler } from './pages-compiler';
 import { StylesCompiler } from './styles-compiler';
+import { ScriptsCompiler } from './scripts-compiler';
+import { ScriptsCompilerOptions } from './scripts-compiler-options';
 
 export interface Options {
   translations: Translation[],
@@ -10,7 +12,9 @@ export interface Options {
   pagesCompiler: PagesCompiler,
   stylesExtension: string,
   stylesCompiler: StylesCompiler,
-  scriptExtension: string,
+  scriptsExtension: string,
+  scriptsCompiler: ScriptsCompiler,
+  scriptsCompilerOptions: ScriptsCompilerOptions,
   htmlExtension: string,
   distFolder: string,
   distEncoding: string,
