@@ -1,18 +1,20 @@
 import { Translation } from './translation';
-import { Renderer } from './renderer';
+import { PagesCompiler } from './pages-compiler';
+import { StylesCompiler } from './styles-compiler';
 
 export interface Options {
   translations: Translation[],
   defaultTranslation: Translation,
   pagesFolder: string,
   pagesExtension: string,
-  styleExtension: string,
+  pagesCompiler: PagesCompiler,
+  stylesExtension: string,
+  stylesCompiler: StylesCompiler,
   scriptExtension: string,
   htmlExtension: string,
   distFolder: string,
   distEncoding: string,
   cleanDistFolder: boolean,
-  renderer: Renderer,
   verbose: boolean,
   rootUrl: string,
 }

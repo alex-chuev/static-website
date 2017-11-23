@@ -4,13 +4,12 @@ import * as path from 'path';
 import { Options } from './interfaces/options';
 import { Code } from './interfaces/code';
 import { dist } from './utils/dist';
-import { compileStylus } from './compilers/compile-stylus';
 
 export function renderCss(page: string, options: Options): Code {
   const sourcePath = path.join(options.pagesFolder, page);
-  const globalSourcePath = `${sourcePath}.${options.styleExtension}`;
-  const inlineSourcePath = `${sourcePath}.inline.${options.styleExtension}`;
-  const externalSourcePath = `${sourcePath}.external.${options.styleExtension}`;
+  const globalSourcePath = `${sourcePath}.${options.stylesExtension}`;
+  const inlineSourcePath = `${sourcePath}.inline.${options.stylesExtension}`;
+  const externalSourcePath = `${sourcePath}.external.${options.stylesExtension}`;
   const externalDistPath = `${page}.css`;
 
   let global: string = null;
@@ -18,15 +17,15 @@ export function renderCss(page: string, options: Options): Code {
   let externalUrl: string = null;
 
   if (fs.existsSync(globalSourcePath)) {
-    global = compile(globalSourcePath);
+    global = compile(globalSourcePath, options);
   }
 
   if (fs.existsSync(inlineSourcePath)) {
-    inline = compile(inlineSourcePath);
+    inline = compile(inlineSourcePath, options);
   }
 
   if (fs.existsSync(externalSourcePath)) {
-    dist(externalDistPath, compile(externalSourcePath), options);
+    dist(externalDistPath, compile(externalSourcePath, options), options);
     externalUrl = options.rootUrl + externalDistPath;
   }
 
@@ -37,8 +36,8 @@ export function renderCss(page: string, options: Options): Code {
   };
 }
 
-function compile(filename: string): string {
+function compile(filename: string, options: Options): string {
   const source = fs.readFileSync(filename, 'utf8');
 
-  return compileStylus(source, filename);
+  return options.stylesCompiler(source, filename);
 }

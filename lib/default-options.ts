@@ -1,18 +1,20 @@
 import { Options } from './interfaces/options';
-import { defaultRenderer } from './default-renderer';
+import { compilePug } from './compilers/compile-pug';
+import { compileStylus } from './compilers/compile-stylus';
 
 export const defaultOptions: Options = {
   translations: [],
   defaultTranslation: null,
   pagesFolder: 'pages',
   pagesExtension: 'pug',
-  styleExtension: 'styl',
+  pagesCompiler: compilePug,
+  stylesExtension: 'styl',
+  stylesCompiler: compileStylus,
   scriptExtension: 'ts',
   distFolder: 'dist',
   htmlExtension: 'html',
   distEncoding: 'utf-8',
   cleanDistFolder: true,
-  renderer: defaultRenderer,
   verbose: true,
   rootUrl: '/',
 };
