@@ -1,10 +1,10 @@
-import * as stylus from 'stylus';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
 import { Options } from './interfaces/options';
 import { Code } from './interfaces/code';
 import { dist } from './utils/dist';
+import { compileStylus } from './compilers/compile-stylus';
 
 export function renderCss(page: string, options: Options): Code {
   const sourcePath = path.join(options.pagesFolder, page);
@@ -40,8 +40,5 @@ export function renderCss(page: string, options: Options): Code {
 function compile(filename: string): string {
   const source = fs.readFileSync(filename, 'utf8');
 
-  return stylus(source)
-    .set('filename', filename)
-    .set('compress', true)
-    .render();
+  return compileStylus(source, filename);
 }

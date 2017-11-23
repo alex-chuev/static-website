@@ -10,7 +10,7 @@ export function renderPages(options: Options) {
   const pages = getPages(options);
 
   if (pages.length && options.verbose) {
-    console.log(`Rendering ${pages.length} pages for ${options.translations.length} languages:`);
+    console.info(`Rendering ${pages.length} pages for ${options.translations.length} languages:`);
   }
 
   pages.forEach(page => {
@@ -23,7 +23,7 @@ export function renderPages(options: Options) {
   });
 
   if (options.verbose) {
-    console.log(`Rendered ${pages.length * options.translations.length} page files.`);
+    console.info(`Rendered ${pages.length * options.translations.length} page files.`);
   }
 }
 
