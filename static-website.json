@@ -1,9 +1,0 @@
-{
-  "translations": [
-    "en",
-    "ru",
-    "de"
-  ],
-  "defaultTranslation": "en",
-  "pagesFolder": "static/pages"
-}
