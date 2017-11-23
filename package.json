@@ -5,7 +5,9 @@
   "repository": "https://github.com/alex-chuev/static-website.git",
   "main": "dist/index.js",
   "dependencies": {
+    "commander": "^2.12.1",
     "fs-extra": "^4.0.2",
+    "inquirer": "^4.0.0",
     "glob": "^7.1.2",
     "pug": "^2.0.0-rc.4",
     "stylus": "^0.54.5",
@@ -13,8 +15,10 @@
     "typescript": "^2.6.1"
   },
   "devDependencies": {
+    "@types/commander": "^2.11.0",
     "@types/fs-extra": "^4.0.5",
     "@types/glob": "^5.0.33",
+    "@types/inquirer": "0.0.35",
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.0.53",
     "@types/pug": "^2.0.4",
@@ -28,8 +32,12 @@
     "test": "ts-mocha lib/**/*.spec.ts",
     "test-watch": "npm run test -- --watch --watch-extensions ts",
     "build": "tsc",
+    "cli-init": "ts-node lib/cli/app init",
+    "cli-build": "ts-node lib/cli/app build",
+    "cli": "node dist/lib/cli/app.js init",
     "postinstall": "npm run build"
   },
+  "bin": "dist/lib/cli/app.js",
   "author": "Alex Chuev <alex@chuev.com>",
   "license": "ISC"
 }
