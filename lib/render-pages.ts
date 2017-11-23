@@ -5,25 +5,27 @@ import { renderCss } from './render-css';
 import { renderJavascript } from './render-javascript';
 import { renderHtml } from './render-html';
 import { Code } from './interfaces/code';
+import { loadTranslations } from './load-translations';
 
 export function renderPages(options: Options) {
   const pages = getPages(options);
+  const translations = loadTranslations(options);
 
-  if (pages.length && options.verbose) {
-    console.info(`Rendering ${pages.length} pages for ${options.translations.length} languages:`);
+  if (options.verbose) {
+    console.info(`Rendering ${pages.length} pages for ${translations.length} languages:`);
   }
 
   pages.forEach(page => {
     const css: Code = renderCss(page, options);
     const javascript: Code = renderJavascript(page, options);
 
-    options.translations.forEach(translation => {
+    translations.forEach(translation => {
       renderHtml(page, translation, {css, javascript}, options);
     });
   });
 
   if (options.verbose) {
-    console.info(`Rendered ${pages.length * options.translations.length} page files.`);
+    console.info(`Rendered ${pages.length * translations.length} page files.`);
   }
 }
 

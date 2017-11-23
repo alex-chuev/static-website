@@ -21,7 +21,7 @@ function compile(filename: string, compilerOptions: PagesCompilerOptions, option
 }
 
 function distHtml(page: string, html: string, translation: Translation, options: Options) {
-  const languagePart = translation === options.defaultTranslation ? '' : translation.language;
+  const languagePart = translation.language === options.translations.defaultLanguage ? '' : translation.language;
   const distPath = path.join(languagePart, page + '.' + options.htmlExtension);
 
   dist(distPath, html, options);

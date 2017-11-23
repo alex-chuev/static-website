@@ -4,8 +4,14 @@ import { compileStylus } from './compilers/compile-stylus';
 import { compileTypescript } from './compilers/compile-typescript';
 
 export const defaultOptions: Options = {
-  translations: [],
-  defaultTranslation: null,
+  src: {
+    folder: ''
+  },
+  translations: {
+    folder: 'translations',
+    defaultLanguage: 'en',
+    extension: 'json',
+  },
   pagesFolder: 'pages',
   pagesExtension: 'pug',
   pagesCompiler: compilePug,

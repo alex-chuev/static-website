@@ -5,8 +5,14 @@ import { ScriptsCompiler } from './scripts-compiler';
 import { ScriptsCompilerOptions } from './scripts-compiler-options';
 
 export interface Options {
-  translations: Translation[],
-  defaultTranslation: Translation,
+  src: {
+    folder: string,
+  },
+  translations: {
+    folder: string,
+    defaultLanguage: string,
+    extension: string,
+  },
   pagesFolder: string,
   pagesExtension: string,
   pagesCompiler: PagesCompiler,
