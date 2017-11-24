@@ -28,7 +28,7 @@ export const defaultOptions: Options = {
     folder: 'dist',
     encoding: 'utf-8',
     clean: true,
-    url: 'utf-8',
+    url: '/',
   },
   verbose: true,
 };

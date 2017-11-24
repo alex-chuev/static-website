@@ -79,5 +79,11 @@ block content
   body
     block content
     block scripts
+
+  if js.externalUrl
+    script(type="text/javascript" src=js.externalUrl)
+
+  if js.inline
+    script(type="text/javascript")=js.inline
 `, 'utf-8');
 }

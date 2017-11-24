@@ -21,7 +21,7 @@ export function renderPages(options: Options) {
     const javascript: Code = renderJavascript(page, options);
 
     translations.forEach(translation => {
-      renderHtml(page, translation, {css, javascript}, options);
+      renderHtml(page, translation, {css, js: javascript}, options);
     });
   });
 
