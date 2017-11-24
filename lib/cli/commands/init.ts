@@ -16,6 +16,8 @@ export function init(answers: Answers) {
   createConfigFile(options);
   createLanguageFiles(answers, options);
   createPageFiles(answers, options);
+  createIndexScriptFile(options);
+  createIndexStyleFile(options);
 }
 
 function createOptions(answers: Answers): Options {
@@ -86,4 +88,16 @@ block content
   if js.inline
     script(type="text/javascript")=js.inline
 `, 'utf-8');
+}
+
+function createIndexScriptFile(options: Options) {
+  const file = path.join(options.src.folder, options.scripts.folder, `index.${options.scripts.extension}`);
+
+  fs.outputFileSync(file, '');
+}
+
+function createIndexStyleFile(options: Options) {
+  const file = path.join(options.src.folder, options.styles.folder, `index.${options.styles.extension}`);
+
+  fs.outputFileSync(file, '');
 }

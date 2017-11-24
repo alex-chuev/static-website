@@ -3,32 +3,32 @@ import * as path from 'path';
 
 import { Options } from './interfaces/options';
 import { Code } from './interfaces/code';
-import { dist } from './utils/dist';
-import { compileStylus } from './compilers/compile-stylus';
-import { StylesCompiler } from './interfaces/styles-compiler';
 import { createAbsoluteUrl } from './utils/create-absolute-url';
+import { StylusCompiler } from './compilers/styles/stylus-compiler';
+import { Compiler } from './compilers/compiler';
 
 export function renderCss(page: string, options: Options): Code {
-  const sourcePath = path.join(options.src.folder, options.pages.folder, page);
+  const sourcePath = path.join(options.pages.folder, page);
   const globalSourcePath = `${sourcePath}.${options.styles.extension}`;
   const inlineSourcePath = `${sourcePath}.inline.${options.styles.extension}`;
   const externalSourcePath = `${sourcePath}.external.${options.styles.extension}`;
   const externalDistPath = `${page}.css`;
+  const compiler = getCompiler(options);
 
   let global: string = null;
   let inline: string = null;
   let externalUrl: string = null;
 
   if (fs.existsSync(globalSourcePath)) {
-    global = compile(globalSourcePath, options);
+    global = compiler.compileFromFile(globalSourcePath, options);
   }
 
   if (fs.existsSync(inlineSourcePath)) {
-    inline = compile(inlineSourcePath, options);
+    inline = compiler.compileFromFile(inlineSourcePath, options);
   }
 
   if (fs.existsSync(externalSourcePath)) {
-    dist(externalDistPath, compile(externalSourcePath, options), options);
+    compiler.compileFile(inlineSourcePath, options, externalDistPath);
     externalUrl = createAbsoluteUrl(externalDistPath, options);
   }
 
@@ -39,17 +39,10 @@ export function renderCss(page: string, options: Options): Code {
   };
 }
 
-function compile(filename: string, options: Options): string {
-  const source = fs.readFileSync(filename, 'utf8');
-  const compiler: StylesCompiler = getCompiler(options);
-
-  return compiler(source, filename);
-}
-
-function getCompiler(options: Options): StylesCompiler {
+function getCompiler(options: Options): Compiler {
   switch (options.styles.extension) {
     case 'styl':
     default:
-      return compileStylus;
+      return new StylusCompiler(options);
   }
 }

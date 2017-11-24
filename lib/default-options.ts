@@ -14,9 +14,11 @@ export const defaultOptions: Options = {
     extension: 'pug',
   },
   styles: {
+    folder: 'styles',
     extension: 'styl',
   },
   scripts: {
+    folder: 'scripts',
     extension: 'ts',
     options: {
       compilerOptions: {

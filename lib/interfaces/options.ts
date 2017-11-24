@@ -14,9 +14,11 @@ export interface Options {
     extension: string,
   },
   styles: {
+    folder: string,
     extension: string,
   },
   scripts: {
+    folder: string,
     extension: string,
     options: ScriptsCompilerOptions,
   },

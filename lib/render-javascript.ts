@@ -3,32 +3,32 @@ import * as path from 'path';
 
 import { Options } from './interfaces/options';
 import { Code } from './interfaces/code';
-import { dist } from './utils/dist';
-import { ScriptsCompiler } from './interfaces/scripts-compiler';
-import { compileTypescript } from './compilers/compile-typescript';
 import { createAbsoluteUrl } from './utils/create-absolute-url';
+import { Compiler } from './compilers/compiler';
+import { TypescriptCompiler } from './compilers/scripts/typescript-compiler';
 
 export function renderJavascript(page: string, options: Options): Code {
-  const sourcePath = path.join(options.src.folder, options.pages.folder, page);
+  const sourcePath = path.join(options.pages.folder, page);
   const globalSourcePath = `${sourcePath}.${options.scripts.extension}`;
   const inlineSourcePath = `${sourcePath}.inline.${options.scripts.extension}`;
   const externalSourcePath = `${sourcePath}.external.${options.scripts.extension}`;
   const externalDistPath = `${page}.js`;
+  const compiler = getCompiler(options);
 
   let global: string = null;
   let inline: string = null;
   let externalUrl: string = null;
 
   if (fs.existsSync(globalSourcePath)) {
-    global = compile(globalSourcePath, options);
+    global = compiler.compileFromFile(globalSourcePath, options);
   }
 
   if (fs.existsSync(inlineSourcePath)) {
-    inline = compile(inlineSourcePath, options);
+    inline = compiler.compileFromFile(inlineSourcePath, options);
   }
 
   if (fs.existsSync(externalSourcePath)) {
-    dist(externalDistPath, compile(externalSourcePath, options), options);
+    compiler.compileFile(inlineSourcePath, options, externalDistPath);
     externalUrl = createAbsoluteUrl(externalDistPath, options);
   }
 
@@ -39,17 +39,10 @@ export function renderJavascript(page: string, options: Options): Code {
   };
 }
 
-function compile(filename: string, options: Options): string {
-  const source = fs.readFileSync(filename, 'utf8');
-  const compiler: ScriptsCompiler = getCompiler(options);
-
-  return compiler(source, options.scripts.options, filename);
-}
-
-function getCompiler(options: Options): ScriptsCompiler {
+function getCompiler(options: Options): Compiler {
   switch (options.pages.extension) {
     case 'ts':
     default:
-      return compileTypescript;
+      return new TypescriptCompiler(options);
   }
 }
