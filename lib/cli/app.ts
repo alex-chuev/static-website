@@ -2,9 +2,9 @@
 
 import * as program from 'commander';
 import * as inquirer from 'inquirer';
-import { initQuestions } from './init-questions';
-import { render } from '../render';
-import { loadOptions } from './load-options';
+import { initQuestions } from './commands/init-questions';
+import { init } from './commands/init';
+import { build } from './commands/build';
 
 program
   .version('1.0.0')
@@ -14,13 +14,11 @@ program
 program
   .command('init')
   .description('to init a new project')
-  .action(() => inquirer.prompt(initQuestions).then(answers => {
-    console.log(answers);
-  }));
+  .action(command => inquirer.prompt(initQuestions).then(answers => init(answers)));
 
 program
   .command('build')
   .description('to build the project')
-  .action(command => render(loadOptions(command)));
+  .action(command => build(command));
 
 program.parse(process.argv);

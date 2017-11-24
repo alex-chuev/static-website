@@ -8,7 +8,7 @@ import { renderPages } from './render-pages';
 export function render(partialOptions?: PartialOptions) {
   const options = prepareOptions(partialOptions);
 
-  if (options.cleanDistFolder) {
+  if (options.dist.clean) {
     cleanDistFolder(options);
   }
 
@@ -27,5 +27,5 @@ function prepareOptions(partialOptions: PartialOptions): Options {
 }
 
 function cleanDistFolder(options: Options) {
-  fs.removeSync(options.distFolder);
+  fs.removeSync(options.dist.folder);
 }

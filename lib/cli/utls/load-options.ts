@@ -1,5 +1,5 @@
 import * as fs from 'fs-extra';
-import { PartialOptions } from '../interfaces/partial-options';
+import { PartialOptions } from '../../interfaces/partial-options';
 import * as path from 'path';
 
 export function loadOptions(command: any): PartialOptions {

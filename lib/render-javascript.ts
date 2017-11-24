@@ -4,12 +4,14 @@ import * as path from 'path';
 import { Options } from './interfaces/options';
 import { Code } from './interfaces/code';
 import { dist } from './utils/dist';
+import { ScriptsCompiler } from './interfaces/scripts-compiler';
+import { compileTypescript } from './compilers/compile-typescript';
 
 export function renderJavascript(page: string, options: Options): Code {
-  const sourcePath = path.join(options.pagesFolder, page);
-  const globalSourcePath = `${sourcePath}.${options.scriptsExtension}`;
-  const inlineSourcePath = `${sourcePath}.inline.${options.scriptsExtension}`;
-  const externalSourcePath = `${sourcePath}.external.${options.scriptsExtension}`;
+  const sourcePath = path.join(options.pages.folder, page);
+  const globalSourcePath = `${sourcePath}.${options.scripts.extension}`;
+  const inlineSourcePath = `${sourcePath}.inline.${options.scripts.extension}`;
+  const externalSourcePath = `${sourcePath}.external.${options.scripts.extension}`;
   const externalDistPath = `${page}.js`;
 
   let global: string = null;
@@ -26,7 +28,7 @@ export function renderJavascript(page: string, options: Options): Code {
 
   if (fs.existsSync(externalSourcePath)) {
     dist(externalDistPath, compile(externalSourcePath, options), options);
-    externalUrl = options.rootUrl + externalDistPath;
+    externalUrl = options.dist.url + externalDistPath;
   }
 
   return {
@@ -38,6 +40,15 @@ export function renderJavascript(page: string, options: Options): Code {
 
 function compile(filename: string, options: Options): string {
   const source = fs.readFileSync(filename, 'utf8');
+  const compiler: ScriptsCompiler = getCompiler(options);
 
-  return options.scriptsCompiler(source, options.scriptsCompilerOptions, filename);
+  return compiler(source, options.scripts.options, filename);
+}
+
+function getCompiler(options: Options): ScriptsCompiler {
+  switch (options.pages.extension) {
+    case 'ts':
+    default:
+      return compileTypescript;
+  }
 }

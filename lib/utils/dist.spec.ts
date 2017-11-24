@@ -23,9 +23,9 @@ describe('dist', function () {
   it('should call methods with the next arguments', function () {
     dist('index.html', 'data', defaultOptions);
 
-    const filePath = `${defaultOptions.distFolder}${path.sep}index.html`;
+    const filePath = `${defaultOptions.dist.folder}${path.sep}index.html`;
 
-    assert(outputFileSyncStub.calledWith(filePath, 'data', defaultOptions.distEncoding));
+    assert(outputFileSyncStub.calledWith(filePath, 'data', defaultOptions.dist.encoding));
     assert(consoleLogStub.calledWith(`> ${filePath}`));
   });
 });

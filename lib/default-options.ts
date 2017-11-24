@@ -1,7 +1,4 @@
 import { Options } from './interfaces/options';
-import { compilePug } from './compilers/compile-pug';
-import { compileStylus } from './compilers/compile-stylus';
-import { compileTypescript } from './compilers/compile-typescript';
 
 export const defaultOptions: Options = {
   src: {
@@ -12,22 +9,26 @@ export const defaultOptions: Options = {
     defaultLanguage: 'en',
     extension: 'json',
   },
-  pagesFolder: 'pages',
-  pagesExtension: 'pug',
-  pagesCompiler: compilePug,
-  stylesExtension: 'styl',
-  stylesCompiler: compileStylus,
-  scriptsExtension: 'ts',
-  scriptsCompiler: compileTypescript,
-  scriptsCompilerOptions: {
-    compilerOptions: {
-      target: "es5",
-    }
+  pages: {
+    folder: 'pages',
+    extension: 'pug',
   },
-  distFolder: 'dist',
-  htmlExtension: 'html',
-  distEncoding: 'utf-8',
-  cleanDistFolder: true,
+  styles: {
+    extension: 'styl',
+  },
+  scripts: {
+    extension: 'ts',
+    options: {
+      compilerOptions: {
+        target: "es5",
+      },
+    },
+  },
+  dist: {
+    folder: 'dist',
+    encoding: 'utf-8',
+    clean: true,
+    url: 'utf-8',
+  },
   verbose: true,
-  rootUrl: '/',
 };
