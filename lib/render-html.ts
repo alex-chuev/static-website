@@ -11,7 +11,7 @@ import { compilePug } from './compilers/compile-pug';
 
 export function renderHtml(page: string, translation: Translation, codes: Codes, options: Options) {
   const compilerOptions: PagesCompilerOptions = {...translation, ...codes};
-  const pagePath = path.join(options.pages.folder, `${page}.${options.pages.extension}`);
+  const pagePath = path.join(options.src.folder, options.pages.folder, `${page}.${options.pages.extension}`);
 
   distHtml(page, compile(pagePath, compilerOptions, options), translation, options);
 }
@@ -20,7 +20,7 @@ function compile(filename: string, compilerOptions: PagesCompilerOptions, option
   const source = fs.readFileSync(filename, 'utf8');
   const compiler: PagesCompiler = getCompiler(options);
 
-  return compiler(source, compilerOptions);
+  return compiler(source, compilerOptions, filename);
 }
 
 function getCompiler(options: Options): PagesCompiler {

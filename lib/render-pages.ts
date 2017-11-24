@@ -6,6 +6,7 @@ import { renderJavascript } from './render-javascript';
 import { renderHtml } from './render-html';
 import { Code } from './interfaces/code';
 import { loadTranslations } from './load-translations';
+import * as path from 'path';
 
 export function renderPages(options: Options) {
   const pages = getPages(options);
@@ -32,7 +33,7 @@ export function renderPages(options: Options) {
 function getPages(options: Options) {
   const pattern = `**/*.${options.pages.extension}`;
   const pages = glob.sync(pattern, {
-    cwd: options.pages.folder,
+    cwd: path.join(options.src.folder, options.pages.folder),
   });
 
   return removePageExtensions(pages, options);

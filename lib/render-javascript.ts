@@ -8,7 +8,7 @@ import { ScriptsCompiler } from './interfaces/scripts-compiler';
 import { compileTypescript } from './compilers/compile-typescript';
 
 export function renderJavascript(page: string, options: Options): Code {
-  const sourcePath = path.join(options.pages.folder, page);
+  const sourcePath = path.join(options.src.folder, options.pages.folder, page);
   const globalSourcePath = `${sourcePath}.${options.scripts.extension}`;
   const inlineSourcePath = `${sourcePath}.inline.${options.scripts.extension}`;
   const externalSourcePath = `${sourcePath}.external.${options.scripts.extension}`;

@@ -8,7 +8,7 @@ import { compileStylus } from './compilers/compile-stylus';
 import { StylesCompiler } from './interfaces/styles-compiler';
 
 export function renderCss(page: string, options: Options): Code {
-  const sourcePath = path.join(options.pages.folder, page);
+  const sourcePath = path.join(options.src.folder, options.pages.folder, page);
   const globalSourcePath = `${sourcePath}.${options.styles.extension}`;
   const inlineSourcePath = `${sourcePath}.inline.${options.styles.extension}`;
   const externalSourcePath = `${sourcePath}.external.${options.styles.extension}`;

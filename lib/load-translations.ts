@@ -6,7 +6,7 @@ import { Options } from './interfaces/options';
 import { Translation } from './interfaces/translation';
 
 export function loadTranslations(options: Options): Translation[] {
-  const pattern = path.join(options.translations.folder, options.src.folder, `*.${options.translations.extension}`);
+  const pattern = path.join(options.src.folder, options.translations.folder, `*.${options.translations.extension}`);
 
   return glob.sync(pattern).map(file => load(file));
 }
