@@ -1,4 +1,4 @@
-import * as glob from 'glob';
+import * as _ from 'lodash';
 
 import { Options } from './interfaces/options';
 import { renderCss } from './render-css';
@@ -6,9 +6,10 @@ import { renderJavascript } from './render-javascript';
 import { renderHtml } from './render-html';
 import { Code } from './interfaces/code';
 import { loadTranslations } from './load-translations';
-import * as path from 'path';
+import { Codes } from './interfaces/codes';
+import { getPages } from './utils/get-pages';
 
-export function renderPages(options: Options) {
+export function renderPages(options: Options): string[] {
   const pages = getPages(options);
   const translations = loadTranslations(options);
 
@@ -16,31 +17,11 @@ export function renderPages(options: Options) {
     console.info(`Rendering ${pages.length} pages for ${translations.length} languages:`);
   }
 
-  pages.forEach(page => {
+  return _.flatMap(pages, page => {
     const css: Code = renderCss(page, options);
     const javascript: Code = renderJavascript(page, options);
+    const codes: Codes = {css, js: javascript};
 
-    translations.forEach(translation => {
-      renderHtml(page, translation, {css, js: javascript}, options);
-    });
+    return translations.map(translation => renderHtml(page, translation, codes, options));
   });
-
-  if (options.verbose) {
-    console.info(`Rendered ${pages.length * translations.length} page files.`);
-  }
-}
-
-function getPages(options: Options) {
-  const pattern = `**/*.${options.pages.extension}`;
-  const pages = glob.sync(pattern, {
-    cwd: path.join(options.src.folder, options.pages.folder),
-  });
-
-  return removePageExtensions(pages, options);
-}
-
-function removePageExtensions(pages: string[], options: Options): string[] {
-  const extensionRegexp = new RegExp(`\.${options.pages.extension}$`);
-
-  return pages.map(page => page.replace(extensionRegexp, ''));
 }

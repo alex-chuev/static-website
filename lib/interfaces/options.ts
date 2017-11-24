@@ -26,5 +26,8 @@ export interface Options {
     url: string,
     clean: boolean,
   },
+  sitemap: {
+    generate: boolean,
+  },
   verbose: boolean,
 }

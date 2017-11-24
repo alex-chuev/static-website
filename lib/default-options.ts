@@ -30,5 +30,8 @@ export const defaultOptions: Options = {
     clean: true,
     url: '/',
   },
+  sitemap: {
+    generate: true,
+  },
   verbose: true,
 };

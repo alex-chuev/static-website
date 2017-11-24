@@ -6,6 +6,7 @@ import { Code } from './interfaces/code';
 import { dist } from './utils/dist';
 import { ScriptsCompiler } from './interfaces/scripts-compiler';
 import { compileTypescript } from './compilers/compile-typescript';
+import { createAbsoluteUrl } from './utils/create-absolute-url';
 
 export function renderJavascript(page: string, options: Options): Code {
   const sourcePath = path.join(options.src.folder, options.pages.folder, page);
@@ -28,7 +29,7 @@ export function renderJavascript(page: string, options: Options): Code {
 
   if (fs.existsSync(externalSourcePath)) {
     dist(externalDistPath, compile(externalSourcePath, options), options);
-    externalUrl = options.dist.url + externalDistPath;
+    externalUrl = createAbsoluteUrl(externalDistPath, options);
   }
 
   return {

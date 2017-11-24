@@ -9,11 +9,11 @@ import { Codes } from './interfaces/codes';
 import { PagesCompiler } from './interfaces/pages-compiler';
 import { compilePug } from './compilers/compile-pug';
 
-export function renderHtml(page: string, translation: Translation, codes: Codes, options: Options) {
+export function renderHtml(page: string, translation: Translation, codes: Codes, options: Options): string {
   const compilerOptions: PagesCompilerOptions = {...translation, ...codes};
   const pagePath = path.join(options.src.folder, options.pages.folder, `${page}.${options.pages.extension}`);
 
-  distHtml(page, compile(pagePath, compilerOptions, options), translation, options);
+  return distHtml(page, compile(pagePath, compilerOptions, options), translation, options);
 }
 
 function compile(filename: string, compilerOptions: PagesCompilerOptions, options: Options): string {
@@ -31,9 +31,11 @@ function getCompiler(options: Options): PagesCompiler {
   }
 }
 
-function distHtml(page: string, html: string, translation: Translation, options: Options) {
+function distHtml(page: string, html: string, translation: Translation, options: Options): string {
   const languagePart = translation.language === options.translations.defaultLanguage ? '' : translation.language;
   const distPath = path.join(languagePart, page + '.html');
 
   dist(distPath, html, options);
+
+  return distPath;
 }
