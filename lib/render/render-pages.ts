@@ -10,11 +10,11 @@ export function renderPages(state: State) {
     const js: Code = renderPageScripts(page, state);
 
     if (state.css) {
-      css.external.push(state.css);
+      css.external.unshift(state.css);
     }
 
     if (state.js) {
-      js.external.push(state.js);
+      js.external.unshift(state.js);
     }
 
     state.translations.forEach(
