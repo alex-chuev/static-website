@@ -7,10 +7,6 @@ import { Codes } from './interfaces/codes';
 import { Translation } from './interfaces/translation';
 
 export function renderPages(pages: string[], translations: Translation[], options: Options) {
-  if (options.verbose) {
-    console.info(`Rendering ${pages.length} pages for ${translations.length} languages:`);
-  }
-
   pages.forEach(page => {
     const css: Code = renderCss(page, options);
     const javascript: Code = renderJavascript(page, options);
