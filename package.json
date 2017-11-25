@@ -1,6 +1,6 @@
 {
   "name": "static-website",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Create a static multilingual website",
   "repository": "https://github.com/alex-chuev/static-website.git",
   "main": "dist/index.js",
