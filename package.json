@@ -1,6 +1,6 @@
 {
   "name": "static-website",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Create a static multilingual website",
   "repository": "https://github.com/alex-chuev/static-website.git",
   "main": "build/cli/app.js",
@@ -34,8 +34,7 @@
     "test": "ts-mocha lib/**/*.spec.ts",
     "test-watch": "npm run test -- --watch --watch-extensions ts",
     "build": "tsc",
-    "cli-init": "ts-node lib/cli/app init",
-    "cli-build": "ts-node lib/cli/app build",
+    "cli": "ts-node lib/cli/app",
     "prepublish": "npm run build"
   },
   "bin": "build/cli/app.js",
