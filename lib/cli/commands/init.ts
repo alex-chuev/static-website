@@ -1,10 +1,10 @@
 import { parseLanguages } from '../utls/parse-languages';
-import { saveJson } from '../../utils/save-json';
 import * as path from 'path';
 import { defaultOptions } from '../../default-options';
 import * as fs from 'fs-extra';
 import * as _ from 'lodash';
 import { Options } from '../../interfaces/options';
+import { outputJsonSync } from 'fs-extra';
 
 interface Answers {
   [key: string]: any;
@@ -41,7 +41,9 @@ function createOptions(answers: Answers): Options {
 }
 
 function createConfigFile(options: Options) {
-  saveJson('static-website.json', options);
+  outputJsonSync('static-website.json', options, {
+    spaces: 2,
+  });
 }
 
 function createLanguageFiles(answers: Answers, options: Options) {
@@ -49,7 +51,17 @@ function createLanguageFiles(answers: Answers, options: Options) {
 
   languages.forEach(language => {
     const languagePath = path.join(options.src.folder, options.translations.folder, `${language}.json`);
-    saveJson(languagePath, {meta: {title: 'static-website', description: '', keywords: ''}, content: 'static-website'});
+
+    outputJsonSync(languagePath, {
+      meta: {
+        title: `Static website (${language})`,
+        description: '',
+        keywords: '',
+      },
+      content: `Static website (${language})`,
+    }, {
+      spaces: 2,
+    });
   });
 }
 
@@ -73,20 +85,20 @@ block content
     meta(charset="utf-8")
     block head
 
-    if css.externalUrl
-      link(rel="stylesheet" type="text/css" href=css.externalUrl)
+    each url in css.external
+      link(rel="stylesheet" type="text/css" href=url)
 
-    if css.inline
-      style(type="text/css")=css.inline
+    each code in css.inline
+      style(type="text/css")=code
   body
     block content
     block scripts
 
-  if js.externalUrl
-    script(type="text/javascript" src=js.externalUrl)
+    each url in js.external
+      script(type="text/javascript" src=url)
 
-  if js.inline
-    script(type="text/javascript")=js.inline
+    each code in js.inline
+      script(type="text/javascript")=code
 `, 'utf-8');
 }
 

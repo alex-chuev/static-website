@@ -1,42 +1,26 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
 
 import { Options } from '../interfaces/options';
+import { dist } from '../utils/dist';
+import { src } from '../utils/src';
+import { FilePath } from '../types';
 
 export abstract class Compiler {
 
   abstract method(src: string, data: any, file: string): string;
 
-  constructor(
-    public options: Options,
-  ) {
+  constructor(public options: Options) {
   }
 
-  compileFile(srcFile: string, data: any, distFile: string) {
-    this.saveFile(distFile, this.compileFromFile(srcFile, data));
+  compileFile(filePath: FilePath, data: any, distFilePath: FilePath) {
+    this.dist(distFilePath, this.compileFromFile(filePath, data));
   }
 
-  compileFromFile(srcFile: string, data: any): string {
-    srcFile = path.join(this.options.src.folder, srcFile);
-
-    return this.method(this.readFile(srcFile), data, srcFile);
+  compileFromFile(filePath: FilePath, data: any): string {
+    return this.method(src(filePath, this.options), data, path.join(this.options.src.folder, filePath));
   }
 
-  compileToFile(src: string, data: any, distFile: string) {
-    this.saveFile(distFile, this.method(src, data, null));
-  }
-
-  protected readFile(file: string): string {
-    return fs.readFileSync(file, 'utf8');
-  }
-
-  protected saveFile(file: string, content: string) {
-    file = path.join(this.options.dist.folder, file);
-
-    if (this.options.verbose) {
-      console.info(`> ${path.relative(process.cwd(), file)}`);
-    }
-
-    fs.outputFileSync(file, content, this.options.dist.encoding);
+  protected dist(filePath: FilePath, content: string) {
+    dist(filePath, content, this.options);
   }
 }

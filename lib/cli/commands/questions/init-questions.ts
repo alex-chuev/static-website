@@ -1,5 +1,5 @@
 import { Answers, ChoiceType, Questions } from 'inquirer';
-import { parseLanguages } from '../utls/parse-languages';
+import { parseLanguages } from '../../utls/parse-languages';
 
 export const initQuestions: Questions = [
   {

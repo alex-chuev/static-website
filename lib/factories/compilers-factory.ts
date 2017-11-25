@@ -1,9 +1,9 @@
-import { Options } from '../interfaces/options';
 import { StylusCompiler } from '../compilers/styles/stylus-compiler';
 import { PugCompiler } from '../compilers/pages/pug-compiler';
 import { Compilers } from '../interfaces/compilers';
 import { Compiler } from '../compilers/compiler';
 import { TypescriptCompiler } from '../compilers/scripts/typescript-compiler';
+import { Options } from '../interfaces/options';
 
 export class CompilersFactory {
   static createCompilers(options: Options): Compilers {

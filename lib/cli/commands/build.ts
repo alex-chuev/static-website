@@ -1,6 +1,6 @@
-import { render } from '../../render';
+import { build as _build } from '../../build';
 import { loadOptions } from '../utls/load-options';
 
 export function build(command: any) {
-  render(loadOptions(command));
+  _build(loadOptions(command));
 }

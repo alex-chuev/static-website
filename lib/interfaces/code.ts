@@ -1,5 +1,6 @@
+import { Url } from '../types';
+
 export interface Code {
-  global: string;
-  inline: string;
-  externalUrl: string;
+  inline: string[];
+  external: Url[];
 }

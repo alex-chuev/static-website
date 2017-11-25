@@ -1,32 +1,31 @@
 import * as fs from 'fs-extra';
-import { PartialOptions } from '../../interfaces/partial-options';
 import * as path from 'path';
+import { Options } from '../../interfaces/options';
+import { defaultOptions } from '../../default-options';
+import { readJsonSync } from 'fs-extra';
 
-export function loadOptions(command: any): PartialOptions {
+export function loadOptions(command: any): Options {
   if (command.parent.config) {
-    return load(path.join(process.cwd(), command.parent.config), true);
+    const configPath = path.join(process.cwd(), command.parent.config);
+
+    return load(configPath, true);
   } else {
     return load('static-website.json');
   }
 }
 
-function load(file: string, exit = false): PartialOptions {
+function load(file: string, exit = false): Options {
   if (fs.existsSync(file)) {
-    return parse(fs.readFileSync(file, 'utf-8'), file);
+    const options: Options = readJsonSync(file);
+
+    return {
+      ...defaultOptions,
+      ...options,
+    };
   } else if (exit) {
     console.error(`File ${file} doesn't exist`);
     process.exit(1);
   } else {
-    return {};
-  }
-}
-
-function parse(contents: string, file: string): PartialOptions {
-  try {
-    return JSON.parse(contents);
-  }
-  catch {
-    console.error(`File ${file} isn't a valid JSON file`);
-    process.exit(1);
+    return defaultOptions;
   }
 }

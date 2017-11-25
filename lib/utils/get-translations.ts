@@ -1,20 +1,26 @@
 import * as glob from 'glob';
 import * as path from 'path';
-import * as fs from 'fs';
 
-import { Options } from '../interfaces/options';
 import { Translation } from '../interfaces/translation';
+import { readJsonSync } from 'fs-extra';
+import { Options } from '../interfaces/options';
 
 export function getTranslations(options: Options): Translation[] {
-  const pattern = path.join(options.src.folder, options.translations.folder, `*.${options.translations.extension}`);
+  const pattern = path.join(
+    options.src.folder,
+    options.translations.folder,
+    `*.${options.translations.extension}`,
+  );
 
-  return glob.sync(pattern).map(file => load(file));
+  return glob.sync(pattern)
+    .map(file => process(file, readJsonSync(file), options));
 }
 
-function load(file: string): Translation {
-  const json = JSON.parse(fs.readFileSync(file, 'utf-8'));
+function process(file: string, translation: Translation, options: Options): Translation {
+  const language = path.parse(file).name;
 
-  json.language = path.parse(file).name;
+  translation.language = language;
+  translation.languageUrl = language === options.translations.defaultLanguage ? '' : language;
 
-  return json;
+  return translation;
 }

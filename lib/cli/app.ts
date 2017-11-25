@@ -1,8 +1,6 @@
-#!/usr/bin/env node
-
 import * as program from 'commander';
 import * as inquirer from 'inquirer';
-import { initQuestions } from './commands/init-questions';
+import { initQuestions } from './commands/questions/init-questions';
 import { init } from './commands/init';
 import { build } from './commands/build';
 

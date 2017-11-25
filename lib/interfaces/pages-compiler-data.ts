@@ -1,4 +1,4 @@
 import { Translation } from './translation';
 import { Codes } from './codes';
 
-export type PagesCompilerOptions = Translation & Codes;
+export type PagesCompilerData = Translation & Codes;
