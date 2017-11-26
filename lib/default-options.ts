@@ -2,10 +2,10 @@ import { Options } from './interfaces/options';
 
 export const defaultOptions: Options = {
   src: {
-    folder: ''
+    folder: '',
   },
   assets: {
-    folder: 'assets'
+    folder: 'assets',
   },
   translations: {
     folder: 'translations',
@@ -25,7 +25,7 @@ export const defaultOptions: Options = {
     extension: 'ts',
     options: {
       compilerOptions: {
-        target: "es5",
+        target: 'es5',
       },
     },
   },
@@ -34,6 +34,11 @@ export const defaultOptions: Options = {
     encoding: 'utf-8',
     clean: true,
     url: '/',
+  },
+  serve: {
+    host: 'localhost',
+    port: 5000,
+    open: true,
   },
   sitemap: {
     generate: true,

@@ -31,6 +31,11 @@ export interface Options {
     url: string,
     clean: boolean,
   },
+  serve: {
+    host: string,
+    port: number,
+    open: boolean,
+  },
   sitemap: {
     generate: boolean,
   },
