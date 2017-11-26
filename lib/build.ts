@@ -9,6 +9,7 @@ import { CompilersFactory } from './factories/compilers-factory';
 import { renderScripts } from './render/render-scripts';
 import { renderStyles } from './render/render-styles';
 import { State } from './state';
+import { copyAssets } from './utils/copy-assets';
 
 export function build(options: Options) {
   if (options.dist.clean) {
@@ -30,6 +31,7 @@ export function build(options: Options) {
     js,
   });
 
+  copyAssets(state);
   renderPages(state);
 
   if (options.sitemap.generate) {

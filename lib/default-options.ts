@@ -4,6 +4,9 @@ export const defaultOptions: Options = {
   src: {
     folder: ''
   },
+  assets: {
+    folder: 'assets'
+  },
   translations: {
     folder: 'translations',
     defaultLanguage: 'en',

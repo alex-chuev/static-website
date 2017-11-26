@@ -1,0 +1,19 @@
+html(lang=language)
+  head
+    meta(charset="utf-8")
+    block head
+
+    each url in css.external
+      link(rel="stylesheet" type="text/css" href=url)
+
+    each code in css.inline
+      style(type="text/css")=code
+  body
+    block content
+    block scripts
+
+    each url in js.external
+      script(type="text/javascript" src=url)
+
+    each code in js.inline
+      script(type="text/javascript")=code

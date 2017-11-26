@@ -4,6 +4,9 @@ export interface Options {
   src: {
     folder: string,
   },
+  assets: {
+    folder: string,
+  },
   translations: {
     folder: string,
     defaultLanguage: string,

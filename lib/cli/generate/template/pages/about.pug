@@ -1,0 +1,11 @@
+extends ../layouts/main
+
+block head
+  title #{meta.title}
+  meta(name="description" content=meta.description)
+  meta(name="keywords" content=meta.keywords)
+
+block content
+  .about
+    h1.about__title #{meta.title}
+    .about__content #{content}
