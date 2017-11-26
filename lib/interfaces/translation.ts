@@ -1,5 +1,5 @@
 export interface Translation {
   language: string;
-  languageUrl: string;
+  languageUrlPart: string;
   [key: string]: any;
 }

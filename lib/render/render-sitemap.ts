@@ -13,7 +13,7 @@ const footer = `
 export function renderSitemap(state: State) {
   const body = _(state.pages)
     .flatMap(page => state.translations.map(translation => (
-      path.join(translation.languageUrl, page + '.html')
+      path.join(translation.languageUrlPart, page + '.html')
     )))
     .map(url => createAbsoluteUrl(url, state.options))
     .map(url => `

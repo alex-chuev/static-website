@@ -20,7 +20,7 @@ function process(file: string, translation: Translation, options: Options): Tran
   const language = path.parse(file).name;
 
   translation.language = language;
-  translation.languageUrl = language === options.translations.defaultLanguage ? '' : language;
+  translation.languageUrlPart = language === options.translations.defaultLanguage ? '' : language;
 
   return translation;
 }
