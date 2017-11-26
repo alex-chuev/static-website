@@ -26,6 +26,16 @@ static-website init
 
 It also will ask you some questions.
 
+## Serve
+
+It is very convenient to develop and see what happens in real time:
+
+```bash
+static-website serve
+```
+
+The command will be automatically rebuilding a project when there are some changes and serve the result using HTTP.
+
 ## Build
 
 To build static website run the next command inside the project:
