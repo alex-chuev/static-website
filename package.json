@@ -37,6 +37,7 @@
     "test": "ts-mocha lib/**/*.spec.ts",
     "test-watch": "npm run test -- --watch --watch-extensions ts",
     "build": "tsc",
+    "watch": "tsc -w",
     "cli": "ts-node lib/cli/app.ts",
     "prepublish": "npm run build"
   },
