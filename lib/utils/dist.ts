@@ -7,7 +7,7 @@ export function dist(filePath: FilePath, content: string, options: Options) {
   filePath = path.join(options.dist.folder, filePath);
 
   if (options.verbose) {
-    console.info(`> ${path.relative(process.cwd(), filePath)}`);
+    console.info(`> ${path.relative(options.dist.folder, filePath)}`);
   }
 
   outputFileSync(filePath, content, options.dist.encoding);

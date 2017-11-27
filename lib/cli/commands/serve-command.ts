@@ -21,9 +21,9 @@ export function serveCommand(command: any) {
 }
 
 function rebuild(options: Options) {
-  console.log('\x1b[32m', '\nRebuilding...', '\x1b[0m');
+  console.log('\x1b[32m\nRebuilding...\x1b[0m');
 
   build(options);
 
-  console.log('\x1b[32m', 'Rebuilt successfully.', '\x1b[0m');
+  console.log('\x1b[32mRebuilt successfully.\x1b[0m');
 }
