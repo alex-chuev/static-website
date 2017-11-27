@@ -2,7 +2,7 @@ import { Options } from './interfaces/options';
 
 export const defaultOptions: Options = {
   src: {
-    folder: '',
+    folder: 'src',
   },
   assets: {
     folder: 'assets',

@@ -6,6 +6,6 @@ export const initQuestions: Questions = [].concat([
     name: 'srcFolder',
     message: 'Enter the source folder:',
     type: 'input',
-    default: 'static',
+    default: 'src',
   },
 ], createQuestions);

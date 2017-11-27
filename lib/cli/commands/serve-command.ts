@@ -7,13 +7,16 @@ import { Options } from '../../interfaces/options';
 export function serveCommand(command: any) {
   const options = loadOptions(command);
 
-  watchTree(options.src.folder, () => rebuild(options));
+  watchTree(options.src.folder, {
+    interval: 0.15,
+  }, () => rebuild(options));
 
   ls.start({
     root: options.dist.folder,
     host: options.serve.host,
     port: options.serve.port,
     open: options.serve.open,
+    logLevel: 0,
   });
 }
 
