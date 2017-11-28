@@ -1,6 +1,6 @@
 {
   "name": "static-website",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "Create a static multilingual website",
   "repository": "https://github.com/alex-chuev/static-website.git",
   "main": "lib/cli/app.js",
@@ -43,5 +43,11 @@
   },
   "bin": "lib/cli/app.js",
   "author": "Alex Chuev <alex@chuev.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": [
+    "static",
+    "website",
+    "seo",
+    "cli"
+  ]
 }
