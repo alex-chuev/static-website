@@ -1,6 +1,7 @@
 .idea/
 node_modules/
 dist/
+serve/
 src/
 static-website.json
 *.js

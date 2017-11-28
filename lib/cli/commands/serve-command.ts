@@ -6,6 +6,8 @@ import { Options } from '../../interfaces/options';
 
 export function serveCommand(command: any) {
   const options = loadOptions(command);
+  options.dist.clean = false;
+  options.dist.folder = 'serve';
 
   watchTree(options.src.folder, {
     interval: 0.15,

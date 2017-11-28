@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import { emptyDirSync } from 'fs-extra';
 
 import { Options } from './interfaces/options';
 import { renderPages } from './render/render-pages';
@@ -13,7 +13,7 @@ import { copyAssets } from './utils/copy-assets';
 
 export function build(options: Options) {
   if (options.dist.clean) {
-    fs.removeSync(options.dist.folder);
+    emptyDirSync(options.dist.folder);
   }
 
   const pages = getPages(options);
