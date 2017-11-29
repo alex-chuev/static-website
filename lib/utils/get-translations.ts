@@ -4,6 +4,7 @@ import * as path from 'path';
 import { Translation } from '../interfaces/translation';
 import { readJsonSync } from 'fs-extra';
 import { Options } from '../interfaces/options';
+import { getLanguageUrlPart } from './get-language-url-part';
 
 export function getTranslations(options: Options): Translation[] {
   const pattern = path.join(
@@ -20,7 +21,7 @@ function process(file: string, translation: Translation, options: Options): Tran
   const language = path.parse(file).name;
 
   translation.language = language;
-  translation.languageUrlPart = language === options.translations.defaultLanguage ? '' : language;
+  translation.languageUrlPart = getLanguageUrlPart(language, options);
 
   return translation;
 }

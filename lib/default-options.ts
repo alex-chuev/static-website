@@ -1,6 +1,7 @@
 import { Options } from './interfaces/options';
 
 export const defaultOptions: Options = {
+  verbose: true,
   src: {
     folder: 'src',
   },
@@ -11,6 +12,7 @@ export const defaultOptions: Options = {
     folder: 'translations',
     defaultLanguage: 'en',
     extension: 'json',
+    generate: true,
   },
   pages: {
     folder: 'pages',
@@ -43,5 +45,14 @@ export const defaultOptions: Options = {
   sitemap: {
     generate: true,
   },
-  verbose: true,
+  helpers: {
+    currentUrl: 'currentUrl',
+    i18n: 'i18n',
+    url: 'url',
+    isActiveUrl: 'isActiveUrl',
+    languageUrl: 'languageUrl',
+    link: 'link',
+    languageLink: 'languageLink',
+    asset: 'asset',
+  },
 };

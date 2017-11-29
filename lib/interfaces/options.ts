@@ -1,6 +1,8 @@
 import { ScriptsCompilerOptions } from './scripts-compiler-options';
+import { OptionsHelpers } from './options-helpers';
 
 export interface Options {
+  verbose: boolean,
   src: {
     folder: string,
   },
@@ -11,6 +13,7 @@ export interface Options {
     folder: string,
     defaultLanguage: string,
     extension: string,
+    generate: boolean,
   },
   pages: {
     folder: string,
@@ -39,5 +42,5 @@ export interface Options {
   sitemap: {
     generate: boolean,
   },
-  verbose: boolean,
+  helpers: OptionsHelpers,
 }
