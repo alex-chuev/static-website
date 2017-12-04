@@ -75,4 +75,40 @@ describe('TemplateHelpersFactory', () => {
       )).equal(true);
     });
   });
+
+  describe('link method', () => {
+    it('should be correct', () => {
+      expect(templateHelpers.link('/info/about/')).equal('<a href="/ru/info/about/">/ru/info/about/</a>');
+      expect(templateHelpers.link('/info/about/', 'text')).equal('<a href="/ru/info/about/">text</a>');
+      expect(templateHelpers.link('/info/about/', 'text', 'link')).equal('<a href="/ru/info/about/" class="link">text</a>');
+      expect(templateHelpers.link('/info/docs/', 'text', 'link', 'link--active')).equal('<a href="/ru/info/docs/" class="link">text</a>');
+
+      expect(templateHelpers.link('/info/about/', 'text', 'link', 'link--active'))
+        .equal('<a href="/ru/info/about/" class="link link--active">text</a>');
+
+      expect(templateHelpers.link('/info/about/', 'text', 'link', 'link--active', {
+        tabindex: 2,
+      })).equal('<a href="/ru/info/about/" class="link link--active" tabindex="2">text</a>');
+
+      expect(templateHelpers.link('/info/about/', 'text', 'link', 'link--active', {
+        tabindex: 2,
+      }), 'de').equal('<a href="/de/info/about/" class="link link--active" tabindex="2">text</a>');
+
+      expect(templateHelpers.link('/info/about/', 'text', 'link', 'link--active', {
+        tabindex: 2,
+      }), 'en').equal('<a href="/info/about/" class="link link--active" tabindex="2">text</a>');
+    });
+  });
+
+  describe('languageLink method', () => {
+    it('should be correct', () => {
+      expect(templateHelpers.languageLink('en', 'text', 'link', 'link--active', {
+        tabindex: 2,
+      })).equal('<a href="/info/about/" class="link link--active" tabindex="2">text</a>');
+
+      expect(templateHelpers.languageLink('de', 'text', 'link', 'link--active', {
+        tabindex: 2,
+      })).equal('<a href="/de/info/about/" class="link link--active" tabindex="2">text</a>');
+    });
+  });
 });
