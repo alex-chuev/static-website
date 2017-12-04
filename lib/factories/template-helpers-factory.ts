@@ -58,11 +58,17 @@ export class TemplateHelpersFactory {
       },
       asset(file: string): string {
         const dir = path.parse(currentPage).dir;
-        const srcPath = path.join(options.src.folder, dir, file);
+        const srcPath = path.join(options.src.folder, options.pages.folder, dir, file);
         const distPath = path.join(options.dist.folder, dir, file);
 
         if (existsSync(srcPath)) {
-          copySync(srcPath, distPath);
+          if (false === existsSync(distPath)) {
+            copySync(srcPath, distPath);
+
+            if (options.verbose) {
+              console.info(`> ${path.relative(options.dist.folder, distPath)}`);
+            }
+          }
 
           return createAbsoluteUrl(path.join(dir, file), options);
         } else {
