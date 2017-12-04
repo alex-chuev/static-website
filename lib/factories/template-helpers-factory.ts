@@ -6,6 +6,7 @@ import { createAbsoluteUrl } from '../utils/create-absolute-url';
 import * as path from 'path';
 import { getLanguageUrlPart } from '../utils/get-language-url-part';
 import { PropertyPath } from 'lodash';
+import { TranslationService } from '../services/translation-service';
 
 export class TemplateHelpersFactory {
   static createTemplateHelpers(page: string, translation: Translation, options: Options): TemplateHelpers {
@@ -13,16 +14,14 @@ export class TemplateHelpersFactory {
 
     return {
       currentUrl: createAbsoluteUrl(path.join(translation.languageUrlPart, removeIndex(`${page}.html`)), options),
-      i18n(messagePath: PropertyPath): string {
-        if (_.has(translation, messagePath)) {
-          return _.get(translation, messagePath);
+      i18n(message: PropertyPath, otherwise = ''): string {
+        if (_.has(translation, message)) {
+          return _.get(translation, message);
+        } else if (options.translations.generate) {
+          TranslationService.saveTranslation(_.set(translation, message, otherwise), options);
         }
 
-        if (options.translations.generate) {
-          generateMissingTranslation(messagePath);
-        }
-
-        return '';
+        return otherwise;
       },
       url(page: string, language = translation.language): string {
         return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), removeIndex(page)), options);
@@ -48,7 +47,4 @@ export class TemplateHelpersFactory {
 
 function removeIndex(page: string): string {
   return page.replace(/(index|index.html)$/, '');
-}
-
-function generateMissingTranslation(message: PropertyPath) {
 }
