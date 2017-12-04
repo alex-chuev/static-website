@@ -12,11 +12,13 @@ import { HtmlFactory } from './html-factory';
 import { Attributes } from '../interfaces/attributes';
 
 export class TemplateHelpersFactory {
-  static createTemplateHelpers(page: string, translation: Translation, options: Options): TemplateHelpers {
-    const pageWithoutIndex = removeIndex(page);
+  static createTemplateHelpers(currentPage: string, translation: Translation, options: Options): TemplateHelpers {
+    const pageWithoutIndex = removeIndex(currentPage);
+    const urlWithoutLanguage = createAbsoluteUrl(removeIndex(`${currentPage}.html`), options);
 
     return {
-      currentUrl: createAbsoluteUrl(path.join(translation.languageUrlPart, removeIndex(`${page}.html`)), options),
+      currentUrl: createAbsoluteUrl(
+        path.join(translation.languageUrlPart, removeIndex(`${currentPage}.html`)), options),
       i18n(message: PropertyPath, otherwise = ''): string {
         if (_.has(translation, message)) {
           return _.get(translation, message);
@@ -26,18 +28,18 @@ export class TemplateHelpersFactory {
 
         return otherwise;
       },
-      url(page: string, language = translation.language): string {
-        return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), removeIndex(page)), options);
+      url(relativeUrl: string, language = translation.language): string {
+        return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), removeIndex(relativeUrl)), options);
       },
-      isActiveUrl(page: string): boolean {
-        return this.currentUrl === removeIndex(page);
+      isActiveUrl(relativeUrl: string): boolean {
+        return urlWithoutLanguage === removeIndex(relativeUrl);
       },
       languageUrl(language: string): string {
         return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), pageWithoutIndex), options);
       },
       link(page: string, text?: string, className?: string, activeClass?: string, attrs?: Attributes, language?: string): string {
         const href = this.url(page, language);
-        const attributes = {href};
+        const attributes: Attributes = {href};
 
         if (activeClass && this.isActiveUrl(page)) {
           className += ` ${activeClass}`;
@@ -52,10 +54,10 @@ export class TemplateHelpersFactory {
         return HtmlFactory.createElement('a', text ? text : href, attributes);
       },
       languageLink(language: string, text?: string, className?: string, activeClassName?: string, attributes?: Attributes): string {
-        return this.link(page, text, className, activeClassName, attributes, language);
+        return this.link(createAbsoluteUrl(`${currentPage}.html`, options), text, className, activeClassName, attributes, language);
       },
       asset(file: string): string {
-        const dir = path.parse(page).dir;
+        const dir = path.parse(currentPage).dir;
         const srcPath = path.join(options.src.folder, dir, file);
         const distPath = path.join(options.dist.folder, dir, file);
 
