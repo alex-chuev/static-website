@@ -42,6 +42,40 @@ describe('TemplateHelpersFactory', () => {
     });
   });
 
+  describe('url method', () => {
+    it('should works correct', () => {
+      expect(templateHelpers.url('/')).equal('/ru/');
+      expect(templateHelpers.url('/index.html')).equal('/ru/');
+      expect(templateHelpers.url('/contacts/')).equal('/ru/contacts/');
+
+      expect(templateHelpers.url('/', 'en')).equal('/');
+      expect(templateHelpers.url('/index.html', 'en')).equal('/');
+      expect(templateHelpers.url('/contacts/', 'en')).equal('/contacts/');
+
+      expect(templateHelpers.url('/', 'de')).equal('/de/');
+      expect(templateHelpers.url('/index.html', 'de')).equal('/de/');
+      expect(templateHelpers.url('/contacts/', 'de')).equal('/de/contacts/');
+    });
+  });
+
+  describe('isActiveUrl method', () => {
+    it('should works correct', () => {
+      expect(templateHelpers.isActiveUrl('/ru/info/about/index')).equal(true);
+      expect(templateHelpers.isActiveUrl('/ru/info/about/index.html')).equal(true);
+      expect(templateHelpers.isActiveUrl('/ru/info/about/')).equal(true);
+      expect(templateHelpers.isActiveUrl('/ru/info/about')).equal(false);
+      expect(templateHelpers.isActiveUrl('/ru/info/about.html')).equal(false);
+    });
+  });
+
+  describe('languageUrl method', () => {
+    it('should works correct', () => {
+      expect(templateHelpers.languageUrl('en')).equal('/info/about/');
+      expect(templateHelpers.languageUrl('ru')).equal('/ru/info/about/');
+      expect(templateHelpers.languageUrl('de')).equal('/de/info/about/');
+    });
+  });
+
   describe('i18n method', () => {
     it('should work correct', () => {
       const otherwise = [];
