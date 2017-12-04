@@ -3,8 +3,10 @@ import { TemplateHelpersFactory } from './template-helpers-factory';
 import { Translation } from '../interfaces/translation';
 import { defaultOptions } from '../default-options';
 import { expect } from 'chai';
-import { SinonSpy, stub } from 'sinon';
+import { SinonStub, stub } from 'sinon';
 import { TranslationService } from '../services/translation-service';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 let templateHelpers: TemplateHelpers;
 const page = 'info/about/index';
@@ -16,16 +18,22 @@ const translation: Translation = {
   },
 };
 const options = defaultOptions;
-let translationServiceStub: SinonSpy;
+let translationServiceStub: SinonStub;
+let existsSyncStub: SinonStub;
+let copySyncStub: SinonStub;
 
 describe('TemplateHelpersFactory', () => {
   beforeEach(() => {
     templateHelpers = TemplateHelpersFactory.createTemplateHelpers(page, translation, options);
     translationServiceStub = stub(TranslationService, 'saveTranslation');
+    existsSyncStub = stub(fs, 'existsSync');
+    copySyncStub = stub(fs, 'copySync');
   });
 
   afterEach(() => {
     translationServiceStub.restore();
+    existsSyncStub.restore();
+    copySyncStub.restore();
   });
 
   describe('currentUrl property', () => {
@@ -49,6 +57,22 @@ describe('TemplateHelpersFactory', () => {
 
       expect(templateHelpers.i18n('another.deep.path')).equal(otherwise);
       expect(translationServiceStub.callCount).equal(2);
+    });
+  });
+
+  describe('asset method', () => {
+    it('should work correct', () => {
+      const file = 'images/image.png';
+
+      existsSyncStub.returns(false);
+      expect(() => templateHelpers.asset(file)).to.throw(`File ${file} doesn't exist.`);
+
+      existsSyncStub.returns(true);
+      expect(templateHelpers.asset(file)).equal(`/info/about/${file}`);
+      expect(copySyncStub.calledWith(
+        `src/info/about/${file}`.replace(/\//g, path.sep),
+        `dist/info/about/${file}`.replace(/\//g, path.sep),
+      )).equal(true);
     });
   });
 });

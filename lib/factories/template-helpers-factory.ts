@@ -7,6 +7,7 @@ import * as path from 'path';
 import { getLanguageUrlPart } from '../utils/get-language-url-part';
 import { PropertyPath } from 'lodash';
 import { TranslationService } from '../services/translation-service';
+import { copySync, existsSync } from 'fs-extra';
 
 export class TemplateHelpersFactory {
   static createTemplateHelpers(page: string, translation: Translation, options: Options): TemplateHelpers {
@@ -38,8 +39,18 @@ export class TemplateHelpersFactory {
       languageLink(page: string): string {
         return '';
       },
-      asset(page: string): string {
-        return '';
+      asset(file: string): string {
+        const dir = path.parse(page).dir;
+        const srcPath = path.join(options.src.folder, dir, file);
+        const distPath = path.join(options.dist.folder, dir, file);
+
+        if (existsSync(srcPath)) {
+          copySync(srcPath, distPath);
+
+          return createAbsoluteUrl(path.join(dir, file), options);
+        } else {
+          throw new Error(`File ${file} doesn't exist.`);
+        }
       },
     };
   }
