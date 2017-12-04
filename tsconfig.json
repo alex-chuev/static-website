@@ -6,7 +6,7 @@
   },
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
+    "src/**/*.ts",
     "lib/cli/generate/template"
   ]
 }

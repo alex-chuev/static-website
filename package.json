@@ -31,16 +31,14 @@
     "@types/watch": "^1.0.0",
     "chai": "^4.1.2",
     "mocha": "^3.2.0",
-    "sinon": "^4.1.2",
-    "ts-mocha": "^1.0.3",
-    "ts-node": "^3.3.0"
+    "sinon": "^4.1.2"
   },
   "scripts": {
-    "test": "ts-mocha lib/**/*.spec.ts",
-    "test-watch": "npm run test -- --watch --watch-extensions ts",
+    "test": "mocha lib/**/*.spec.js",
+    "test-watch": "npm run test -- --watch --watch-extensions js",
     "build": "tsc",
     "watch": "tsc -w",
-    "cli": "ts-node lib/cli/app.ts",
+    "cli": "node lib/cli/app.js",
     "prepublish": "npm run build"
   },
   "bin": "lib/cli/app.js",
