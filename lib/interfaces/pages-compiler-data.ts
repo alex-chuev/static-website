@@ -5,5 +5,6 @@ import { Environment } from './environment';
 
 export type PagesCompilerData = Codes & TemplateHelpers & {
   language: Language,
+  otherLanguages: Language[],
   environment: Environment,
 };
