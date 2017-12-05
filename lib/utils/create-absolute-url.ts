@@ -6,5 +6,5 @@ const indexRegExp = /index\.html$/g;
 const slashRegExp = /\\/g;
 
 export function createAbsoluteUrl(url: Url, options: Options): Url {
-  return path.join(options.dist.url, url.replace(indexRegExp, '')).replace(slashRegExp, '/');
+  return options.dist.url + path.join(url.replace(indexRegExp, '')).replace(slashRegExp, '/');
 }
