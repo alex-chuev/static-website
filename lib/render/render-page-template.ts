@@ -13,6 +13,7 @@ export function renderPageTemplate(page: FilePath, language: Language, codes: Co
   const helpers = TemplateHelpersFactory.createTemplateHelpers(page, language, state.options);
   const compilerOptions: PagesCompilerData = {
     language,
+    environment: state.environment,
     ...codes,
     ...helpers,
   };

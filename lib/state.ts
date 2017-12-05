@@ -4,9 +4,11 @@ import { FilePath, Url } from './types';
 import { Options } from './interfaces/options';
 import { Compilers } from './interfaces/compilers';
 import { Language } from './entities/language';
+import { Environment } from './interfaces/environment';
 
 class Data {
   options: Options;
+  environment: Environment;
   pages: FilePath[];
   languages: Language[];
   compilers: Compilers;

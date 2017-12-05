@@ -24,7 +24,9 @@ export function serveCommand(command: any) {
 function rebuild(options: Options) {
   console.log('\x1b[32m\nRebuilding...\x1b[0m');
 
-  build(options);
+  build(options, {
+    production: false,
+  });
 
   // Just clean the folder once after first rebuild
   options.dist.clean = false;

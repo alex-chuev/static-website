@@ -10,8 +10,9 @@ import { renderScripts } from './render/render-scripts';
 import { renderStyles } from './render/render-styles';
 import { State } from './state';
 import { copyAssets } from './utils/copy-assets';
+import { Environment } from './interfaces/environment';
 
-export function build(options: Options) {
+export function build(options: Options, environment: Environment) {
   if (options.dist.clean) {
     emptyDirSync(options.dist.folder);
   }
@@ -24,6 +25,7 @@ export function build(options: Options) {
 
   const state = new State({
     options,
+    environment,
     pages,
     languages,
     compilers,
