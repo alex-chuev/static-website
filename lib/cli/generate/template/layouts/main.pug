@@ -8,6 +8,9 @@ html(lang=language)
 
     each code in css.inline
       style(type="text/css")=code
+
+    each language in otherLanguages
+      link(rel='alternate', hreflang=language.name, href=languageUrl(language.name))
   body
     block content
     block scripts
