@@ -37,11 +37,11 @@ export class TemplateHelpersFactory {
       languageUrl(language: string): string {
         return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), `${currentPage}.html`), options);
       },
-      link(relativeUrl: Url, text?: string, className?: string, activeClass?: string, attrs?: Attributes, language?: string): string {
-        const href = this.url(relativeUrl, language);
-        const attributes: Attributes = {href};
+      link(url: Url, text?: string, className?: string, activeClass?: string, attrs?: Attributes, languageName = language.name): string {
+        const href = this.url(url, languageName);
+        const attributes: Attributes = {href, hreflang: languageName};
 
-        if (activeClass && this.isActiveUrl(relativeUrl)) {
+        if (activeClass && this.isActiveUrl(url)) {
           className += ` ${activeClass}`;
         }
 
