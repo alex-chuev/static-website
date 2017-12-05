@@ -35,7 +35,7 @@
   },
   "scripts": {
     "test": "mocha lib/**/*.spec.js",
-    "test-watch": "npm run test -- --watch --watch-extensions js",
+    "test-watch": "npm run test -- --watch --watch-extensions .js",
     "build": "tsc",
     "watch": "tsc -w",
     "cli": "node lib/cli/app.js",

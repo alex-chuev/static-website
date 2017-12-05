@@ -10,15 +10,15 @@ import { TranslationService } from '../services/translation-service';
 import { copySync, existsSync } from 'fs-extra';
 import { HtmlFactory } from './html-factory';
 import { Attributes } from '../interfaces/attributes';
+import { Url } from '../types';
+import { ConsoleService } from '../services/console-service';
 
 export class TemplateHelpersFactory {
   static createTemplateHelpers(currentPage: string, translation: Translation, options: Options): TemplateHelpers {
-    const pageWithoutIndex = removeIndex(currentPage);
-    const urlWithoutLanguage = createAbsoluteUrl(removeIndex(`${currentPage}.html`), options);
+    const defaultLanguageUrl: Url = createAbsoluteUrl(`${currentPage}.html`, options);
 
     return {
-      currentUrl: createAbsoluteUrl(
-        path.join(translation.languageUrlPart, removeIndex(`${currentPage}.html`)), options),
+      currentUrl: createAbsoluteUrl(path.join(translation.languageUrlPart, `${currentPage}.html`), options),
       i18n(message: PropertyPath, otherwise = ''): string {
         if (_.has(translation, message)) {
           return _.get(translation, message);
@@ -28,20 +28,20 @@ export class TemplateHelpersFactory {
 
         return otherwise;
       },
-      url(relativeUrl: string, language = translation.language): string {
-        return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), removeIndex(relativeUrl)), options);
+      url(relativeUrl: Url, language = translation.language): string {
+        return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), relativeUrl), options);
       },
-      isActiveUrl(relativeUrl: string): boolean {
-        return urlWithoutLanguage === removeIndex(relativeUrl);
+      isActiveUrl(relativeUrl: Url): boolean {
+        return defaultLanguageUrl === createAbsoluteUrl(relativeUrl, options);
       },
       languageUrl(language: string): string {
-        return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), pageWithoutIndex), options);
+        return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), `${currentPage}.html`), options);
       },
-      link(page: string, text?: string, className?: string, activeClass?: string, attrs?: Attributes, language?: string): string {
-        const href = this.url(page, language);
+      link(relativeUrl: Url, text?: string, className?: string, activeClass?: string, attrs?: Attributes, language?: string): string {
+        const href = this.url(relativeUrl, language);
         const attributes: Attributes = {href};
 
-        if (activeClass && this.isActiveUrl(page)) {
+        if (activeClass && this.isActiveUrl(relativeUrl)) {
           className += ` ${activeClass}`;
         }
 
@@ -57,7 +57,7 @@ export class TemplateHelpersFactory {
         return this.link(createAbsoluteUrl(`${currentPage}.html`, options), text, className, activeClassName, attributes, language);
       },
       asset(file: string): string {
-        const dir = path.parse(currentPage).dir;
+        const dir = path.dirname(currentPage);
         const srcPath = path.join(options.src.folder, options.pages.folder, dir, file);
         const distPath = path.join(options.dist.folder, dir, file);
 
@@ -66,19 +66,15 @@ export class TemplateHelpersFactory {
             copySync(srcPath, distPath);
 
             if (options.verbose) {
-              console.info(`> ${path.relative(options.dist.folder, distPath)}`);
+              ConsoleService.dist(distPath, options);
             }
           }
 
           return createAbsoluteUrl(path.join(dir, file), options);
         } else {
-          throw new Error(`File ${file} doesn't exist.`);
+          ConsoleService.error(`File ${srcPath} doesn't exist.`, options);
         }
       },
     };
   }
-}
-
-function removeIndex(page: string): string {
-  return page.replace(/(index|index.html)$/, '');
 }

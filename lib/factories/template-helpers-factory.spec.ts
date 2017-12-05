@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { SinonStub, stub } from 'sinon';
 import { TranslationService } from '../services/translation-service';
 import * as fs from 'fs-extra';
-import * as path from 'path';
+import { ConsoleService } from '../services/console-service';
 
 let templateHelpers: TemplateHelpers;
 const page = 'info/about/index';
@@ -21,6 +21,8 @@ const options = defaultOptions;
 let translationServiceStub: SinonStub;
 let existsSyncStub: SinonStub;
 let copySyncStub: SinonStub;
+let consoleServiceErrorStub: SinonStub;
+let consoleServiceDistStub: SinonStub;
 
 describe('TemplateHelpersFactory', () => {
   beforeEach(() => {
@@ -28,12 +30,16 @@ describe('TemplateHelpersFactory', () => {
     translationServiceStub = stub(TranslationService, 'saveTranslation');
     existsSyncStub = stub(fs, 'existsSync');
     copySyncStub = stub(fs, 'copySync');
+    consoleServiceErrorStub = stub(ConsoleService, 'error');
+    consoleServiceDistStub = stub(ConsoleService, 'dist');
   });
 
   afterEach(() => {
     translationServiceStub.restore();
     existsSyncStub.restore();
     copySyncStub.restore();
+    consoleServiceErrorStub.restore();
+    consoleServiceDistStub.restore();
   });
 
   describe('currentUrl property', () => {
@@ -60,7 +66,7 @@ describe('TemplateHelpersFactory', () => {
 
   describe('isActiveUrl method', () => {
     it('should works correct', () => {
-      expect(templateHelpers.isActiveUrl('/info/about/index')).equal(true);
+      expect(templateHelpers.isActiveUrl('/info/about/')).equal(true);
       expect(templateHelpers.isActiveUrl('/info/about/index.html')).equal(true);
       expect(templateHelpers.isActiveUrl('/info/about/')).equal(true);
       expect(templateHelpers.isActiveUrl('/info/about')).equal(false);
@@ -99,14 +105,12 @@ describe('TemplateHelpersFactory', () => {
       const file = 'images/image.png';
 
       existsSyncStub.returns(false);
-      expect(() => templateHelpers.asset(file)).to.throw(`File ${file} doesn't exist.`);
+      expect(consoleServiceErrorStub.calledOnce).equal(false);
+      expect(templateHelpers.asset(file)).equal(undefined);
+      expect(consoleServiceErrorStub.calledOnce).equal(true);
 
       existsSyncStub.returns(true);
       expect(templateHelpers.asset(file)).equal(`/info/about/${file}`);
-      expect(copySyncStub.calledWith(
-        `src/info/about/${file}`.replace(/\//g, path.sep),
-        `dist/info/about/${file}`.replace(/\//g, path.sep),
-      )).equal(true);
     });
   });
 
