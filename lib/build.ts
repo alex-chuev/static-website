@@ -4,7 +4,7 @@ import { Options } from './interfaces/options';
 import { renderPages } from './render/render-pages';
 import { renderSitemap } from './render/render-sitemap';
 import { getPages } from './utils/get-pages';
-import { getTranslations } from './utils/get-translations';
+import { getLanguages } from './utils/get-languages';
 import { CompilersFactory } from './factories/compilers-factory';
 import { renderScripts } from './render/render-scripts';
 import { renderStyles } from './render/render-styles';
@@ -17,7 +17,7 @@ export function build(options: Options) {
   }
 
   const pages = getPages(options);
-  const translations = getTranslations(options);
+  const languages = getLanguages(options);
   const compilers = CompilersFactory.createCompilers(options);
   const css = renderStyles(compilers, options);
   const js = renderScripts(compilers, options);
@@ -25,13 +25,13 @@ export function build(options: Options) {
   const state = new State({
     options,
     pages,
-    translations,
+    languages,
     compilers,
     css,
     js,
   });
 
-  copyAssets(state);
+  copyAssets(options);
   renderPages(state);
 
   if (options.sitemap.generate) {

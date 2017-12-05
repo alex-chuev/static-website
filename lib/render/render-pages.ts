@@ -17,8 +17,8 @@ export function renderPages(state: State) {
       js.external.unshift(state.js);
     }
 
-    state.translations.forEach(
-      translation => renderPageTemplate(page, translation, {css, js}, state),
+    state.languages.forEach(
+      language => renderPageTemplate(page, language, {css, js}, state),
     );
   });
 }

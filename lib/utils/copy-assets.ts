@@ -1,11 +1,11 @@
-import { State } from '../state';
 import * as path from 'path';
 import { copySync, existsSync } from 'fs-extra';
+import { Options } from '../interfaces/options';
 
-export function copyAssets(state: State) {
-  const folder = path.join(state.options.src.folder, state.options.assets.folder);
+export function copyAssets(options: Options) {
+  const folder = path.join(options.src.folder, options.assets.folder);
 
   if (existsSync(folder)) {
-    copySync(folder, state.options.dist.folder);
+    copySync(folder, options.dist.folder);
   }
 }

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { TemplateHelpers } from '../interfaces/template-helpers';
-import { Translation } from '../interfaces/translation';
+import { Language } from '../entities/language';
 import { Options } from '../interfaces/options';
 import { createAbsoluteUrl } from '../utils/create-absolute-url';
 import * as path from 'path';
@@ -14,22 +14,22 @@ import { Url } from '../types';
 import { ConsoleService } from '../services/console-service';
 
 export class TemplateHelpersFactory {
-  static createTemplateHelpers(currentPage: string, translation: Translation, options: Options): TemplateHelpers {
+  static createTemplateHelpers(currentPage: string, language: Language, options: Options): TemplateHelpers {
     const defaultLanguageUrl: Url = createAbsoluteUrl(`${currentPage}.html`, options);
 
     return {
-      currentUrl: createAbsoluteUrl(path.join(translation.languageUrlPart, `${currentPage}.html`), options),
+      currentUrl: createAbsoluteUrl(path.join(language.url, `${currentPage}.html`), options),
       i18n(message: PropertyPath, otherwise = ''): string {
-        if (_.has(translation, message)) {
-          return _.get(translation, message);
+        if (_.has(language.translation, message)) {
+          return _.get(language.translation, message);
         } else if (options.translations.generate) {
-          TranslationService.saveTranslation(_.set(translation, message, otherwise), options);
+          TranslationService.saveTranslation(_.set(language.translation, message, otherwise), options);
         }
 
         return otherwise;
       },
-      url(relativeUrl: Url, language = translation.language): string {
-        return createAbsoluteUrl(path.join(getLanguageUrlPart(language, options), relativeUrl), options);
+      url(relativeUrl: Url, languageName = language.name): string {
+        return createAbsoluteUrl(path.join(getLanguageUrlPart(languageName, options), relativeUrl), options);
       },
       isActiveUrl(relativeUrl: Url): boolean {
         return defaultLanguageUrl === createAbsoluteUrl(relativeUrl, options);

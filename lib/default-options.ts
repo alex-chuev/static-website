@@ -9,7 +9,7 @@ export const defaultOptions: Options = {
     folder: 'assets',
   },
   translations: {
-    folder: 'translations',
+    folder: 'languages',
     defaultLanguage: 'en',
     extension: 'json',
     generate: true,

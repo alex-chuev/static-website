@@ -39,6 +39,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "cli": "node lib/cli/app.js",
+    "cli-serve": "npm run cli -- serve",
     "prepublish": "npm run build"
   },
   "bin": "lib/cli/app.js",

@@ -1,21 +1,23 @@
 import { TemplateHelpers } from '../interfaces/template-helpers';
 import { TemplateHelpersFactory } from './template-helpers-factory';
-import { Translation } from '../interfaces/translation';
 import { defaultOptions } from '../default-options';
 import { expect } from 'chai';
 import { SinonStub, stub } from 'sinon';
 import { TranslationService } from '../services/translation-service';
 import * as fs from 'fs-extra';
 import { ConsoleService } from '../services/console-service';
+import { Language } from '../entities/language';
 
 let templateHelpers: TemplateHelpers;
 const page = 'info/about/index';
-const translation: Translation = {
-  language: 'ru',
-  languageUrlPart: 'ru',
-  meta: {
-    title: 'title'
-  },
+const language: Language = {
+  name: 'ru',
+  url: 'ru',
+  translation: {
+    meta: {
+      title: 'title'
+    },
+  }
 };
 const options = defaultOptions;
 let translationServiceStub: SinonStub;
@@ -26,7 +28,7 @@ let consoleServiceDistStub: SinonStub;
 
 describe('TemplateHelpersFactory', () => {
   beforeEach(() => {
-    templateHelpers = TemplateHelpersFactory.createTemplateHelpers(page, translation, options);
+    templateHelpers = TemplateHelpersFactory.createTemplateHelpers(page, language, options);
     translationServiceStub = stub(TranslationService, 'saveTranslation');
     existsSyncStub = stub(fs, 'existsSync');
     copySyncStub = stub(fs, 'copySync');
