@@ -7,6 +7,7 @@ import { Options } from '../../interfaces/options';
 export function serveCommand(command: any) {
   const options = loadOptions(command);
   options.dist.folder = 'serve';
+  options.dist.clean = false;
 
   watchTree(options.src.folder, {
     interval: 0.15,
@@ -27,9 +28,6 @@ function rebuild(options: Options) {
   build(options, {
     production: false,
   });
-
-  // Just clean the folder once after first rebuild
-  options.dist.clean = false;
 
   console.log('\x1b[32mRebuilt successfully.\x1b[0m');
 }
