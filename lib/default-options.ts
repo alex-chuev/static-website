@@ -45,14 +45,4 @@ export const defaultOptions: Options = {
   sitemap: {
     generate: true,
   },
-  helpers: {
-    currentUrl: 'currentUrl',
-    i18n: 'i18n',
-    url: 'url',
-    isActiveUrl: 'isActiveUrl',
-    languageUrl: 'languageUrl',
-    link: 'link',
-    languageLink: 'languageLink',
-    asset: 'asset',
-  },
 };

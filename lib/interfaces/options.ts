@@ -1,5 +1,4 @@
 import { ScriptsCompilerOptions } from './scripts-compiler-options';
-import { OptionsHelpers } from './options-helpers';
 
 export interface Options {
   verbose: boolean,
@@ -42,5 +41,4 @@ export interface Options {
   sitemap: {
     generate: boolean,
   },
-  helpers: OptionsHelpers,
 }
