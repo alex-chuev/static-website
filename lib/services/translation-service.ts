@@ -1,18 +1,18 @@
 import * as path from 'path';
 
 import { outputJsonSync } from 'fs-extra';
-import { Translation } from '../interfaces/translation';
+import { Language } from '../entities/language';
 import { Options } from '../interfaces/options';
 
 export class TranslationService {
-  static saveTranslation(translation: Translation, options: Options) {
+  static saveTranslation(language: Language, options: Options) {
     const file = path.join(
       options.src.folder,
       options.translations.folder,
-      translation.language + '.' + options.translations.extension,
+      language.name + '.' + options.translations.extension,
     );
 
-    outputJsonSync(file, translation, {
+    outputJsonSync(file, language.translation, {
       spaces: 2,
     })
   }

@@ -22,7 +22,9 @@ export class TemplateHelpersFactory {
       if (_.has(language.translation, message)) {
         return _.get(language.translation, message);
       } else if (options.translations.generate) {
-        TranslationService.saveTranslation(_.set(language.translation, message, otherwise), options);
+        _.set(language.translation, message, otherwise);
+
+        TranslationService.saveTranslation(language, options);
       }
 
       return otherwise;
