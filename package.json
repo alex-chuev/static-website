@@ -39,8 +39,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "cli": "node lib/cli/app.js",
-    "cli-serve": "npm run cli -- serve",
-    "prepublish": "npm run build"
+    "cli-serve": "npm run cli -- serve"
   },
   "bin": "lib/cli/app.js",
   "author": "Alex Chuev <alex@chuev.com>",
