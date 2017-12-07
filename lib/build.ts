@@ -17,11 +17,11 @@ export function build(options: Options, environment: Environment) {
     emptyDirSync(options.dist.folder);
   }
 
-  const pages = getPages(options);
-  const languages = getLanguages(options);
   const compilers = CompilersFactory.createCompilers(options);
   const css = renderStyles(compilers, options);
   const js = renderScripts(compilers, options);
+  const pages = getPages(options);
+  const languages = getLanguages(options);
 
   const state = new State({
     options,
