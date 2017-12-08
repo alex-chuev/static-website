@@ -24,7 +24,7 @@ program
 program
   .command('serve')
   .description('to serve the project')
-  .action(command => serveCommand(command));
+  .action(command => serveCommand());
 
 program
   .command('init')
@@ -34,6 +34,6 @@ program
 program
   .command('build')
   .description('to build the project')
-  .action(command => buildCommand(command));
+  .action(command => buildCommand());
 
 program.parse(process.argv);

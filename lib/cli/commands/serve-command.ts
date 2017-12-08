@@ -4,8 +4,8 @@ import { build } from '../../build';
 import { loadOptions } from '../utils/load-options';
 import { Options } from '../../interfaces/options';
 
-export function serveCommand(command: any) {
-  const options = loadOptions(command);
+export function serveCommand() {
+  const options = loadOptions();
   options.dist.folder = 'serve';
   options.dist.clean = false;
 
