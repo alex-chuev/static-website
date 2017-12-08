@@ -12,8 +12,8 @@ export function renderCode(
   distExt: string,
   options: Options,
 ): Url {
-  const srcPath = path.join(srcFolder, `index.${srcExt}`);
-  const distPath = `index.${distExt}`;
+  const srcPath = path.join(srcFolder, `main.${srcExt}`);
+  const distPath = `main.${distExt}`;
 
   if (srcExists(srcPath, options)) {
     compiler.compileFile(srcPath, null, distPath);
