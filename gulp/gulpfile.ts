@@ -30,7 +30,7 @@ function assets() {
 }
 
 function watchAssets() {
-  return gulp.watch(path.join(options.src.folder, options.assets.folder, '**/*'))
+  return gulp.watch(path.join(options.src.folder, options.assets.folder, '**/*'), ['assets'])
     .on('change', function (change: any) {
       if (change.type === 'deleted') {
         const relative = path.relative(path.join(options.src.folder, options.assets.folder), change.path);
@@ -63,7 +63,7 @@ gulp.task('pages', function () {
 
       callback();
     }))
-    .pipe(data(function (page: Page) {
+    .pipe(data(function (page: Page, cb) {
       const language: Language = page.language;
       const environment: Environment = {
         production: false,
@@ -72,13 +72,33 @@ gulp.task('pages', function () {
       const codes = {css: {external: [], inline: []}, js: {external: [], inline: []}};
       const helpers = TemplateHelpersFactory.createTemplateHelpers(page.id, page.language, options);
 
-      return {
+      gulp.src(path.join(page.base, `${page.id}.${options.styles.extension}`))
+        .pipe(stylus())
+        .pipe(gulp.dest(options.dist.folder));
+
+      gulp.src(path.join(page.base, `${page.id}.inline.${options.styles.extension}`))
+        .pipe(stylus())
+        .pipe(gulp.dest(options.dist.folder))
+        .pipe(through.obj(function (file: File, enc, callback) {
+          console.log(file);
+          callback(null, file);
+        }));
+
+      gulp.src(path.join(page.base, `${page.id}.${options.styles.extension}`))
+        .pipe(stylus())
+        .pipe(gulp.dest(options.dist.folder))
+        .pipe(through.obj(function (file: File, enc, callback) {
+          console.log(file);
+          callback(null, file);
+        }));
+
+      cb(null, {
         language,
         environment,
         otherLanguages,
         ...codes,
         ...helpers,
-      };
+      });
     }))
     .pipe(pug())
     .pipe(through.obj(function (file: File, enc, callback) {

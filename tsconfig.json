@@ -3,7 +3,11 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "lib": [
+      "es5",
+      "es6"
+    ]
   },
   "exclude": [
     "node_modules",
