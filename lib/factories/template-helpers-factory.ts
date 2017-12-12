@@ -10,11 +10,11 @@ import { TranslationService } from '../services/translation-service';
 import { copySync, existsSync } from 'fs-extra';
 import { HtmlFactory } from './html-factory';
 import { Attributes } from '../interfaces/attributes';
-import { Url } from '../types';
+import { PageId, Url } from '../types';
 import { ConsoleService } from '../services/console-service';
 
 export class TemplateHelpersFactory {
-  static createTemplateHelpers(currentPage: string, language: Language, options: Options): TemplateHelpers {
+  static createTemplateHelpers(currentPage: PageId, language: Language, options: Options): TemplateHelpers {
     const defaultLanguageUrl: Url = createAbsoluteUrl(`${currentPage}.html`, options);
     const currentUrl = createAbsoluteUrl(path.join(language.url, `${currentPage}.html`), options);
 

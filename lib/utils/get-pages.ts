@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as glob from 'glob';
 
 import { Options } from '../interfaces/options';
-import { FilePath } from '../types';
+import { FilePath, PageId } from '../types';
 
 export function getPages(options: Options): FilePath[] {
   const pattern = `**/*.${options.pages.extension}`;
@@ -11,4 +11,11 @@ export function getPages(options: Options): FilePath[] {
   return glob.sync(pattern, {
     cwd: path.join(options.src.folder, options.pages.folder),
   }).map(page => page.replace(extensionRegexp, ''));
+}
+
+
+export function removePageExtension(originalPath: FilePath, options: Options): PageId {
+  const extensionRegexp = new RegExp(`\.${options.pages.extension}$`);
+
+  return originalPath.replace(extensionRegexp, '');
 }
