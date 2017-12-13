@@ -7,4 +7,3 @@ static-website.json
 *.ts
 tsconfig.json
 *.spec.js
-!*.js

@@ -4,4 +4,4 @@ dist/
 serve/
 src/
 static-website.json
-*.js
+build/

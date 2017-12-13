@@ -1,14 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": false,
+    "allowJs": true,
+    "outDir": "build",
     "lib": [
       "es5",
-      "es6"
+      "es6",
+      "dom"
     ]
   },
+  "include": [
+    "lib/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "src/**/*.ts",

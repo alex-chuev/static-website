@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as gulp from 'gulp';
 import * as cached from 'gulp-cached';
 import * as clean from 'gulp-clean';
-import * as sequence from 'gulp-sequence';
 import * as debug from 'gulp-debug';
 import * as sitemap from 'gulp-sitemap';
 import * as pug from 'gulp-pug';
@@ -12,13 +11,13 @@ import * as through from 'through2';
 import { removeSync } from 'fs-extra';
 import * as File from 'vinyl';
 
-import { loadOptions } from '../lib/cli/utils/load-options';
-import { getLanguages } from '../lib/utils/get-languages';
-import { TemplateHelpersFactory } from '../lib/factories/template-helpers-factory';
-import { Language } from '../lib/entities/language';
-import { Environment } from '../lib/interfaces/environment';
-import { PageId } from '../lib/types';
-import { removePageExtension } from '../lib/utils/get-pages';
+import { loadOptions } from '../cli/utils/load-options';
+import { getLanguages } from '../utils/get-languages';
+import { TemplateHelpersFactory } from '../factories/template-helpers-factory';
+import { Language } from '../entities/language';
+import { Environment } from '../interfaces/environment';
+import { PageId } from '../types';
+import { removePageExtension } from '../utils/get-pages';
 
 const options = loadOptions();
 
@@ -30,7 +29,7 @@ function assets() {
 }
 
 function watchAssets() {
-  return gulp.watch(path.join(options.src.folder, options.assets.folder, '**/*'), ['assets'])
+  return gulp.watch(path.join(options.src.folder, options.assets.folder, '**/*'), assets)
     .on('change', function (change: any) {
       if (change.type === 'deleted') {
         const relative = path.relative(path.join(options.src.folder, options.assets.folder), change.path);
@@ -72,25 +71,26 @@ gulp.task('pages', function () {
       const codes = {css: {external: [], inline: []}, js: {external: [], inline: []}};
       const helpers = TemplateHelpersFactory.createTemplateHelpers(page.id, page.language, options);
 
-      gulp.src(path.join(page.base, `${page.id}.${options.styles.extension}`))
+      console.log(path.join(page.base, `${page.id}?(.inline).${options.styles.extension}`));
+      gulp.src(path.join(page.base, `${page.id}?(.inline).${options.styles.extension}`))
         .pipe(stylus())
         .pipe(gulp.dest(options.dist.folder));
+      //
+      // gulp.src(path.join(page.base, `${page.id}.inline.${options.styles.extension}`))
+      //   .pipe(stylus())
+      //   .pipe(gulp.dest(options.dist.folder))
+      //   .pipe(through.obj(function (file: File, enc, callback) {
+      //     console.log(file);
+      //     callback(null, file);
+      //   }));
 
-      gulp.src(path.join(page.base, `${page.id}.inline.${options.styles.extension}`))
-        .pipe(stylus())
-        .pipe(gulp.dest(options.dist.folder))
-        .pipe(through.obj(function (file: File, enc, callback) {
-          console.log(file);
-          callback(null, file);
-        }));
-
-      gulp.src(path.join(page.base, `${page.id}.${options.styles.extension}`))
-        .pipe(stylus())
-        .pipe(gulp.dest(options.dist.folder))
-        .pipe(through.obj(function (file: File, enc, callback) {
-          console.log(file);
-          callback(null, file);
-        }));
+      // gulp.src(path.join(page.base, `${page.id}.${options.styles.extension}`))
+      //   .pipe(stylus())
+      //   .pipe(gulp.dest(options.dist.folder))
+      //   .pipe(through.obj(function (file: File, enc, callback) {
+      //     console.log(file);
+      //     callback(null, file);
+      //   }));
 
       cb(null, {
         language,
@@ -123,5 +123,5 @@ gulp.task('sitemap', function () {
     .pipe(debug({title: 'Sitemap:'}));
 });
 
-gulp.task('build', sequence('clean', 'assets', 'pages', 'sitemap'));
-gulp.task('default', sequence('build', 'watch'));
+gulp.task('build', gulp.series('clean', 'assets', 'pages', 'sitemap'));
+gulp.task('default', gulp.series('build', 'watch'));

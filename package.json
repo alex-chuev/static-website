@@ -3,18 +3,17 @@
   "version": "1.1.6",
   "description": "Create a static multilingual website",
   "repository": "https://github.com/alex-chuev/static-website.git",
-  "main": "lib/cli/app.js",
+  "main": "build/cli/app.js",
   "dependencies": {
     "commander": "^2.12.2",
     "fs-extra": "^4.0.2",
     "glob": "^7.1.2",
-    "gulp": "^3.9.1",
+    "gulp": "github:gulpjs/gulp#4.0",
     "gulp-cached": "^1.1.1",
     "gulp-clean": "^0.3.2",
     "gulp-data": "^1.2.1",
     "gulp-debug": "^3.1.0",
     "gulp-pug": "^3.3.0",
-    "gulp-sequence": "^0.4.6",
     "gulp-sitemap": "^4.2.0",
     "gulp-stylus": "^2.6.0",
     "inquirer": "^4.0.1",
@@ -47,15 +46,16 @@
     "sinon": "^4.1.2"
   },
   "scripts": {
-    "test": "mocha lib/**/*.spec.js",
+    "test": "mocha build/**/*.spec.js",
     "test-watch": "npm run test -- --watch --watch-extensions .js",
     "build": "tsc",
     "watch": "tsc -w",
-    "cli": "node lib/cli/app.js",
+    "cli": "node build/cli/app.js",
     "cli-serve": "npm run cli -- serve",
-    "gulp": "gulp --gulpfile gulp/gulpfile.js --cwd ."
+    "gulp": "gulp --gulpfile build/gulp/gulpfile.js --cwd .",
+    "gulp-watch": "watch \"npm run gulp\" build"
   },
-  "bin": "lib/cli/app.js",
+  "bin": "build/cli/app.js",
   "author": "Alex Chuev <alex@chuev.com>",
   "license": "ISC",
   "keywords": [
