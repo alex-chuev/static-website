@@ -40,5 +40,6 @@ export interface Options {
   },
   sitemap: {
     generate: boolean,
+    domain: string,
   },
 }

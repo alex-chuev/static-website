@@ -1,4 +1,4 @@
-import { Codes } from './codes';
+import { Codes } from '../entities/codes';
 import { TemplateHelpers } from './template-helpers';
 import { Language } from '../entities/language';
 import { Environment } from './environment';

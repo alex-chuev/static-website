@@ -44,5 +44,6 @@ export const defaultOptions: Options = {
   },
   sitemap: {
     generate: true,
+    domain: '',
   },
 };

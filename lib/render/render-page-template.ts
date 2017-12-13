@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import { Language } from '../entities/language';
 import { PagesCompilerData } from '../interfaces/pages-compiler-data';
-import { Codes } from '../interfaces/codes';
+import { Codes } from '../entities/codes';
 import { State } from '../state';
 import { FilePath } from '../types';
 import { TemplateHelpersFactory } from '../factories/template-helpers-factory';

@@ -1,4 +1,4 @@
-import { Code } from '../interfaces/code';
+import { Code } from '../entities/code';
 import { renderPageCode } from './render-page-code';
 import { State } from '../state';
 import { FilePath } from '../types';

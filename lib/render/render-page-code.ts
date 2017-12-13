@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { Code } from '../interfaces/code';
+import { Code } from '../entities/code';
 import { createAbsoluteUrl } from '../utils/create-absolute-url';
 import { Compiler } from '../compilers/compiler';
 import { State } from '../state';
