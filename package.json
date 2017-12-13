@@ -15,6 +15,7 @@
     "gulp-data": "^1.2.1",
     "gulp-debug": "^3.1.0",
     "gulp-pug": "^3.3.0",
+    "gulp-remember": "^1.0.0",
     "gulp-sitemap": "^4.2.0",
     "gulp-stylus": "^2.6.0",
     "gulp-typescript": "^3.2.3",

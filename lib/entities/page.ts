@@ -6,7 +6,11 @@ import { Codes } from './codes';
 import * as path from 'path';
 import { replaceExtension } from 'gulp-util';
 
-export class Page {
+export interface Page extends File {
+  data: PageData;
+}
+
+export class PageData {
   id: PageId;
   language: Language;
   languages: Language[];

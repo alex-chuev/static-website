@@ -10,7 +10,7 @@ import { obj as through2 } from 'through2';
 import * as File from 'vinyl';
 import * as merge2 from 'merge2';
 
-import { Page } from '../entities/page';
+import { Page, PageData } from '../entities/page';
 import { Language } from '../entities/language';
 import { Environment } from '../interfaces/environment';
 import { Options } from '../interfaces/options';
@@ -23,7 +23,8 @@ const environment: Environment = {
 function fetchPages(options: Options): ReadWriteStream {
   return gulp.src(path.join(options.src.folder, options.pages.folder, `**/*.${options.pages.extension}`))
     .pipe(through2(function (file: File, enc: string, callback) {
-      callback(null, new Page(file, options));
+      file.data = new PageData(file, options);
+      callback(null, file);
     }));
 }
 
@@ -45,6 +46,37 @@ function fetchScripts(globs: string | string[]): ReadWriteStream {
     allowEmpty: true,
   }).pipe(typescript());
 }
+
+// function fetchCode(options: Options): ReadWriteStream {
+// }
+//
+// function flattenLanguages(options: Options): ReadWriteStream {
+//   return through2(function (page: Page, enc: string, callback) {
+//     page.languages.forEach(language => {
+//       page.language = language;
+//
+//       this.push(page);
+//     });
+//
+//     callback();
+//   });
+// }
+//
+// function exposeExternalCode(options: Options): ReadWriteStream {
+// }
+//
+// export function compilePages(options: Options) {
+//   fetchPages(options)
+//     .pipe(fetchLanguages(options))
+//     .pipe(fetchCode(options))
+//     .pipe(flattenLanguages(options))
+//     .pipe(data({}))
+//     .pipe(pug())
+//     .pipe(gulp.dest(options.dist.folder))
+//     .pipe(exposeExternalCode(options))
+//     .pipe(gulp.dest(options.dist.folder))
+//   ;
+// }
 
 export function compilePages(options: Options) {
   return merge2(
