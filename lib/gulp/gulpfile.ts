@@ -24,4 +24,4 @@ gulp.task('scripts', compileScripts.bind(null, options));
 gulp.task('sitemap', generateSitemap.bind(null, options));
 
 gulp.task('build', gulp.series('clean', 'assets', 'styles'/*, 'scripts'*/, 'pages', 'sitemap'));
-gulp.task('default', gulp.parallel('build'/*, 'watch'*/));
+gulp.task('default', gulp.series('build'/*, 'watch'*/));
