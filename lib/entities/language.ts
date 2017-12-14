@@ -1,6 +1,5 @@
 import { Translation } from '../interfaces/translation';
 import { Url } from '../types';
-import { getLanguageUrlPart } from '../utils/get-language-url-part';
 import { Options } from '../interfaces/options';
 import * as File from 'vinyl';
 
@@ -10,8 +9,12 @@ export class Language {
   translation: Translation;
 
   constructor(file: File, options: Options) {
-    this.name = file.basename;
-    this.url = getLanguageUrlPart(this.name, options);
+    this.name = file.stem;
+    this.url = Language.getUrl(this.name, options);
     this.translation = JSON.parse(file.contents.toString());
+  }
+
+  static getUrl(language: string, options: Options): string {
+    return language === options.translations.defaultLanguage ? '' : language;
   }
 }

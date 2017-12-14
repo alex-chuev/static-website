@@ -1,6 +1,5 @@
 import { watchTree } from 'watch';
 import * as ls from 'live-server';
-import { build } from '../../build';
 import { loadOptions } from '../utils/load-options';
 import { Options } from '../../interfaces/options';
 

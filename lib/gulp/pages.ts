@@ -9,102 +9,113 @@ import { obj as combine } from 'stream-combiner2';
 import { obj as through2 } from 'through2';
 import * as File from 'vinyl';
 import * as merge2 from 'merge2';
+import * as stream from 'stream';
+
+const s = new stream.Readable({
+  objectMode: true,
+});
 
 import { Page, PageData } from '../entities/page';
 import { Language } from '../entities/language';
 import { Environment } from '../interfaces/environment';
 import { Options } from '../interfaces/options';
 import ReadWriteStream = NodeJS.ReadWriteStream;
+import WritableStream = NodeJS.WritableStream;
 
 const environment: Environment = {
   production: false,
 };
 
-function fetchPages(options: Options): ReadWriteStream {
-  return gulp.src(path.join(options.src.folder, options.pages.folder, `**/*.${options.pages.extension}`))
-    .pipe(through2(function (file: File, enc: string, callback) {
-      file.data = new PageData(file, options);
-      callback(null, file);
-    }));
+function fetchLanguages(options: Options): Promise<Language[]> {
+  return new Promise(resolve => {
+    const languages: Language[] = [];
+
+    gulp.src(path.join(options.src.folder, options.translations.folder, `*.${options.translations.extension}`))
+      .on('data', file => languages.push(new Language(file, options)))
+      .on('end', () => resolve(languages))
+  });
 }
 
-function fetchLanguages(options: Options): ReadWriteStream {
-  return gulp.src(path.join(options.src.folder, options.translations.folder, `*.${options.translations.extension}`))
-    .pipe(through2(function (file: File, enc: string, callback) {
-      callback(null, new Language(file, options));
-    }));
+function createPages(options: Options): ReadWriteStream {
+  const promise = fetchLanguages(options);
+
+  return through2(function (file: File, enc: string, callback) {
+    promise.then(languages => {
+      languages.forEach(language => {
+        const page = file.clone();
+        page.data = new PageData(page, language, languages, options);
+        this.push(page);
+      });
+
+      callback();
+    });
+  });
 }
 
-function fetchStyles(globs: string | string[]): ReadWriteStream {
-  return gulp.src(globs, {
-    allowEmpty: true,
-  }).pipe(stylus());
+function fetchStyle(glob: string, target: File[]): Promise<File> {
+  return fetchCode(glob, stylus(), target);
 }
 
-function fetchScripts(globs: string | string[]): ReadWriteStream {
-  return gulp.src(globs, {
-    allowEmpty: true,
-  }).pipe(typescript());
+function fetchScript(glob: string, target: File[]): Promise<File> {
+  return fetchCode(glob, typescript(), target);
 }
 
-// function fetchCode(options: Options): ReadWriteStream {
-// }
-//
-// function flattenLanguages(options: Options): ReadWriteStream {
-//   return through2(function (page: Page, enc: string, callback) {
-//     page.languages.forEach(language => {
-//       page.language = language;
-//
-//       this.push(page);
-//     });
-//
-//     callback();
-//   });
-// }
-//
-// function exposeExternalCode(options: Options): ReadWriteStream {
-// }
-//
-// export function compilePages(options: Options) {
-//   fetchPages(options)
-//     .pipe(fetchLanguages(options))
-//     .pipe(fetchCode(options))
-//     .pipe(flattenLanguages(options))
-//     .pipe(data({}))
-//     .pipe(pug())
-//     .pipe(gulp.dest(options.dist.folder))
-//     .pipe(exposeExternalCode(options))
-//     .pipe(gulp.dest(options.dist.folder))
-//   ;
-// }
+function fetchCode(glob: string, writableStream: WritableStream, target: File[]): Promise<File> {
+  return new Promise(resolve => {
+    gulp.src(glob, {allowEmpty: true})
+      .pipe(writableStream)
+      .on('data', file => target.push(file))
+      .on('end', () => resolve());
+  });
+}
+
+function fetchPageCode(options: Options): ReadWriteStream {
+  const externalStylesPath = path.join(options.src.folder, options.styles.folder, `main.${options.styles.extension}`);
+  const inlineStylesPath = path.join(options.src.folder, options.styles.folder, `main.inline.${options.styles.extension}`);
+  const externalScriptsPath = path.join(options.src.folder, options.scripts.folder, `main.${options.scripts.extension}`);
+  const inlineScriptsPath = path.join(options.src.folder, options.scripts.folder, `main.inline.${options.scripts.extension}`);
+
+  return through2(function (page: Page, enc: string, callback) {
+    Promise.all([
+      fetchStyle(externalStylesPath, page.data.css.external),
+      fetchStyle(inlineStylesPath, page.data.css.inline),
+      fetchScript(externalScriptsPath, page.data.js.external),
+      fetchScript(inlineScriptsPath, page.data.js.inline),
+      fetchStyle(page.data.externalStylesPath, page.data.css.external),
+      fetchStyle(page.data.inlineStylesPath, page.data.css.inline),
+      fetchScript(page.data.externalScriptsPath, page.data.js.external),
+      fetchScript(page.data.inlineScriptsPath, page.data.js.inline),
+    ]).then(() => callback(null, page));
+  });
+}
+
+function addPageLanguagePath(options: Options): ReadWriteStream {
+  const pagesSrc = path.join(options.src.folder, options.pages.folder);
+
+  return through2(function (page: Page, enc: string, callback) {
+    page.path = path.resolve(path.join(pagesSrc, page.data.language.url, path.relative(pagesSrc, page.path)));
+    callback(null, page);
+  });
+}
+
+function exposeAssets(options: Options): ReadWriteStream {
+  return through2(function (page: Page, enc: string, callback) {
+    page.data.css.external.forEach(file => this.push(file));
+    page.data.js.external.forEach(file => this.push(file));
+
+    callback();
+  });
+}
 
 export function compilePages(options: Options) {
-  return merge2(
-    [
-      fetchStyles(path.join(options.src.folder, options.styles.folder, `main.${options.styles.extension}`)),
-      fetchStyles(path.join(options.src.folder, options.styles.folder, `main.inline.${options.styles.extension}`)),
-      fetchScripts(path.join(options.src.folder, options.scripts.folder, `main.${options.scripts.extension}`)),
-      fetchScripts(path.join(options.src.folder, options.scripts.folder, `main.inline.${options.scripts.extension}`)),
-      fetchLanguages(options),
-    ],
-    fetchPages(options)
-      .pipe(through2(function (page: Page, enc, callback) {
-        merge2([
-          fetchStyles(page.externalStylesPath),
-          fetchStyles(page.inlineStylesPath),
-          fetchScripts(page.externalScriptsPath),
-          fetchScripts(page.inlineScriptsPath),
-        ]);
-
-        this.push(page.file);
-
-        callback();
-      }))
-      .pipe(data(function (page: Page, cb) {
-        cb(null, {/* create page data */});
-      }))
-      .pipe(pug())
-      .pipe(gulp.dest(options.dist.folder))
-      .pipe(debug({title: 'Pages:'}))
-  );
+  return gulp.src(path.join(options.src.folder, options.pages.folder, `**/*.${options.pages.extension}`))
+    .pipe(createPages(options))
+    .pipe(fetchPageCode(options))
+    .pipe(pug())
+    .pipe(addPageLanguagePath(options))
+    .pipe(gulp.dest(options.dist.folder))
+    .pipe(debug({title: 'Pages:'}))
+    .pipe(exposeAssets(options))
+    .pipe(gulp.dest(options.dist.folder))
+    .pipe(debug({title: 'Page assets:'}));
 }
