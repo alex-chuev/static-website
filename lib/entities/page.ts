@@ -1,4 +1,4 @@
-import { FilePath, string } from '../types';
+import { FilePath } from '../types';
 import { Language } from './language';
 import * as File from 'vinyl';
 import { Options } from '../interfaces/options';

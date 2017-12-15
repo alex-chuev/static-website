@@ -21,16 +21,12 @@
     "gulp-typescript": "^3.2.3",
     "gulp-util": "^3.0.8",
     "inquirer": "^4.0.1",
-    "live-server": "^1.2.0",
     "lodash": "^4.17.4",
-    "merge2": "^1.2.0",
     "pug": "^2.0.0-rc.4",
-    "stream-combiner2": "^1.1.1",
     "stylus": "^0.54.5",
     "through2": "^2.0.3",
     "typescript": "^2.6.2",
-    "uglify-js": "^3.2.1",
-    "watch": "^1.0.2"
+    "uglify-js": "^3.2.1"
   },
   "devDependencies": {
     "@types/chai": "^4.0.6",
@@ -40,14 +36,12 @@
     "@types/gulp": "^4.0.5",
     "@types/inquirer": "0.0.35",
     "@types/lodash": "^4.14.87",
-    "@types/merge2": "^1.1.4",
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.0.54",
     "@types/pug": "^2.0.4",
     "@types/sinon": "^4.0.0",
     "@types/stylus": "^0.48.28",
     "@types/uglify-js": "^2.6.29",
-    "@types/watch": "^1.0.0",
     "chai": "^4.1.2",
     "mocha": "^3.2.0",
     "sinon": "^4.1.2"
@@ -59,8 +53,7 @@
     "watch": "tsc -w",
     "cli": "node build/cli/app.js",
     "cli-serve": "npm run cli -- serve",
-    "gulp": "gulp --gulpfile build/gulp/gulpfile.js --cwd .",
-    "gulp-watch": "watch \"npm run gulp\" build"
+    "gulp": "gulp --gulpfile build/gulp/gulpfile.js --cwd ."
   },
   "bin": "build/cli/app.js",
   "author": "Alex Chuev <alex@chuev.com>",

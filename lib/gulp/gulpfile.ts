@@ -8,6 +8,8 @@ import { cleanDist } from './clean';
 import { assets } from './assets';
 import { compilePages } from './pages';
 import { generateSitemap } from './sitemap';
+import { Options } from '../interfaces/options';
+import { Environment } from '../interfaces/environment';
 
 const options = loadOptions();
 
@@ -18,3 +20,9 @@ gulp.task('sitemap', generateSitemap.bind(null, options));
 
 gulp.task('build', gulp.series('clean', 'assets', 'pages', 'sitemap'));
 gulp.task('default', gulp.series('build'));
+
+export const build = (options: Options, environment: Environment) => {
+};
+
+export const serve = (options: Options, environment: Environment) => {
+};

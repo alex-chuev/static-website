@@ -5,10 +5,8 @@ import * as data from 'gulp-data';
 import * as debug from 'gulp-debug';
 import * as pug from 'gulp-pug';
 import * as typescript from 'gulp-typescript';
-import { obj as combine } from 'stream-combiner2';
 import { obj as through2 } from 'through2';
 import * as File from 'vinyl';
-import * as merge2 from 'merge2';
 import * as stream from 'stream';
 
 const s = new stream.Readable({
@@ -107,7 +105,7 @@ function exposeAssets(options: Options): ReadWriteStream {
   });
 }
 
-export function compilePages(options: Options) {
+export function compilePages(options: Options): NodeJS.ReadWriteStream {
   return gulp.src(path.join(options.src.folder, options.pages.folder, `**/*.${options.pages.extension}`))
     .pipe(createPages(options))
     .pipe(fetchPageCode(options))
