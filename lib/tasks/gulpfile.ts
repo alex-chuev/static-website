@@ -31,6 +31,5 @@ export const serve = (options: Options, environment: Environment) => {
     server: options.dist.folder,
   });
 
-  gulp.watch(options.src.folder)
-    .on('change', () => gulp.series('build')(browserSync.reload));
+  gulp.watch(options.dist.folder).on('change', browserSync.reload);
 };
