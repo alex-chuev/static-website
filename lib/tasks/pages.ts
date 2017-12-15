@@ -6,80 +6,88 @@ import * as debug from 'gulp-debug';
 import * as pug from 'gulp-pug';
 import * as typescript from 'gulp-typescript';
 import { obj as through2 } from 'through2';
-import { File } from 'gulp-util';
-
-import { Page, PageData } from '../entities/page';
+import { File, replaceExtension } from 'gulp-util';
+import { Page, PageData, PageDataProps, PageDependencies } from '../entities/page';
 import { Language } from '../entities/language';
-import { Environment } from '../interfaces/environment';
 import { Options } from '../interfaces/options';
 import ReadWriteStream = NodeJS.ReadWriteStream;
-import WritableStream = NodeJS.WritableStream;
+import toArray = require('stream-to-array');
+import { PageCode } from '../entities/page-code';
 
-const environment: Environment = {
-  production: false,
-};
-
-function fetchLanguages(options: Options): Promise<Language[]> {
-  return new Promise(resolve => {
-    const languages: Language[] = [];
-
-    gulp.src(path.join(options.src.folder, options.translations.folder, `*.${options.translations.extension}`))
-      .on('data', file => languages.push(new Language(file, options)))
-      .on('end', () => resolve(languages))
-  });
+function fetchPageFiles(options: Options): ReadWriteStream {
+  return gulp.src(path.join(options.src.folder, options.pages.folder, `**/*.${options.pages.extension}`))
+    .pipe(debug({title: 'Found pages:', showFiles: false}));
 }
 
-function createPages(options: Options): ReadWriteStream {
-  const promise = fetchLanguages(options);
+function fetchLanguages(options: Options): ReadWriteStream {
+  return gulp.src(path.join(options.src.folder, options.translations.folder, `*.${options.translations.extension}`))
+    .pipe(debug({title: 'Found languages:', showFiles: false}))
+    .pipe(through2(function (file: File, enc: string, callback) {
+      callback(null, new Language(file, options));
+    }));
+}
 
-  return through2(function (file: File, enc: string, callback) {
-    promise.then(languages => {
-      languages.forEach(language => {
-        const page = file.clone();
-        page.data = new PageData(page, language, languages, options);
-        this.push(page);
-      });
+function createPage(props: PageDataProps): Page {
+  const page = props.file.clone();
+  page.data = new PageData(props);
+  return page as Page;
+}
 
-      callback();
+function fetchCode(stylesPath: string, scriptsPath: string, options: Options): Promise<PageCode> {
+  return Promise.all([
+    toArray(compileStyle(path.join(stylesPath, `.${options.styles.extension}`))),
+    toArray(compileStyle(path.join(stylesPath, `.inline.${options.styles.extension}`))),
+    toArray(compileScript(path.join(scriptsPath, `.${options.scripts.extension}`))),
+    toArray(compileScript(path.join(scriptsPath, `.inline.${options.scripts.extension}`))),
+  ]).then(data => new PageCode(data));
+}
+
+function createDependenciesLoader(options: Options): (file: File) => Promise<PageDependencies> {
+  const stylesPath = path.join(options.src.folder, options.styles.folder, 'main');
+  const scriptsPath = path.join(options.src.folder, options.scripts.folder, 'main');
+
+  const languagesPromise = toArray(fetchLanguages(options));
+  const globalCodePromise = fetchCode(stylesPath, scriptsPath, options);
+
+  return (file: File): Promise<PageDependencies> => {
+    const pageCodeBasePath = replaceExtension(file.relative, '');
+    const pageCodePromise = fetchCode(pageCodeBasePath, pageCodeBasePath, options);
+
+    return Promise.all([
+      languagesPromise,
+      globalCodePromise,
+      pageCodePromise,
+    ]).then(data => {
+      const [languages, globalCode, code] = data;
+      return {languages, globalCode, code};
     });
-  });
+  }
 }
 
-function fetchStyle(glob: string, target: File[]): Promise<File> {
-  return fetchCode(glob, stylus(), target);
+function fetchPages(options: Options): ReadWriteStream {
+  const loadDependencies = createDependenciesLoader(options);
+
+  return fetchPageFiles(options)
+    .pipe(through2(function (file: File, enc: string, callback) {
+      loadDependencies(file).then((dependencies: PageDependencies) => {
+        dependencies.languages.forEach(language => this.push(createPage({file, language, dependencies})));
+
+        callback();
+      });
+    }));
 }
 
-function fetchScript(glob: string, target: File[]): Promise<File> {
-  return fetchCode(glob, typescript(), target);
+function compileStyle(glob: string): ReadWriteStream {
+  return compileCode(glob, stylus());
 }
 
-function fetchCode(glob: string, writableStream: WritableStream, target: File[]): Promise<File> {
-  return new Promise(resolve => {
-    gulp.src(glob, {allowEmpty: true})
-      .pipe(writableStream)
-      .on('data', file => target.push(file))
-      .on('end', () => resolve());
-  });
+function compileScript(glob: string): ReadWriteStream {
+  return compileCode(glob, typescript());
 }
 
-function fetchPageCode(options: Options): ReadWriteStream {
-  const externalStylesPath = path.join(options.src.folder, options.styles.folder, `main.${options.styles.extension}`);
-  const inlineStylesPath = path.join(options.src.folder, options.styles.folder, `main.inline.${options.styles.extension}`);
-  const externalScriptsPath = path.join(options.src.folder, options.scripts.folder, `main.${options.scripts.extension}`);
-  const inlineScriptsPath = path.join(options.src.folder, options.scripts.folder, `main.inline.${options.scripts.extension}`);
-
-  return through2(function (page: Page, enc: string, callback) {
-    Promise.all([
-      fetchStyle(externalStylesPath, page.data.css.external),
-      fetchStyle(inlineStylesPath, page.data.css.inline),
-      fetchScript(externalScriptsPath, page.data.js.external),
-      fetchScript(inlineScriptsPath, page.data.js.inline),
-      fetchStyle(page.data.externalStylesPath, page.data.css.external),
-      fetchStyle(page.data.inlineStylesPath, page.data.css.inline),
-      fetchScript(page.data.externalScriptsPath, page.data.js.external),
-      fetchScript(page.data.inlineScriptsPath, page.data.js.inline),
-    ]).then(() => callback(null, page));
-  });
+function compileCode(glob: string, writableStream: ReadWriteStream): ReadWriteStream {
+  return gulp.src(glob, {allowEmpty: true})
+    .pipe(writableStream);
 }
 
 function addPageLanguagePath(options: Options): ReadWriteStream {
@@ -100,10 +108,11 @@ function exposeAssets(options: Options): ReadWriteStream {
   });
 }
 
-export function compilePages(options: Options): NodeJS.ReadWriteStream {
-  return gulp.src(path.join(options.src.folder, options.pages.folder, `**/*.${options.pages.extension}`))
-    .pipe(createPages(options))
-    .pipe(fetchPageCode(options))
+export function compilePages(options: Options): ReadWriteStream {
+  return fetchPages(options)
+    .pipe(through2((page: Page, e, cb) => {
+      cb(null, page)
+    }))
     .pipe(pug())
     .pipe(addPageLanguagePath(options))
     .pipe(gulp.dest(options.dist.folder))

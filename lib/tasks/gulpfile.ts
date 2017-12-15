@@ -23,7 +23,7 @@ gulp.task('sitemap', generateSitemap.bind(null, options));
 gulp.task('build', gulp.series('clean', 'assets', 'pages', 'sitemap'));
 gulp.task('default', gulp.series('build'));
 
-export const build = (options: Options, environment: Environment) => {
+export const compile = (options: Options, environment: Environment) => {
 };
 
 export const serve = (options: Options, environment: Environment) => {
