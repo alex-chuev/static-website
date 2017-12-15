@@ -5,3 +5,4 @@ serve/
 src/
 static-website.json
 build/
+npm-debug.log

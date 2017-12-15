@@ -1,6 +1,7 @@
 import * as gulp from 'gulp';
 import * as clean from 'gulp-clean';
 import * as sitemap from 'gulp-sitemap';
+import { create } from 'browser-sync';
 
 import { loadOptions } from '../cli/utils/load-options';
 
@@ -12,6 +13,7 @@ import { Options } from '../interfaces/options';
 import { Environment } from '../interfaces/environment';
 
 const options = loadOptions();
+const browserSync = create();
 
 gulp.task('clean', cleanDist.bind(null, options));
 gulp.task('assets', assets.bind(null, options));
@@ -25,4 +27,10 @@ export const build = (options: Options, environment: Environment) => {
 };
 
 export const serve = (options: Options, environment: Environment) => {
+  browserSync.init({
+    server: options.dist.folder,
+  });
+
+  gulp.watch(options.src.folder)
+    .on('change', () => gulp.series('build')(browserSync.reload));
 };
