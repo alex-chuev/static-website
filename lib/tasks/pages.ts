@@ -7,11 +7,6 @@ import * as pug from 'gulp-pug';
 import * as typescript from 'gulp-typescript';
 import { obj as through2 } from 'through2';
 import * as File from 'vinyl';
-import * as stream from 'stream';
-
-const s = new stream.Readable({
-  objectMode: true,
-});
 
 import { Page, PageData } from '../entities/page';
 import { Language } from '../entities/language';
