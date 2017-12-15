@@ -1,7 +1,7 @@
 import { Translation } from '../interfaces/translation';
 import { Url } from '../types';
 import { Options } from '../interfaces/options';
-import * as File from 'vinyl';
+import { File } from 'gulp-util';
 
 export class Language {
   name: string;

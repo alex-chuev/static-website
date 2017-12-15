@@ -1,6 +1,6 @@
 import { FilePath } from '../types';
 import { Language } from './language';
-import * as File from 'vinyl';
+import { File } from 'gulp-util';
 import { Options } from '../interfaces/options';
 import * as path from 'path';
 import { replaceExtension } from 'gulp-util';
