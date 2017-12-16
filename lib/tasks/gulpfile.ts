@@ -1,32 +1,29 @@
 import * as gulp from 'gulp';
-import * as clean from 'gulp-clean';
-import * as sitemap from 'gulp-sitemap';
 import { create } from 'browser-sync';
-
 import { loadOptions } from '../cli/utils/load-options';
-
 import { cleanDist } from './clean';
-import { assets } from './assets';
-import { compilePages } from './pages';
+import { copyAssets } from './assets';
 import { generateSitemap } from './sitemap';
 import { Options } from '../interfaces/options';
 import { Environment } from '../interfaces/environment';
+import { compilePages } from './pages';
 
 const options = loadOptions();
-const browserSync = create();
 
 gulp.task('clean', cleanDist.bind(null, options));
-gulp.task('assets', assets.bind(null, options));
 gulp.task('pages', compilePages.bind(null, options));
 gulp.task('sitemap', generateSitemap.bind(null, options));
+gulp.task('assets', copyAssets.bind(null, options));
 
-gulp.task('build', gulp.series('clean', 'assets', 'pages', 'sitemap'));
-gulp.task('default', gulp.series('build'));
+gulp.task('compile', gulp.series('clean', 'pages', 'sitemap', 'assets'));
+gulp.task('default', gulp.series('compile'));
 
 export const compile = (options: Options, environment: Environment) => {
 };
 
 export const serve = (options: Options, environment: Environment) => {
+  const browserSync = create();
+
   browserSync.init({
     server: options.dist.folder,
   });

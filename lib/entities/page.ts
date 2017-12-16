@@ -26,6 +26,7 @@ export class PageData {
   js = new Code();
   language: Language;
   otherLanguages: Language[];
+  assets: File[] = [];
 
   constructor(
     props: PageDataProps,
