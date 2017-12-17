@@ -37,6 +37,7 @@ export class PageData {
   asset: (relativeUrl: Url) => Url;
   url: (relativeUrl: Url, languageName: string) => Url;
   languageUrl: (languageName: string) => Url;
+  isActive: (relativeUrl: Url) => boolean;
 
   constructor(props: PageDataProps) {
     this.language = props.language;
@@ -47,7 +48,9 @@ export class PageData {
     this.currentUrl = url(`${this.id}.html`, this.language.url, props.options);
     this.currentDefaultLanguageUrl = createAbsoluteUrl(`${this.id}.html`, props.options);
     this.url = (relativeUrl: Url, languageName = props.language.name) => url(relativeUrl, languageName, props.options);
-    this.languageUrl = (languageName: Url) => url(`${this.id}.html`, languageName, props.options);
+    this.languageUrl = (languageName: string) => url(`${this.id}.html`, languageName, props.options);
+    this.isActive = (relativeUrl: Url) =>
+      this.currentDefaultLanguageUrl === createAbsoluteUrl(relativeUrl, props.options);
   }
 }
 
