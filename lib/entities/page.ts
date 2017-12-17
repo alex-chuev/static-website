@@ -3,6 +3,9 @@ import { File } from 'gulp-util';
 import { replaceExtension } from 'gulp-util';
 import { Code } from './code';
 import { PageCode } from './page-code';
+import { Url } from '../types';
+import { createAbsoluteUrl } from '../factories/template-helpers-factory';
+import { Options } from '../interfaces/options';
 
 export interface Page extends File {
   data: PageData;
@@ -14,9 +17,10 @@ export class PageDependencies {
   globalCode: PageCode;
 }
 
-export class PageDataProps {
+export interface PageDataProps {
   file: File;
   language: Language;
+  options: Options;
   dependencies: PageDependencies;
 }
 
@@ -27,6 +31,7 @@ export class PageData {
   language: Language;
   otherLanguages: Language[];
   assets: File[] = [];
+  asset: (filename: string) => Url;
 
   constructor(
     props: PageDataProps,
@@ -34,5 +39,6 @@ export class PageData {
     this.language = props.language;
     this.id = replaceExtension(props.file.relative, '');
     this.otherLanguages = props.dependencies.languages.filter(language => language !== props.language);
+    this.asset = (filename: string) => createAbsoluteUrl(filename, props.options);
   }
 }

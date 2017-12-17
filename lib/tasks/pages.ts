@@ -37,7 +37,12 @@ function fetchPages(options: Options): ReadWriteStream {
   return fetchPageFiles(options)
     .pipe(through2(function (file: File, enc: string, callback) {
       loadDependencies(file).then((dependencies: PageDependencies) => {
-        dependencies.languages.forEach(language => this.push(createPage({file, language, dependencies})));
+        dependencies.languages.forEach(language => this.push(createPage({
+          file,
+          language,
+          options,
+          dependencies,
+        })));
 
         callback();
       });
