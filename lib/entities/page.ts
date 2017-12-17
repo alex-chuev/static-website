@@ -6,7 +6,8 @@ import { PageCode } from './page-code';
 import { Url } from '../types';
 import { createAbsoluteUrl } from '../factories/template-helpers-factory';
 import { Options } from '../interfaces/options';
-import * as path from 'path';
+import { PropertyPath } from 'lodash';
+import { assetHelper, i18nHelper, urlHelper } from '../helpers/template-helpers';
 
 export interface Page extends File {
   data: PageData;
@@ -38,26 +39,20 @@ export class PageData {
   url: (relativeUrl: Url, languageName: string) => Url;
   languageUrl: (languageName: string) => Url;
   isActive: (relativeUrl: Url) => boolean;
+  i18n: (message: PropertyPath, otherwise: string) => string;
 
   constructor(props: PageDataProps) {
     this.language = props.language;
     this.id = replaceExtension(props.file.relative, '');
     this.otherLanguages = props.dependencies.languages.filter(language => language !== props.language);
 
-    this.asset = (relativeUrl: Url) => asset(relativeUrl, props.options);
-    this.currentUrl = url(`${this.id}.html`, this.language.url, props.options);
+    this.asset = (relativeUrl: Url) => assetHelper(relativeUrl, props.options);
+    this.currentUrl = urlHelper(`${this.id}.html`, this.language.url, props.options);
     this.currentDefaultLanguageUrl = createAbsoluteUrl(`${this.id}.html`, props.options);
-    this.url = (relativeUrl: Url, languageName = props.language.name) => url(relativeUrl, languageName, props.options);
-    this.languageUrl = (languageName: string) => url(`${this.id}.html`, languageName, props.options);
+    this.url = (relativeUrl: Url, languageName = props.language.name) => urlHelper(relativeUrl, languageName, props.options);
+    this.languageUrl = (languageName: string) => urlHelper(`${this.id}.html`, languageName, props.options);
     this.isActive = (relativeUrl: Url) =>
       this.currentDefaultLanguageUrl === createAbsoluteUrl(relativeUrl, props.options);
+    this.i18n = (message: PropertyPath, otherwise = ''): string => i18nHelper(message, otherwise, props);
   }
-}
-
-function asset(relativeUrl: Url, options: Options): Url {
-  return createAbsoluteUrl(relativeUrl, options);
-}
-
-function url(relativeUrl: Url, languageName: string, options: Options): Url {
-  return createAbsoluteUrl(path.join(Language.getUrl(languageName, options), relativeUrl), options);
 }
