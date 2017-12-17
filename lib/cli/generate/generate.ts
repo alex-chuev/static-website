@@ -48,7 +48,7 @@ function createConfigFile(data: Data, options: Options) {
 }
 
 function copyTemplate(target: FilePath) {
-  copySync(path.join(__dirname, 'template'), target);
+  copySync(path.join(__dirname, '../../../templates/basic'), target);
 }
 
 function createLanguageFiles(answers: CreateAnswers, target: FilePath, options: Options) {
