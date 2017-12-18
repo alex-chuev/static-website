@@ -1,15 +1,21 @@
 import * as path from 'path';
-import * as gulp from 'gulp';
+import * as vfs from 'vinyl-fs';
 import * as sitemap from 'gulp-sitemap';
 import * as debug from 'gulp-debug';
 
 import { Config } from '../interfaces/config';
+import * as stream from 'stream';
+import { PageFile } from '../entities/page';
 
 export function generateSitemap(options: Config) {
-  return gulp.src(path.join(options.dist.folder, '**/*.html'), {read: false})
+  return vfs.src(path.join(options.dist.folder, '**/*.html'), {read: false})
     .pipe(sitemap({
       siteUrl: options.sitemap.domain + options.dist.url,
     }))
-    .pipe(gulp.dest(options.dist.folder))
+    .pipe(vfs.dest(options.dist.folder))
     .pipe(debug({title: 'Sitemap:'}));
+}
+
+export function promiseGenerateSitemap(config: Config, pages: PageFile[]) {
+  const str = new stream.PassThrough();
 }

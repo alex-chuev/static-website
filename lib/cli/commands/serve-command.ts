@@ -1,8 +1,7 @@
-import { loadOptions } from '../utils/load-options';
-import { serve } from '../../tasks/gulpfile';
+import { build } from '../../tasks/build';
 
 export function serveCommand() {
-  serve(loadOptions(), {
+  build({
     production: false,
   });
 }

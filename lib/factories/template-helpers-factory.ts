@@ -9,10 +9,10 @@ import { copySync, existsSync } from 'fs-extra';
 import { HtmlFactory } from './html-factory';
 import { Attributes } from '../interfaces/attributes';
 import { Url } from '../types';
-import { Page } from '../entities/page';
+import { PageFile } from '../entities/page';
 
 export class TemplateHelpersFactory {
-  static createTemplateHelpers(page: Page, options: Config): TemplateHelpers {
+  static createTemplateHelpers(page: PageFile, options: Config): TemplateHelpers {
     const defaultLanguageUrl: Url = createAbsoluteUrl(`${page.data.id}.html`, options);
     const currentUrl = createAbsoluteUrl(path.join(page.data.language.url, `${page.data.id}.html`), options);
 

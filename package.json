@@ -8,18 +8,14 @@
     "browser-sync": "^2.18.13",
     "commander": "^2.12.2",
     "fs-extra": "^4.0.2",
-    "glob": "^7.1.2",
-    "gulp": "github:gulpjs/gulp#4.0",
     "gulp-cached": "^1.1.1",
     "gulp-clean": "^0.3.2",
-    "gulp-data": "^1.2.1",
     "gulp-debug": "^3.1.0",
     "gulp-pug": "^3.3.0",
     "gulp-remember": "^1.0.0",
     "gulp-sitemap": "^4.2.0",
     "gulp-stylus": "^2.6.0",
     "gulp-typescript": "^3.2.3",
-    "gulp-util": "^3.0.8",
     "inquirer": "^4.0.1",
     "lodash": "^4.17.4",
     "map-stream": "0.0.7",
@@ -28,15 +24,13 @@
     "stylus": "^0.54.5",
     "through2": "^2.0.3",
     "typescript": "^2.6.2",
-    "uglify-js": "^3.2.1"
+    "vinyl": "^2.1.0",
+    "vinyl-fs": "^3.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.6",
     "@types/commander": "^2.12.2",
     "@types/fs-extra": "^4.0.5",
-    "@types/glob": "^5.0.33",
-    "@types/gulp": "^4.0.5",
-    "@types/gulp-util": "^3.0.34",
     "@types/inquirer": "0.0.35",
     "@types/lodash": "^4.14.87",
     "@types/mocha": "^2.2.44",
@@ -47,6 +41,7 @@
     "@types/stylus": "^0.48.28",
     "@types/uglify-js": "^2.6.29",
     "@types/vinyl": "^2.0.1",
+    "@types/vinyl-fs": "^2.4.8",
     "chai": "^4.1.2",
     "mocha": "^3.2.0",
     "sinon": "^4.1.2"
@@ -58,7 +53,7 @@
     "watch": "tsc -w --inlineSourceMap true",
     "cli": "node build/cli/app.js",
     "cli-serve": "npm run cli -- serve",
-    "gulp": "gulp --gulpfile build/tasks/gulpfile.js --cwd ."
+    "cli-build": "npm run cli -- build"
   },
   "bin": "build/cli/app.js",
   "author": "Alex Chuev <alex@chuev.com>",

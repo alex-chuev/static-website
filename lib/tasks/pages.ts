@@ -1,71 +1,62 @@
 import * as path from 'path';
-import * as gulp from 'gulp';
 import * as vfs from 'vinyl-fs';
 import * as debug from 'gulp-debug';
 import * as pug from 'gulp-pug';
 import { obj as through2 } from 'through2';
-import { File } from 'gulp-util';
-import { Page, PageData, PageDataProps } from '../entities/page';
+import * as File from 'vinyl';
+import { PageFile, PageData, PageDataProps } from '../entities/page';
 import { Config } from '../interfaces/config';
 import ReadWriteStream = NodeJS.ReadWriteStream;
 import { promiseLanguages } from './languages';
-import { createConfig } from '../cli/utils/load-options';
 import { Code } from '../entities/code';
 import { Language } from '../entities/language';
 import toArray = require('stream-to-array');
 import { generateSitemap } from './sitemap';
-import { getCode } from './code';
+import { promiseCode } from './code';
+import * as stream from 'stream';
+import { Environment } from '../interfaces/environment';
 
 const compilePageTemplates = pug();
-const savePages = (page: Page) => vfs.dest(path.join(page.data.options.dist.folder, page.data.language.url));
+const savePages = (page: PageFile) => vfs.dest(path.join(page.data.options.dist.folder, page.data.language.url));
 
-export function compilePages(options: Config): ReadWriteStream {
-  return vfs.src('static-website.json')
-    .pipe(createConfig)
-    .pipe(createPages)
-    .pipe(compilePageTemplates)
-    .pipe(savePages)
-    .pipe(generateSitemap)
-    .pipe(debug({title: 'Pages:'}));
+export function promisePages(config: Config, environment: Environment, languages: Language[]): Promise<PageFile[]> {
+  return toArray(fetchPages(config, environment, languages));
 }
 
-function getPageFiles(options: Config): ReadWriteStream {
-  return gulp.src(path.join(options.src.folder, options.pages.folder, `**/*.${options.pages.extension}`))
+function fetchPages(config: Config, environment: Environment, languages: Language[]): ReadWriteStream {
+  const globalCodePromise = promiseCode(config);
+
+  return getPageFiles(config)
+    .pipe(through2(function (file, enc, callback) {
+      createPages(config, file, globalCodePromise, languages)
+        .then(pages => {
+          pages.forEach(page => this.push(page));
+          callback();
+        })
+    }));
+}
+
+async function createPages(config: Config, file: File, globalCodePromise: Promise<Code>, languages: Language[]): Promise<PageFile[]> {
+  const globalCode = await globalCodePromise;
+  const pageCode = await promiseCode(config, file);
+  const pages: PageFile[] = [];
+
+  languages.forEach(async language => {
+    const pageLanguageCode = await promiseCode(config, file, language);
+    const code = globalCode.append(pageCode).append(pageLanguageCode);
+    pages.push(createPage({config, languages, file, language, code}));
+  });
+
+  return pages;
+}
+
+function getPageFiles(config: Config): ReadWriteStream {
+  return vfs.src(path.join(config.src.folder, config.pages.folder, `**/*.${config.pages.extension}`))
     .pipe(debug({title: 'Found pages:', showFiles: false}));
 }
 
-function promisePageFiles(config: Config): Promise<File[]> {
-  return toArray(getPageFiles(config));
-}
-
-function createPage(props: PageDataProps): Page {
+function createPage(props: PageDataProps): PageFile {
   const page = props.file.clone();
   page.data = new PageData(props);
-  return page as Page;
+  return page as PageFile;
 }
-
-const createPages = through2(async (config: Config, enc, cb) => {
-  const files: File[] = await promisePageFiles(config);
-  const languages: Language[] = await promiseLanguages(config);
-  const globalCode: Code = await getCode(config);
-
-  files.forEach(async file => {
-    const pageCode: Code = await getCode(config, file);
-
-    languages.forEach(async language => {
-      const pageLanguageCode: Code = await getCode(config, file, language);
-
-      const code = globalCode.append(pageCode).append(pageLanguageCode);
-
-      this.push(createPage({
-        config,
-        languages,
-        file,
-        language,
-        code,
-      }));
-    });
-
-    cb();
-  });
-});

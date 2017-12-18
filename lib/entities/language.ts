@@ -1,14 +1,14 @@
 import { Translation } from '../interfaces/translation';
 import { Url } from '../types';
 import { Config } from '../interfaces/config';
-import { File } from 'gulp-util';
+import * as File from 'vinyl';
 
 export class Language {
   name: string;
   url: Url;
   translation: Translation;
 
-  constructor(file: File, options: Config) {
+  constructor(public file: File, options: Config) {
     this.name = file.stem;
     this.url = Language.getUrl(this.name, options);
     this.translation = JSON.parse(file.contents.toString());

@@ -1,8 +1,7 @@
-import { loadOptions } from '../utils/load-options';
-import { compile } from '../../tasks/gulpfile';
+import { build } from '../../tasks/build';
 
 export function buildCommand() {
-  compile(loadOptions(), {
+  build({
     production: true,
   });
 }

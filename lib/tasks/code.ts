@@ -1,4 +1,4 @@
-import * as gulp from 'gulp';
+import * as vfs from 'vinyl-fs';
 import ReadWriteStream = NodeJS.ReadWriteStream;
 import { Config } from '../interfaces/config';
 import { Code } from '../entities/code';
@@ -6,12 +6,13 @@ import toArray = require('stream-to-array');
 import { compileStyle } from './styles';
 import * as path from 'path';
 import { compileScript } from './scripts';
-import { File, replaceExtension } from 'gulp-util';
 import { Language } from '../entities/language';
 import { createAbsoluteUrl } from '../factories/template-helpers-factory';
+import * as File from 'vinyl';
+import { removeExtension } from '../helpers/path-helpers';
 
 export function compileCode(glob: string, writableStream: ReadWriteStream): ReadWriteStream {
-  return gulp.src(glob, {allowEmpty: true})
+  return vfs.src(glob, {allowEmpty: true})
     .pipe(writableStream);
 }
 
@@ -35,16 +36,20 @@ export function fetchCode(basePath: string, config: Config): Promise<Code> {
   }));
 }
 
-export function getCode(config: Config, file?: File, language?: Language): Promise<Code> {
+export function promiseCode(config: Config, file?: File, language?: Language): Promise<Code> {
   let basePath: string;
 
   if (language) {
-    basePath = path.join(replaceExtension(file.relative, ''), language.name);
+    basePath = path.join(removeExtension(file.relative), language.name);
   } else if (file) {
-    basePath = replaceExtension(file.relative, '');
+    basePath = removeExtension(file.relative);
   } else {
     basePath = config.src.folder + 'main';
   }
 
   return fetchCode(basePath, config);
+}
+
+export function promiseGlobalCode(config: Config): Promise<Code> {
+  return promiseCode(config);
 }
