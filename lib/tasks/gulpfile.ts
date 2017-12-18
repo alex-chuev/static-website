@@ -4,7 +4,7 @@ import { loadOptions } from '../cli/utils/load-options';
 import { cleanDist } from './clean';
 import { copyAssets } from './assets';
 import { generateSitemap } from './sitemap';
-import { Options } from '../interfaces/options';
+import { Config } from '../interfaces/config';
 import { Environment } from '../interfaces/environment';
 import { compilePages } from './pages';
 
@@ -18,10 +18,10 @@ gulp.task('assets', copyAssets.bind(null, options));
 gulp.task('compile', gulp.series('clean', 'pages', 'sitemap', 'assets'));
 gulp.task('default', gulp.series('compile'));
 
-export const compile = (options: Options, environment: Environment) => {
+export const compile = (options: Config, environment: Environment) => {
 };
 
-export const serve = (options: Options, environment: Environment) => {
+export const serve = (options: Config, environment: Environment) => {
   const browserSync = create();
 
   browserSync.init({

@@ -3,9 +3,9 @@ import * as gulp from 'gulp';
 import * as sitemap from 'gulp-sitemap';
 import * as debug from 'gulp-debug';
 
-import { Options } from '../interfaces/options';
+import { Config } from '../interfaces/config';
 
-export function generateSitemap(options: Options) {
+export function generateSitemap(options: Config) {
   return gulp.src(path.join(options.dist.folder, '**/*.html'), {read: false})
     .pipe(sitemap({
       siteUrl: options.sitemap.domain + options.dist.url,

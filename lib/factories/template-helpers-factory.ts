@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { TemplateHelpers } from '../interfaces/template-helpers';
 import { Language } from '../entities/language';
-import { Options } from '../interfaces/options';
+import { Config } from '../interfaces/config';
 import * as path from 'path';
 import { PropertyPath } from 'lodash';
 import { TranslationService } from '../services/translation-service';
@@ -12,7 +12,7 @@ import { Url } from '../types';
 import { Page } from '../entities/page';
 
 export class TemplateHelpersFactory {
-  static createTemplateHelpers(page: Page, options: Options): TemplateHelpers {
+  static createTemplateHelpers(page: Page, options: Config): TemplateHelpers {
     const defaultLanguageUrl: Url = createAbsoluteUrl(`${page.data.id}.html`, options);
     const currentUrl = createAbsoluteUrl(path.join(page.data.language.url, `${page.data.id}.html`), options);
 
@@ -93,7 +93,7 @@ const indexRegExp = /index\.html$/g;
 const slashRegExp = /\\/g;
 const headSlashRegExp = /^\//g;
 
-export function createAbsoluteUrl(relativeUrl: Url, options: Options): Url {
+export function createAbsoluteUrl(relativeUrl: Url, options: Config): Url {
   return options.dist.url + relativeUrl
     .replace(indexRegExp, '')
     .replace(slashRegExp, '/')

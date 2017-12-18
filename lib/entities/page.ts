@@ -2,10 +2,9 @@ import { Language } from './language';
 import { File } from 'gulp-util';
 import { replaceExtension } from 'gulp-util';
 import { Code } from './code';
-import { PageCode } from './page-code';
 import { Url } from '../types';
 import { createAbsoluteUrl } from '../factories/template-helpers-factory';
-import { Options } from '../interfaces/options';
+import { Config } from '../interfaces/config';
 import { PropertyPath } from 'lodash';
 import { assetHelper, i18nHelper, urlHelper } from '../helpers/template-helpers';
 
@@ -13,24 +12,18 @@ export interface Page extends File {
   data: PageData;
 }
 
-export class PageDependencies {
-  languages: Language[];
-  code: PageCode;
-  globalCode: PageCode;
-}
-
 export interface PageDataProps {
+  config: Config;
+  languages: Language[];
   file: File;
   language: Language;
-  options: Options;
-  dependencies: PageDependencies;
+  code: Code;
 }
 
 export class PageData {
   id: string;
-  css = new Code();
-  js = new Code();
   language: Language;
+  options: Config;
   otherLanguages: Language[];
   currentUrl: Url;
   currentDefaultLanguageUrl: Url;
@@ -43,16 +36,18 @@ export class PageData {
 
   constructor(props: PageDataProps) {
     this.language = props.language;
+    this.options = props.config;
     this.id = replaceExtension(props.file.relative, '');
-    this.otherLanguages = props.dependencies.languages.filter(language => language !== props.language);
+    this.otherLanguages = props.languages.filter(language => language !== props.language);
 
-    this.asset = (relativeUrl: Url) => assetHelper(relativeUrl, props.options);
-    this.currentUrl = urlHelper(`${this.id}.html`, this.language.url, props.options);
-    this.currentDefaultLanguageUrl = createAbsoluteUrl(`${this.id}.html`, props.options);
-    this.url = (relativeUrl: Url, languageName = props.language.name) => urlHelper(relativeUrl, languageName, props.options);
-    this.languageUrl = (languageName: string) => urlHelper(`${this.id}.html`, languageName, props.options);
+    this.asset = (relativeUrl: Url) => assetHelper(relativeUrl, props.config);
+    this.currentUrl = urlHelper(`${this.id}.html`, this.language.url, props.config);
+    this.currentDefaultLanguageUrl = createAbsoluteUrl(`${this.id}.html`, props.config);
+    this.url = (relativeUrl: Url, languageName = props.language.name) => urlHelper(
+      relativeUrl, languageName, props.config);
+    this.languageUrl = (languageName: string) => urlHelper(`${this.id}.html`, languageName, props.config);
     this.isActive = (relativeUrl: Url) =>
-      this.currentDefaultLanguageUrl === createAbsoluteUrl(relativeUrl, props.options);
+      this.currentDefaultLanguageUrl === createAbsoluteUrl(relativeUrl, props.config);
     this.i18n = (message: PropertyPath, otherwise = ''): string => i18nHelper(message, otherwise, props);
   }
 }

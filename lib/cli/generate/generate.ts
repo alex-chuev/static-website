@@ -1,8 +1,8 @@
 import * as path from 'path';
-import { defaultOptions } from '../../default-options';
+import { defaultConfig } from '../../default-options';
 import { copySync, outputJsonSync } from 'fs-extra';
 import * as _ from 'lodash';
-import { Options } from '../../interfaces/options';
+import { Config } from '../../interfaces/config';
 import { parseLanguages } from '../utils/parse-languages';
 import { FilePath } from '../../types';
 import { CreateAnswers } from '../commands/answers/create';
@@ -21,7 +21,7 @@ export function generate(answers: CreateAnswers, data: Data) {
   createLanguageFiles(answers, target, options);
 }
 
-function getOptions(answers: CreateAnswers, data: Data): Options {
+function getOptions(answers: CreateAnswers, data: Data): Config {
   return _.defaultsDeep({
     translations: {
       defaultLanguage: answers.defaultLanguage,
@@ -38,10 +38,10 @@ function getOptions(answers: CreateAnswers, data: Data): Options {
     src: {
       folder: data.src,
     },
-  }, defaultOptions);
+  }, defaultConfig);
 }
 
-function createConfigFile(data: Data, options: Options) {
+function createConfigFile(data: Data, options: Config) {
   outputJsonSync(path.join(data.dir, 'static-website.json'), options, {
     spaces: 2,
   });
@@ -51,7 +51,7 @@ function copyTemplate(target: FilePath) {
   copySync(path.join(__dirname, '../../../templates/basic'), target);
 }
 
-function createLanguageFiles(answers: CreateAnswers, target: FilePath, options: Options) {
+function createLanguageFiles(answers: CreateAnswers, target: FilePath, options: Config) {
   parseLanguages(answers.languages).forEach(language => {
     const languagePath = path.join(target, options.translations.folder, `${language}.json`);
 

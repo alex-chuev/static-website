@@ -1,6 +1,6 @@
 import { ScriptsCompilerOptions } from './scripts-compiler-options';
 
-export interface Options {
+export interface Config {
   verbose: boolean,
   src: {
     folder: string,
@@ -19,11 +19,9 @@ export interface Options {
     extension: string,
   },
   styles: {
-    folder: string,
     extension: string,
   },
   scripts: {
-    folder: string,
     extension: string,
     options: ScriptsCompilerOptions,
   },

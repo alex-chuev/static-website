@@ -1,9 +1,9 @@
 import * as gulp from 'gulp';
 import * as clean from 'gulp-clean';
 
-import { Options } from '../interfaces/options';
+import { Config } from '../interfaces/config';
 
-export function cleanDist(options: Options) {
+export function cleanDist(options: Config) {
   return gulp.src(options.dist.folder, {
     read: false,
     allowEmpty: true,

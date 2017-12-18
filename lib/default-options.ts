@@ -1,6 +1,6 @@
-import { Options } from './interfaces/options';
+import { Config } from './interfaces/config';
 
-export const defaultOptions: Options = {
+export const defaultConfig: Config = {
   verbose: true,
   src: {
     folder: 'src',
@@ -19,11 +19,9 @@ export const defaultOptions: Options = {
     extension: 'pug',
   },
   styles: {
-    folder: 'styles',
     extension: 'styl',
   },
   scripts: {
-    folder: 'scripts',
     extension: 'ts',
     options: {
       compilerOptions: {

@@ -1,6 +1,6 @@
 import { Translation } from '../interfaces/translation';
 import { Url } from '../types';
-import { Options } from '../interfaces/options';
+import { Config } from '../interfaces/config';
 import { File } from 'gulp-util';
 
 export class Language {
@@ -8,13 +8,13 @@ export class Language {
   url: Url;
   translation: Translation;
 
-  constructor(file: File, options: Options) {
+  constructor(file: File, options: Config) {
     this.name = file.stem;
     this.url = Language.getUrl(this.name, options);
     this.translation = JSON.parse(file.contents.toString());
   }
 
-  static getUrl(language: string, options: Options): string {
+  static getUrl(language: string, options: Config): string {
     return language === options.translations.defaultLanguage ? '' : language;
   }
 }

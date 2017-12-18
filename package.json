@@ -22,6 +22,7 @@
     "gulp-util": "^3.0.8",
     "inquirer": "^4.0.1",
     "lodash": "^4.17.4",
+    "map-stream": "0.0.7",
     "pug": "^2.0.0-rc.4",
     "stream-to-array": "^2.3.0",
     "stylus": "^0.54.5",
