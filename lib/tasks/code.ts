@@ -1,4 +1,4 @@
-import * as vfs from 'vinyl-fs';
+import * as gulp from 'gulp';
 import ReadWriteStream = NodeJS.ReadWriteStream;
 import { Config } from '../interfaces/config';
 import { Code } from '../entities/code';
@@ -12,18 +12,19 @@ import * as File from 'vinyl';
 import { removeExtension } from '../helpers/path-helpers';
 
 export function compileCode(glob: string, writableStream: ReadWriteStream): ReadWriteStream {
-  return vfs.src(glob, {allowEmpty: true})
-    .pipe(writableStream);
+  return gulp.src(glob, {allowEmpty: true})
+    .pipe(writableStream)
+    .pipe(gulp.dest('dist'));
 }
 
 export function fetchCode(basePath: string, config: Config): Promise<Code> {
   const code = new Code();
 
   return Promise.all([
-    toArray(compileStyle(path.join(basePath, `.inline.${config.styles.extension}`))),
-    toArray(compileStyle(path.join(basePath, `.${config.styles.extension}`))),
-    toArray(compileScript(path.join(basePath, `.inline.${config.scripts.extension}`))),
-    toArray(compileScript(path.join(basePath, `.${config.scripts.extension}`))),
+    toArray(compileStyle(basePath + `.inline.${config.styles.extension}`)),
+    toArray(compileStyle(basePath + `.${config.styles.extension}`)),
+    toArray(compileScript(basePath + `.inline.${config.scripts.extension}`)),
+    toArray(compileScript(basePath + `.${config.scripts.extension}`)),
   ]).then(data => code.append({
     css: {
       inline: data[0].map((file: File) => file.contents.toString()),
@@ -40,16 +41,12 @@ export function promiseCode(config: Config, file?: File, language?: Language): P
   let basePath: string;
 
   if (language) {
-    basePath = path.join(removeExtension(file.relative), language.name);
+    basePath = removeExtension(file.path) + '.' + language.name;
   } else if (file) {
-    basePath = removeExtension(file.relative);
+    basePath = removeExtension(file.path);
   } else {
-    basePath = config.src.folder + 'main';
+    basePath = path.join(config.src.folder, 'main');
   }
 
   return fetchCode(basePath, config);
-}
-
-export function promiseGlobalCode(config: Config): Promise<Code> {
-  return promiseCode(config);
 }
