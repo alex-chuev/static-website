@@ -8,6 +8,7 @@
     "browser-sync": "^2.18.13",
     "commander": "^2.12.2",
     "fs-extra": "^4.0.2",
+    "gulp": "^3.9.1",
     "gulp-cached": "^1.1.1",
     "gulp-clean": "^0.3.2",
     "gulp-debug": "^3.1.0",

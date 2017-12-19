@@ -1,11 +1,11 @@
 import { Language } from './language';
 import * as File from 'vinyl';
-import { Code } from './code';
+import { Code, CodeType } from './code';
 import { Url } from '../types';
 import { createAbsoluteUrl } from '../factories/template-helpers-factory';
 import { Config } from '../interfaces/config';
 import { PropertyPath } from 'lodash';
-import { assetHelper, i18nHelper, urlHelper } from '../helpers/template-helpers';
+import { assetHelper, urlHelper } from '../helpers/template-helpers';
 import { removeExtension } from '../helpers/path-helpers';
 
 export interface PageFile extends File {
@@ -23,6 +23,8 @@ export interface PageDataProps {
 export class PageData {
   id: string;
   language: Language;
+  css: CodeType;
+  js: CodeType;
   options: Config;
   otherLanguages: Language[];
   currentUrl: Url;
@@ -39,6 +41,8 @@ export class PageData {
     this.options = props.config;
     this.id = removeExtension(props.file.relative,);
     this.otherLanguages = props.languages.filter(language => language !== props.language);
+    this.css = props.code.css;
+    this.js = props.code.js;
 
     this.asset = (relativeUrl: Url) => assetHelper(relativeUrl, props.config);
     this.currentUrl = urlHelper(`${this.id}.html`, this.language.url, props.config);
@@ -48,6 +52,6 @@ export class PageData {
     this.languageUrl = (languageName: string) => urlHelper(`${this.id}.html`, languageName, props.config);
     this.isActive = (relativeUrl: Url) =>
       this.currentDefaultLanguageUrl === createAbsoluteUrl(relativeUrl, props.config);
-    this.i18n = (message: PropertyPath, otherwise = ''): string => i18nHelper(message, otherwise, props);
+    this.i18n = (message: PropertyPath, otherwise = ''): string => this.language.translate(message, otherwise);
   }
 }

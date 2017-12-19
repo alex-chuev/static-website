@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { Url } from '../types';
 
-class CodeType {
+export class CodeType {
   inline: string[] = [];
   external: Url[] = [];
 }

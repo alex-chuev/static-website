@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as vfs from 'vinyl-fs';
+import * as gulp from 'gulp';
 import * as debug from 'gulp-debug';
 import * as File from 'vinyl';
 import { Language } from '../entities/language';
@@ -13,6 +13,6 @@ export function promiseLanguages(config: Config): Promise<Language[]> {
 }
 
 function getLanguageFiles(options: Config): ReadWriteStream {
-  return vfs.src(path.join(options.src.folder, options.translations.folder, `*.${options.translations.extension}`))
-    .pipe(debug({title: 'Found languages:', showFiles: false}));
+  return gulp.src(path.join(options.src.folder, options.translations.folder, `*.${options.translations.extension}`))
+    .pipe(debug({title: 'Language files:'}));
 }
