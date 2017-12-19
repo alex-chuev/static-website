@@ -1,6 +1,6 @@
 import { promiseLanguages } from '../../tasks/languages';
 import { getConfig } from '../../tasks/config';
-import { promiseUpdateTranslations } from '../../tasks/translations';
+import { updateTranslations } from '../../tasks/translations';
 
 export function i18nCommand(message: string, value?: string) {
   const config = getConfig();
@@ -11,6 +11,6 @@ export function i18nCommand(message: string, value?: string) {
         language.translate(message, value);
       });
 
-      return promiseUpdateTranslations(config, languages);
+      updateTranslations(config, languages);
     });
 }
