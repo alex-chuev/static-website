@@ -20,9 +20,11 @@ export const defaultConfig: Config = {
   },
   styles: {
     extension: 'styl',
+    folder: 'styles',
   },
   scripts: {
     extension: 'ts',
+    folder: 'scripts',
     options: {
       compilerOptions: {
         target: 'es5',

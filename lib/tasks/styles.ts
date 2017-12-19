@@ -3,5 +3,7 @@ import ReadWriteStream = NodeJS.ReadWriteStream;
 import { compileCode } from './code';
 
 export function compileStyle(glob: string): ReadWriteStream {
-  return compileCode(glob, stylus());
+  return compileCode(glob, stylus({
+    compress: true
+  }));
 }

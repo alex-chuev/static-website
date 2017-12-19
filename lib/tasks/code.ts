@@ -2,7 +2,6 @@ import * as gulp from 'gulp';
 import ReadWriteStream = NodeJS.ReadWriteStream;
 import { Config } from '../interfaces/config';
 import { Code } from '../entities/code';
-import toArray = require('stream-to-array');
 import { compileStyle } from './styles';
 import * as path from 'path';
 import { compileScript } from './scripts';
@@ -10,43 +9,39 @@ import { Language } from '../entities/language';
 import { createAbsoluteUrl } from '../factories/template-helpers-factory';
 import * as File from 'vinyl';
 import { removeExtension } from '../helpers/path-helpers';
+import { toPromise } from '../helpers/to-promise';
 
 export function compileCode(glob: string, writableStream: ReadWriteStream): ReadWriteStream {
   return gulp.src(glob, {allowEmpty: true})
-    .pipe(writableStream)
-    .pipe(gulp.dest('dist'));
-}
-
-export function fetchCode(basePath: string, config: Config): Promise<Code> {
-  const code = new Code();
-
-  return Promise.all([
-    toArray(compileStyle(basePath + `.inline.${config.styles.extension}`)),
-    toArray(compileStyle(basePath + `.${config.styles.extension}`)),
-    toArray(compileScript(basePath + `.inline.${config.scripts.extension}`)),
-    toArray(compileScript(basePath + `.${config.scripts.extension}`)),
-  ]).then(data => code.append({
-    css: {
-      inline: data[0].map((file: File) => file.contents.toString()),
-      external: data[1].map((file: File) => createAbsoluteUrl(file.relative, config)),
-    },
-    js: {
-      inline: data[2].map((file: File) => file.contents.toString()),
-      external: data[3].map((file: File) => createAbsoluteUrl(file.relative, config)),
-    },
-  }));
+    .pipe(writableStream);
 }
 
 export function promiseCode(config: Config, file?: File, language?: Language): Promise<Code> {
-  let basePath: string;
+  const code = new Code();
+
+  let baseScriptsPath: string;
+  let baseStylesPath: string;
 
   if (language) {
-    basePath = removeExtension(file.path) + '.' + language.name;
+    baseStylesPath = baseScriptsPath = removeExtension(file.path) + '.' + language.name;
   } else if (file) {
-    basePath = removeExtension(file.path);
+    baseStylesPath = baseScriptsPath = removeExtension(file.path);
   } else {
-    basePath = path.join(config.src.folder, 'main');
+    baseStylesPath = path.join(config.src.folder, config.styles.folder, 'main');
+    baseScriptsPath = path.join(config.src.folder, config.scripts.folder, 'main');
   }
 
-  return fetchCode(basePath, config);
+  return Promise.all([
+    toPromise<File>(compileStyle(baseStylesPath + `.inline.${config.styles.extension}`))
+      .then(file => file && code.css.inline.push(file.contents.toString())),
+
+    toPromise<File>(compileStyle(baseStylesPath + `.${config.styles.extension}`).pipe(gulp.dest(config.dist.folder)))
+      .then(file => file && code.css.external.push(createAbsoluteUrl(file.relative, config))),
+
+    toPromise<File>(compileScript(baseScriptsPath + `.inline.${config.scripts.extension}`))
+      .then(file => file && code.js.inline.push(file.contents.toString())),
+
+    toPromise<File>(compileScript(baseScriptsPath + `.${config.scripts.extension}`).pipe(gulp.dest(config.dist.folder)))
+      .then(file => file && code.js.external.push(createAbsoluteUrl(file.relative, config))),
+  ]).then(data => code);
 }

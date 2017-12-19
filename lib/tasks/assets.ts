@@ -1,24 +1,17 @@
-import * as vfs from 'vinyl-fs';
+import * as gulp from 'gulp';
 import * as debug from 'gulp-debug';
 import * as cached from 'gulp-cached';
 import * as path from 'path';
-import { obj as through2 } from 'through2';
-
 import { Config } from '../interfaces/config';
-import ReadWriteStream = NodeJS.ReadWriteStream;
-import { PageFile } from '../entities/page';
+import { toPromise } from '../helpers/to-promise';
 
-export function copyAssets(options: Config) {
-  return vfs.src(path.join(options.src.folder, options.assets.folder, '**/*'))
+export function copyAssets(config: Config) {
+  return gulp.src(path.join(config.src.folder, config.assets.folder, '**/*'))
     .pipe(cached('assets'))
-    .pipe(vfs.dest(options.dist.folder))
+    .pipe(gulp.dest(config.dist.folder))
     .pipe(debug({title: 'Assets:'}));
 }
 
-export function exposePageAssets(options: Config): ReadWriteStream {
-  return through2(function (page: PageFile, enc: string, callback) {
-    page.data.assets.forEach(file => this.push(file));
-
-    callback();
-  });
+export function promiseCopyAssets(config: Config): Promise<void> {
+  return toPromise(copyAssets(config));
 }

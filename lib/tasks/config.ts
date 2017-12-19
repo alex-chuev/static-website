@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import { existsSync, readJsonSync } from 'fs-extra';
-
 import { Config } from '../interfaces/config';
 import { defaultConfig } from '../default-options';
 

@@ -1,7 +1,7 @@
-import { build } from '../../tasks/build';
+import { serve } from '../../tasks/serve';
 
 export function serveCommand() {
-  build({
+  serve({
     production: false,
   });
 }

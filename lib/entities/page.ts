@@ -7,6 +7,7 @@ import { Config } from '../interfaces/config';
 import { PropertyPath } from 'lodash';
 import { assetHelper, urlHelper } from '../helpers/template-helpers';
 import { removeExtension } from '../helpers/path-helpers';
+import { Environment } from '../interfaces/environment';
 
 export interface PageFile extends File {
   data: PageData;
@@ -17,6 +18,7 @@ export interface PageDataProps {
   languages: Language[];
   file: File;
   language: Language;
+  environment: Environment;
   code: Code;
 }
 
@@ -28,6 +30,7 @@ export class PageData {
   options: Config;
   otherLanguages: Language[];
   currentUrl: Url;
+  environment: Environment;
   currentDefaultLanguageUrl: Url;
   assets: File[] = [];
   asset: (relativeUrl: Url) => Url;
@@ -38,6 +41,7 @@ export class PageData {
 
   constructor(props: PageDataProps) {
     this.language = props.language;
+    this.environment = props.environment;
     this.options = props.config;
     this.id = removeExtension(props.file.relative,);
     this.otherLanguages = props.languages.filter(language => language !== props.language);

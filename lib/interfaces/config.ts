@@ -20,9 +20,11 @@ export interface Config {
   },
   styles: {
     extension: string,
+    folder: string,
   },
   scripts: {
     extension: string,
+    folder: string,
     options: ScriptsCompilerOptions,
   },
   dist: {

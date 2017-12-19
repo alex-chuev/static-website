@@ -7,7 +7,7 @@ import { PageData, PageFile } from '../entities/page';
 import { Config } from '../interfaces/config';
 import ReadWriteStream = NodeJS.ReadWriteStream;
 import { Language } from '../entities/language';
-import toArray = require('stream-to-array');
+import { toPromise } from '../helpers/to-promise';
 import { promiseCode } from './code';
 import { Environment } from '../interfaces/environment';
 import { PagePromises } from '../interfaces/page-promises';
@@ -15,7 +15,7 @@ import * as File from 'vinyl';
 import { Code } from '../entities/code';
 
 export function promiseCompilePages(config: Config, environment: Environment, languages: Language[]): Promise<PageFile[]> {
-  return toArray(emitCompiledPages(config, environment, languages));
+  return toPromise(emitCompiledPages(config, environment, languages));
 }
 
 function emitCompiledPages(config: Config, environment: Environment, languages: Language[]): ReadWriteStream {
@@ -54,7 +54,7 @@ function emitCompiledPages(config: Config, environment: Environment, languages: 
         .then(codes => {
           const code = codes.reduce((result, item) => result.append(item), new Code());
           const page = file.clone();
-          page.data = new PageData({config, languages, file, language, code});
+          page.data = new PageData({config, languages, file, language, code, environment});
           return page as PageFile;
         });
     });
