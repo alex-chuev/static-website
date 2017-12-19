@@ -10,6 +10,7 @@ import { newCommand } from './commands/new-command';
 import { CreateAnswers } from './commands/answers/create';
 import { InitAnswers } from './commands/answers/init';
 import { serveCommand } from './commands/serve-command';
+import { i18nCommand } from './commands/i18n-command';
 
 program
   .version('1.0.0')
@@ -35,5 +36,10 @@ program
   .command('build')
   .description('to build the project')
   .action(command => buildCommand());
+
+program
+  .command('i18n <message> [value]')
+  .description('to add a new message to all translation files')
+  .action((message: string, value: string) => i18nCommand(message, value));
 
 program.parse(process.argv);
