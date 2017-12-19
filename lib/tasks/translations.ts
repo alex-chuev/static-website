@@ -7,6 +7,8 @@ import * as debug from 'gulp-debug';
 import { StreamArray } from '../entities/stream-array';
 import * as path from 'path';
 import ReadWriteStream = NodeJS.ReadWriteStream;
+import { sortObject } from '../helpers/object-helpers';
+import { EOL } from 'os';
 
 export function promiseUpdateTranslations(config: Config, languages: Language[]): Promise<void> {
   return toPromise<void>(updateTranslations(config, languages));
@@ -25,7 +27,7 @@ function createUpdatedLanguageFiles(languages: Language[]): File[] {
       const file = language.file.clone({
         contents: false,
       });
-      file.contents = new Buffer(JSON.stringify(language.translation));
+      file.contents = new Buffer(JSON.stringify(sortObject(language.translation), null, 2) + EOL);
       return file;
     });
 }
