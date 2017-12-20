@@ -2,12 +2,14 @@ import { Language } from './language';
 import * as File from 'vinyl';
 import { Code, CodeType } from './code';
 import { Url } from '../types';
-import { createAbsoluteUrl } from '../factories/template-helpers-factory';
+import { createAbsoluteUrl } from '../helpers/url-helpers';
 import { Config } from '../interfaces/config';
 import { PropertyPath } from 'lodash';
 import { assetHelper, urlHelper } from '../helpers/template-helpers';
 import { removeExtension } from '../helpers/path-helpers';
 import { Environment } from '../interfaces/environment';
+import { Attrs } from '../interfaces/attributes';
+import { HtmlFactory } from '../factories/html-factory';
 
 export interface PageFile extends File {
   data: PageData;
@@ -38,6 +40,8 @@ export class PageData {
   languageUrl: (languageName: string) => Url;
   isActive: (relativeUrl: Url) => boolean;
   i18n: (message: PropertyPath, otherwise: string) => string;
+  link: (url: Url, text?: string, className?: string, activeClass?: string, attrs?: Attrs, language?: string) => string;
+  languageLink: (language: string, text?: string, className?: string, activeClass?: string, attrs?: Attrs) => string;
 
   constructor(props: PageDataProps) {
     this.language = props.language;
@@ -57,5 +61,12 @@ export class PageData {
     this.isActive = (relativeUrl: Url) =>
       this.currentDefaultLanguageUrl === createAbsoluteUrl(relativeUrl, props.config);
     this.i18n = (message: PropertyPath, otherwise = ''): string => this.language.translate(message, otherwise);
+    this.link = (url: Url, content?: string, className?: string, activeClassName?: string, attrs?: Attrs, language = props.language.name): string => {
+      return HtmlFactory.createLink(this.url(url, language), content, className, activeClassName, this.isActive(url), attrs, language);
+    };
+    this.languageLink = (language: string, text?: string, className?: string, activeClass?: string, attributes?: Attrs): string => {
+      return this.link(createAbsoluteUrl(`${this.id}.html`, props.config), text, className, activeClass, attributes, language);
+    }
+
   }
 }

@@ -6,7 +6,7 @@ import { compileStyle } from './styles';
 import * as path from 'path';
 import { compileScript } from './scripts';
 import { Language } from '../entities/language';
-import { createAbsoluteUrl } from '../factories/template-helpers-factory';
+import { createAbsoluteUrl } from '../helpers/url-helpers';
 import * as File from 'vinyl';
 import { removeExtension } from '../helpers/path-helpers';
 import { toPromise } from '../helpers/to-promise';
