@@ -5,28 +5,37 @@ import { getConfig } from './config';
 import { build } from './build';
 import * as path from 'path';
 import { promiseCopyAssets } from './assets';
-import { promiseCode } from './code';
+import { onGlobalStyleFileChange, onPageStyleFileChange } from './styles';
+import { onGlobalScriptFileChange, onPageScriptFileChange } from './scripts';
 
-export function serve(environment: Environment) {
+export function serve() {
   const config = getConfig();
+  const environment: Environment = {
+    production: false,
+  };
   const browserSync = create();
 
   build(config, environment)
     .then(() => {
       browserSync.init({
-        server: config.dist.folder
+        server: {
+          baseDir: config.dist.folder,
+        }
       });
 
       gulp.watch(path.join(config.src.folder, config.assets.folder, `**/*`))
         .on('change', () => promiseCopyAssets(config).then(() => browserSync.reload()));
 
       gulp.watch(path.join(config.src.folder, config.styles.folder, `**/*.${config.styles.extension}`))
-        .on('change', () => promiseCode(config).then(() => browserSync.reload('main.css')));
+        .on('change', event => onGlobalStyleFileChange(config, event).then(file => browserSync.reload(file.path)));
+
+      gulp.watch(path.join(config.src.folder, config.pages.folder, `**/*.${config.styles.extension}`))
+        .on('change', event => onPageStyleFileChange(config, event).then(file => browserSync.reload(file.path)));
 
       gulp.watch(path.join(config.src.folder, config.scripts.folder, `**/*.${config.scripts.extension}`))
-        .on('change', () => promiseCode(config).then(() => browserSync.reload('main.js')));
+        .on('change', event => onGlobalScriptFileChange(config, event).then(file => browserSync.reload(file.path)));
 
-      gulp.watch(path.join(config.src.folder, config.pages.folder, `**/*`))
-        .on('change', () => build(config, environment).then(() => browserSync.reload()));
+      gulp.watch(path.join(config.src.folder, config.pages.folder, `**/*.${config.scripts.extension}`))
+        .on('change', event => onPageScriptFileChange(config, event).then(file => browserSync.reload(file.path)));
     });
 }

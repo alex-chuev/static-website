@@ -29,9 +29,11 @@
     "vinyl-fs": "^3.0.0"
   },
   "devDependencies": {
+    "@types/browser-sync": "0.0.37",
     "@types/chai": "^4.0.6",
     "@types/commander": "^2.12.2",
     "@types/fs-extra": "^4.0.5",
+    "@types/gulp": "^4.0.5",
     "@types/inquirer": "0.0.35",
     "@types/lodash": "^4.14.87",
     "@types/mocha": "^2.2.44",
