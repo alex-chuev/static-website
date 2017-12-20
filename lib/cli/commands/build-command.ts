@@ -1,7 +1,8 @@
 import { build } from '../../tasks/build';
+import { getConfig } from '../../tasks/config';
 
 export function buildCommand() {
-  build({
+  build(getConfig(), {
     production: true,
   });
 }

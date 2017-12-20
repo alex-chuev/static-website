@@ -1,15 +1,13 @@
 import { Environment } from '../interfaces/environment';
 import { promiseLanguages } from './languages';
-import { getConfig } from './config';
+import { Config } from '../interfaces/config';
 import { promiseCompilePages } from './pages';
 import { generateSitemap } from './sitemap';
 import { updateTranslations } from './translations';
 import { emptyDirSync } from 'fs-extra';
 import { copyAssets } from './assets';
 
-export async function build(environment: Environment): Promise<void> {
-  const config = getConfig();
-
+export async function build(config: Config, environment: Environment): Promise<void> {
   if(config.dist.clean) {
     emptyDirSync(config.dist.folder);
   }

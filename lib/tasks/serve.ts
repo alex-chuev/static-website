@@ -11,7 +11,7 @@ export function serve(environment: Environment) {
   const config = getConfig();
   const browserSync = create();
 
-  build(environment)
+  build(config, environment)
     .then(() => {
       browserSync.init({
         server: config.dist.folder
@@ -27,6 +27,6 @@ export function serve(environment: Environment) {
         .on('change', () => promiseCode(config).then(() => browserSync.reload('main.js')));
 
       gulp.watch(path.join(config.src.folder, config.pages.folder, `**/*`))
-        .on('change', () => build(environment).then(() => browserSync.reload()));
+        .on('change', () => build(config, environment).then(() => browserSync.reload()));
     });
 }
