@@ -1,14 +1,18 @@
 import * as gulp from 'gulp';
-import * as stylus from 'gulp-stylus';
+import * as gulpStylus from 'gulp-stylus';
+import * as stylus from 'stylus';
 import ReadWriteStream = NodeJS.ReadWriteStream;
 import { compileCode } from './code';
 import { Config } from '../interfaces/config';
 import * as path from "path";
 import { toPromise } from '../helpers/to-promise';
 import * as File from 'vinyl';
+import { existsSync, readFileSync } from 'fs';
+import { Page } from '../entities/page';
+import { Environment } from '../interfaces/environment';
 
 export function compileStyle(glob: string): ReadWriteStream {
-  return compileCode(glob, stylus({
+  return compileCode(glob, gulpStylus({
     compress: true
   }));
 }
@@ -29,8 +33,53 @@ export function onPageStyleFileChange(config: Config, event: any): Promise<File>
 
 function compileStyleFile(config: Config, file: string, base: string): ReadWriteStream {
   return gulp.src(file, {base})
-    .pipe(stylus({
+    .pipe(gulpStylus({
       compress: true,
     }))
     .pipe(gulp.dest(config.dist.folder));
+}
+
+export function getPageInlineCss(config: Config, environment: Environment, pages: Page[]): WeakMap<Page, string> {
+  return pages
+    .reduce((map, page) => {
+      const code = getCss(config, environment, `${page.id}.inline.${config.styles.extension}`);
+      if (code) {
+        map.set(page, code);
+      }
+      return map;
+    }, new WeakMap());
+}
+
+export function getPageExternalCss(config: Config, environment: Environment, pages: Page[]): WeakMap<Page, string> {
+  return pages
+    .reduce((map, page) => {
+      const code = getCss(config, environment, `${page.id}.${config.styles.extension}`);
+      if (code) {
+        map.set(page, code);
+      }
+      return map;
+    }, new WeakMap());
+}
+
+export function getGlobalInlineCss(config: Config, environment: Environment): string {
+  return getCss(config, environment, path.join(config.src.folder, config.styles.folder, `main.inline.${config.styles.extension}`));
+}
+
+export function getGlobalExternalCss(config: Config, environment: Environment): string {
+  return getCss(config, environment, path.join(config.src.folder, config.styles.folder, `main.${config.styles.extension}`));
+}
+
+export function getCss(config: Config, environment: Environment, filename: string): string {
+  if (existsSync(filename)) {
+    let code: string;
+
+    stylus(readFileSync(filename, 'utf-8'))
+      .set('filename', filename)
+      .set('compress', environment.production)
+      .render(function (error, css) {
+        code = css;
+      });
+
+    return code;
+  }
 }

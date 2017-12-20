@@ -1,24 +1,27 @@
-import * as gulp from 'gulp';
-import * as File from 'vinyl';
 import { Config } from './interfaces/config';
 import { Environment } from './interfaces/environment';
 import { Language } from './entities/language';
-import * as path from 'path';
+import { Page } from './entities/page';
 
-class Cache {
+class BuildCacheData {
   config: Config;
   environment: Environment;
+  languages: Language[];
   globalInlineCss: string;
   globalInlineJs: string;
   globalExternalCss: string;
   globalExternalJs: string;
-  languages: { [languageName: string]: Language };
-  pageFiles: { [pagePath: string]: File };
-  pageInlineCss: { [pagePath: string]: string };
-  pageInlineJs: { [pagePath: string]: string };
-  pageExternalCss: { [pagePath: string]: string };
-  pageExternalJs: { [pagePath: string]: string };
+  pages: Page[];
+  pageInlineCss: WeakMap<Page, string>;
+  pageInlineJs: WeakMap<Page, string>;
+  pageExternalCss: WeakMap<Page, string>;
+  pageExternalJs: WeakMap<Page, string>;
 }
 
-function build(languages, pageFiles) {
+export class BuildCache extends BuildCacheData {
+  constructor(data: BuildCacheData) {
+    super();
+
+    Object.assign(this, data);
+  }
 }

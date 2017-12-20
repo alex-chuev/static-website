@@ -10,6 +10,7 @@ import { removeExtension } from '../helpers/path-helpers';
 import { Environment } from '../interfaces/environment';
 import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
+import { readFileSync } from "fs";
 
 export interface PageFile extends File {
   data: PageData;
@@ -68,5 +69,15 @@ export class PageData {
       return this.link(createAbsoluteUrl(`${this.id}.html`, props.config), text, className, activeClass, attributes, language);
     }
 
+  }
+}
+
+export class Page {
+  id: string;
+  content: string;
+
+  constructor(file: string) {
+    this.id = removeExtension(file);
+    this.content = readFileSync(file, 'utf-8');
   }
 }

@@ -3,7 +3,7 @@ import * as gulp from 'gulp';
 import * as debug from 'gulp-debug';
 import * as pug from 'gulp-pug';
 import { obj as through2 } from 'through2';
-import { PageData, PageFile } from '../entities/page';
+import { Page, PageData, PageFile } from '../entities/page';
 import { Config } from '../interfaces/config';
 import ReadWriteStream = NodeJS.ReadWriteStream;
 import { Language } from '../entities/language';
@@ -13,6 +13,7 @@ import { Environment } from '../interfaces/environment';
 import { PagePromises } from '../interfaces/page-promises';
 import * as File from 'vinyl';
 import { Code } from '../entities/code';
+import * as glob from 'glob';
 
 export function promiseCompilePages(config: Config, environment: Environment, languages: Language[]): Promise<PageFile[]> {
   return toPromise(emitCompiledPages(config, environment, languages));
@@ -59,4 +60,9 @@ function emitCompiledPages(config: Config, environment: Environment, languages: 
         });
     });
   }
+}
+
+export function getPages(config: Config): Page[] {
+  return glob.sync(path.join(config.src.folder, config.pages.folder, `**/*.${config.pages.extension}`))
+    .map(file => new Page(file));
 }
