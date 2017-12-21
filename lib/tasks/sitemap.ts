@@ -1,16 +1,16 @@
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as sitemap from 'sitemap';
-import { BuildCache } from '../cache';
+import { App } from '../app';
 import { urlHelper } from '../helpers/template-helpers';
 import { outputFileSync } from 'fs-extra';
 import { Language } from '../entities/language';
 import { Page } from '../entities/page';
 import { Config } from '../interfaces/config';
 
-export function generateSitemap(cache: BuildCache) {
-  const config = cache.config;
-  const content = generateSitemapContent(config, cache.pages, cache.languages);
+export function generateSitemap(app: App) {
+  const config = app.config;
+  const content = generateSitemapContent(config, app.pages, app.languages);
   const dist = path.join(config.dist.folder, 'sitemap.xml');
 
   outputFileSync(dist, content);

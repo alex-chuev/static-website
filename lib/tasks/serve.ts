@@ -3,29 +3,34 @@ import { create } from 'browser-sync';
 import { build } from './build';
 import * as path from 'path';
 import { copyAsset, unlinkAsset } from './assets';
-import { createBuildCache } from './cache';
+import { createApp } from './app';
 
 export function serve() {
-  const cache = createBuildCache({
+  const app = createApp({
     production: false,
   });
 
-  build(cache);
+  build(app);
 
   const browserSync = create();
   browserSync.init({
     server: {
-      baseDir: cache.config.dist.folder,
+      baseDir: app.config.dist.folder,
     },
-    files: path.join(cache.config.dist.folder, '**/*'),
+    files: path.join(app.config.dist.folder, '**/*'),
     watchOptions: {
       ignoreInitial: true,
     },
     reloadDebounce: 200,
   });
 
-  chokidar.watch(path.join(cache.config.src.folder, cache.config.assets.folder, `**/*`), {ignoreInitial: true})
-    .on('add', file => copyAsset(file, cache))
-    .on('change', file => copyAsset(file, cache))
-    .on('unlink', file => unlinkAsset(file, cache));
+  chokidar.watch(path.join(app.config.src.folder, app.config.assets.folder, `**/*`), {ignoreInitial: true})
+    .on('add', file => copyAsset(file, app))
+    .on('change', file => copyAsset(file, app))
+    .on('unlink', file => unlinkAsset(file, app));
+
+  chokidar.watch(path.join(app.config.src.folder, app.config.assets.folder, `**/*`), {ignoreInitial: true})
+    .on('add', file => copyAsset(file, app))
+    .on('change', file => copyAsset(file, app))
+    .on('unlink', file => unlinkAsset(file, app));
 }

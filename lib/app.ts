@@ -4,7 +4,7 @@ import { Language } from './entities/language';
 import { Page } from './entities/page';
 import { CssCode, JsCode } from './tasks/code';
 
-class BuildCacheData {
+class AppData {
   config: Config;
   environment: Environment;
   languages: Language[];
@@ -19,8 +19,8 @@ class BuildCacheData {
   pageExternalJs: WeakMap<Page, JsCode>;
 }
 
-export class BuildCache extends BuildCacheData {
-  constructor(data: BuildCacheData) {
+export class App extends AppData {
+  constructor(data: AppData) {
     super();
 
     Object.assign(this, data);

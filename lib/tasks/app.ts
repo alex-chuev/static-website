@@ -1,12 +1,12 @@
 import { Environment } from '../interfaces/environment';
 import { getLanguages } from './languages';
-import { BuildCache } from '../cache';
+import { App } from '../app';
 import { getPages } from './pages';
 import { getGlobalCss, getPageCss } from './styles';
 import { getGlobalJs, getPageJs } from './scripts';
 import { getConfig } from './config';
 
-export function createBuildCache(environment: Environment): BuildCache {
+export function createApp(environment: Environment): App {
   const config = getConfig();
   const languages = getLanguages(config);
   const globalInlineCss = getGlobalCss(config, environment, true);
@@ -19,7 +19,7 @@ export function createBuildCache(environment: Environment): BuildCache {
   const pageExternalCss = getPageCss(config, environment, pages);
   const pageExternalJs = getPageJs(config, environment, pages);
 
-  return new BuildCache({
+  return new App({
     config,
     environment,
     languages,

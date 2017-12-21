@@ -9,7 +9,7 @@ import { Environment } from '../interfaces/environment';
 import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
 import { readFileSync } from 'fs';
-import { BuildCache } from '../cache';
+import { App } from '../app';
 import { Config } from '../interfaces/config';
 import * as path from 'path';
 import { Code, CssCode, JsCode } from '../tasks/code';
@@ -29,19 +29,19 @@ export class PageData {
   link: (url: Url, text?: string, className?: string, activeClass?: string, attrs?: Attrs, language?: string) => string;
   languageLink: (language: string, text?: string, className?: string, activeClass?: string, attrs?: Attrs) => string;
 
-  constructor(page: Page, language: Language, cache: BuildCache) {
+  constructor(page: Page, language: Language, app: App) {
     this.language = language;
-    this.environment = cache.environment;
-    this.otherLanguages = cache.languages.filter(item => item !== language);
-    this.css = getPageCss(page, cache);
-    this.js = getPageJs(page, cache);
-    this.asset = (relativeUrl: Url) => assetHelper(relativeUrl, cache.config);
-    this.currentUrl = urlHelper(page.distPathWithExt, this.language.url, cache.config);
+    this.environment = app.environment;
+    this.otherLanguages = app.languages.filter(item => item !== language);
+    this.css = getPageCss(page, app);
+    this.js = getPageJs(page, app);
+    this.asset = (relativeUrl: Url) => assetHelper(relativeUrl, app.config);
+    this.currentUrl = urlHelper(page.distPathWithExt, this.language.url, app.config);
     this.url = (relativeUrl: Url, languageName = language.name) => urlHelper(
-      relativeUrl, languageName, cache.config);
-    this.languageUrl = (languageName: string) => urlHelper(page.distPathWithExt, languageName, cache.config);
+      relativeUrl, languageName, app.config);
+    this.languageUrl = (languageName: string) => urlHelper(page.distPathWithExt, languageName, app.config);
     this.isActive = (relativeUrl: Url) =>
-      page.defaultLanguageUrl === createAbsoluteUrl(relativeUrl, cache.config);
+      page.defaultLanguageUrl === createAbsoluteUrl(relativeUrl, app.config);
     this.i18n = (message: PropertyPath, otherwise = ''): string => this.language.translate(message, otherwise);
     this.link = (
       url: Url, content?: string, className?: string, activeClassName?: string, attrs?: Attrs, languageName = language.name): string => {
@@ -55,41 +55,41 @@ export class PageData {
   }
 }
 
-function getPageJs(page: Page, cache: BuildCache): PageCode {
+function getPageJs(page: Page, app: App): PageCode {
   const external: JsCode[] = [
-    cache.globalExternalJs,
-    cache.pageExternalJs.get(page),
+    app.globalExternalJs,
+    app.pageExternalJs.get(page),
   ];
   const inline: JsCode[] = [];
 
-  cache.environment.production ?
+  app.environment.production ?
     inline.push(
-      cache.globalInlineJs,
-      cache.pageInlineJs.get(page),
+      app.globalInlineJs,
+      app.pageInlineJs.get(page),
     ) :
     external.push(
-      cache.globalInlineJs,
-      cache.pageInlineJs.get(page),
+      app.globalInlineJs,
+      app.pageInlineJs.get(page),
     );
 
   return getPageCode(inline, external);
 }
 
-function getPageCss(page: Page, cache: BuildCache): PageCode {
+function getPageCss(page: Page, app: App): PageCode {
   const external: CssCode[] = [
-    cache.globalExternalCss,
-    cache.pageExternalCss.get(page),
+    app.globalExternalCss,
+    app.pageExternalCss.get(page),
   ];
   const inline: CssCode[] = [];
 
-  cache.environment.production ?
+  app.environment.production ?
     inline.push(
-      cache.globalInlineCss,
-      cache.pageInlineCss.get(page),
+      app.globalInlineCss,
+      app.pageInlineCss.get(page),
     ) :
     external.push(
-      cache.globalInlineCss,
-      cache.pageInlineCss.get(page),
+      app.globalInlineCss,
+      app.pageInlineCss.get(page),
     );
 
   return getPageCode(inline, external);

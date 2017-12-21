@@ -1,10 +1,10 @@
 import { build } from '../../tasks/build';
-import { createBuildCache } from '../../tasks/cache';
+import { createApp } from '../../tasks/app';
 
 export function buildCommand() {
-  const cache = createBuildCache({
+  const app = createApp({
     production: true,
   });
 
-  build(cache);
+  build(app);
 }
