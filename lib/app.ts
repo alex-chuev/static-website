@@ -8,6 +8,7 @@ import { copyAssets } from './tasks/assets';
 import * as path from "path";
 import { generateSitemap } from './tasks/sitemap';
 import * as pug from "pug";
+import { updateLanguages } from './tasks/languages';
 
 class AppData {
   config: Config;
@@ -44,6 +45,7 @@ export class App extends AppData {
 
     generateSitemap(this);
     copyAssets(this);
+    updateLanguages(this.languages);
   }
 
   buildPages(pages: Page[], languages: Language[]) {

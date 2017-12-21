@@ -4,21 +4,23 @@ import { Config } from '../interfaces/config';
 import * as _ from 'lodash';
 import { PropertyPath } from 'lodash';
 import * as path from 'path';
+import { outputJsonSync, readJsonSync } from 'fs-extra';
+import { sortObject } from '../helpers/object-helpers';
 
 export class Language {
+  name: string;
   url: Url;
+  translation: Translation;
   updated = false;
-
-  constructor(public name: string, public translation: Translation, private config: Config) {
-    this.url = Language.getUrl(this.name, this.config);
-  }
 
   static getUrl(language: string, config: Config): string {
     return language === config.translations.defaultLanguage ? '' : language;
   }
 
-  get file(): string {
-    return path.join(this.config.src.folder, this.config.translations.folder, `${this.name}.${this.config.translations.extension}`);
+  constructor(public file: string, private config: Config) {
+    this.name = path.parse(this.file).name;
+    this.translation = readJsonSync(this.file);
+    this.url = Language.getUrl(this.name, this.config);
   }
 
   translate(message: PropertyPath, otherwise: any = ''): string {
@@ -30,6 +32,13 @@ export class Language {
     }
 
     return otherwise;
+  }
+
+  save() {
+    if (this.updated) {
+      outputJsonSync(this.file, sortObject(this.translation), {spaces: 2});
+      this.updated = false;
+    }
   }
 
 }
