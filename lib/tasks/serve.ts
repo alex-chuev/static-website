@@ -1,6 +1,5 @@
 import * as chokidar from 'chokidar';
 import { create } from 'browser-sync';
-import { build } from './build';
 import * as path from 'path';
 import { copyAsset, unlinkAsset } from './assets';
 import { createApp } from './app';
@@ -10,7 +9,7 @@ export function serve() {
     production: false,
   });
 
-  build(app);
+  app.build();
 
   const browserSync = create();
   browserSync.init({
@@ -23,11 +22,6 @@ export function serve() {
     },
     reloadDebounce: 200,
   });
-
-  chokidar.watch(path.join(app.config.src.folder, app.config.assets.folder, `**/*`), {ignoreInitial: true})
-    .on('add', file => copyAsset(file, app))
-    .on('change', file => copyAsset(file, app))
-    .on('unlink', file => unlinkAsset(file, app));
 
   chokidar.watch(path.join(app.config.src.folder, app.config.assets.folder, `**/*`), {ignoreInitial: true})
     .on('add', file => copyAsset(file, app))
