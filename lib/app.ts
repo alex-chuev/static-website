@@ -2,7 +2,7 @@ import { Config } from './interfaces/config';
 import { Environment } from './interfaces/environment';
 import { Language } from './entities/language';
 import { Page, PageData } from './entities/page';
-import { CssCode, JsCode } from './tasks/code';
+import { CssCode, JsCode, saveExternalCode, savePageExternalCode } from './tasks/code';
 import { copySync, emptyDirSync, outputFileSync, pathExistsSync } from 'fs-extra';
 import { copyAssets } from './tasks/assets';
 import * as path from "path";
@@ -14,10 +14,10 @@ class AppData {
   config: Config;
   environment: Environment;
   languages: Language[];
-  globalInlineCss: CssCode;
-  globalInlineJs: JsCode;
-  globalExternalCss: CssCode;
-  globalExternalJs: JsCode;
+  inlineCss: CssCode;
+  inlineJs: JsCode;
+  externalCss: CssCode;
+  externalJs: JsCode;
   pages: Page[];
   pageInlineCss: WeakMap<Page, CssCode>;
   pageInlineJs: WeakMap<Page, JsCode>;
@@ -41,6 +41,8 @@ export class App extends AppData {
       copySync(path.join(this.config.src.folder, this.config.assets.folder), this.config.dist.folder);
     }
 
+    saveExternalCode(this);
+
     this.buildPages(this.pages, this.languages);
 
     generateSitemap(this);
@@ -55,6 +57,8 @@ export class App extends AppData {
   buildPage(page: Page, language: Language) {
     const data = new PageData(page, language, this);
     const code = pug.render(page.content, {...data, filename: page.fullPath});
+
+    savePageExternalCode(page, this);
 
     outputFileSync(path.join(this.config.dist.folder, language.url, page.distPathWithExt), code);
   }

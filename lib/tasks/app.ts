@@ -9,10 +9,10 @@ import { getConfig } from './config';
 export function createApp(environment: Environment): App {
   const config = getConfig();
   const languages = getLanguages(config);
-  const globalInlineCss = getGlobalCss(config, environment, true);
-  const globalInlineJs = getGlobalJs(config, environment, true);
-  const globalExternalCss = getGlobalCss(config, environment);
-  const globalExternalJs = getGlobalJs(config, environment);
+  const inlineCss = getGlobalCss(config, environment, true);
+  const inlineJs = getGlobalJs(config, environment, true);
+  const externalCss = getGlobalCss(config, environment);
+  const externalJs = getGlobalJs(config, environment);
   const pages = getPages(config);
   const pageInlineCss = getPageCss(config, environment, pages, true);
   const pageInlineJs = getPageJs(config, environment, pages, true);
@@ -23,10 +23,10 @@ export function createApp(environment: Environment): App {
     config,
     environment,
     languages,
-    globalInlineCss,
-    globalInlineJs,
-    globalExternalCss,
-    globalExternalJs,
+    inlineCss,
+    inlineJs,
+    externalCss,
+    externalJs,
     pages,
     pageInlineCss,
     pageInlineJs,

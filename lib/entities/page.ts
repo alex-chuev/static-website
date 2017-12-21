@@ -1,5 +1,5 @@
 import { Language } from './language';
-import { PageCode } from './code';
+import { PageCode } from './page-code';
 import { Url } from '../types';
 import { createAbsoluteUrl } from '../helpers/url-helpers';
 import { PropertyPath } from 'lodash';
@@ -52,18 +52,18 @@ export class PageData {
 
 function getPageJs(page: Page, app: App): PageCode {
   const external: JsCode[] = [
-    app.globalExternalJs,
+    app.externalJs,
     app.pageExternalJs.get(page),
   ];
   const inline: JsCode[] = [];
 
   app.environment.production ?
     inline.push(
-      app.globalInlineJs,
+      app.inlineJs,
       app.pageInlineJs.get(page),
     ) :
     external.push(
-      app.globalInlineJs,
+      app.inlineJs,
       app.pageInlineJs.get(page),
     );
 
@@ -72,18 +72,18 @@ function getPageJs(page: Page, app: App): PageCode {
 
 function getPageCss(page: Page, app: App): PageCode {
   const external: CssCode[] = [
-    app.globalExternalCss,
+    app.externalCss,
     app.pageExternalCss.get(page),
   ];
   const inline: CssCode[] = [];
 
   app.environment.production ?
     inline.push(
-      app.globalInlineCss,
+      app.inlineCss,
       app.pageInlineCss.get(page),
     ) :
     external.push(
-      app.globalInlineCss,
+      app.inlineCss,
       app.pageInlineCss.get(page),
     );
 

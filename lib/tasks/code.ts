@@ -7,6 +7,9 @@ import { transpileModule } from 'typescript';
 import * as path from 'path';
 import { removeExtension } from '../helpers/path-helpers';
 import { createAbsoluteUrl } from '../helpers/url-helpers';
+import { App } from '../app';
+import { outputFileSync } from 'fs-extra';
+import { Page } from '../entities/page';
 
 export abstract class Code {
   content: string;
@@ -34,6 +37,10 @@ export abstract class Code {
   get url(): string {
     return createAbsoluteUrl(`${this.relativePathWithoutExt}.${this.ext}`, this.config);
   };
+
+  get distPath(): string {
+    return path.join(this.config.dist.folder, `${this.relativePathWithoutExt}.${this.ext}`);
+  };
 }
 
 export class JsCode extends Code {
@@ -57,4 +64,40 @@ export class CssCode extends Code {
       .set('compress', this.environment.production)
       .render((error, content) => this.content = content);
   }
+}
+
+export function saveExternalCode(app: App) {
+  const code: Code[] = [
+    app.externalCss,
+    app.externalJs,
+  ];
+
+  if (false === app.environment.production) {
+    code.push(
+      app.inlineCss,
+      app.inlineJs,
+    );
+  }
+
+  code
+    .filter(item => item)
+    .forEach(item => outputFileSync(item.distPath, item.content));
+}
+
+export function savePageExternalCode(page: Page, app: App) {
+  const code: Code[] = [
+    app.pageExternalCss.get(page),
+    app.pageExternalJs.get(page),
+  ];
+
+  if (false === app.environment.production) {
+    code.push(
+      app.pageInlineCss.get(page),
+      app.pageInlineJs.get(page),
+    );
+  }
+
+  code
+    .filter(item => item)
+    .forEach(item => outputFileSync(item.distPath, item.content));
 }
