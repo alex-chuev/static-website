@@ -47,11 +47,8 @@ export class JsCode extends Code {
   ext = 'js';
 
   getContent() {
-    if (this.environment.production) {
-      this.content = minify(transpileModule(readFileSync(this.fullPath, 'utf-8'), this.config.scripts.options).outputText).code;
-    } else {
-      this.content = transpileModule(readFileSync(this.fullPath, 'utf-8'), this.config.scripts.options).outputText;
-    }
+    const content = transpileModule(readFileSync(this.fullPath, 'utf-8'), this.config.scripts.options).outputText;
+    this.content = this.environment.production ? minify(content).code : content;
   }
 }
 
@@ -66,22 +63,24 @@ export class CssCode extends Code {
   }
 }
 
-export function saveExternalCode(app: App) {
-  const code: Code[] = [
+export function saveExternalCss(app: App) {
+  const code = [
     app.externalCss,
+  ];
+
+  saveExternalCode(app.environment.production ? code : code.concat(
+    app.inlineCss,
+  ));
+}
+
+export function saveExternalJs(app: App) {
+  const code = [
     app.externalJs,
   ];
 
-  if (false === app.environment.production) {
-    code.push(
-      app.inlineCss,
-      app.inlineJs,
-    );
-  }
-
-  code
-    .filter(item => item)
-    .forEach(item => outputFileSync(item.distPath, item.content));
+  saveExternalCode(app.environment.production ? code : code.concat(
+    app.inlineJs,
+  ));
 }
 
 export function savePageExternalCode(page: Page, app: App) {
@@ -90,13 +89,13 @@ export function savePageExternalCode(page: Page, app: App) {
     app.pageExternalJs.get(page),
   ];
 
-  if (false === app.environment.production) {
-    code.push(
-      app.pageInlineCss.get(page),
-      app.pageInlineJs.get(page),
-    );
-  }
+  saveExternalCode(app.environment.production ? code : code.concat(
+    app.pageInlineCss.get(page),
+    app.pageInlineJs.get(page),
+  ));
+}
 
+function saveExternalCode(code: Code[]) {
   code
     .filter(item => item)
     .forEach(item => outputFileSync(item.distPath, item.content));

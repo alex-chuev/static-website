@@ -2,7 +2,7 @@ import { Config } from './interfaces/config';
 import { Environment } from './interfaces/environment';
 import { Language } from './entities/language';
 import { Page, PageData } from './entities/page';
-import { CssCode, JsCode, saveExternalCode, savePageExternalCode } from './tasks/code';
+import { CssCode, JsCode, saveExternalCss, saveExternalJs, savePageExternalCode } from './tasks/code';
 import { copySync, emptyDirSync, outputFileSync, pathExistsSync } from 'fs-extra';
 import { copyAssets } from './tasks/assets';
 import * as path from "path";
@@ -41,7 +41,8 @@ export class App extends AppData {
       copySync(path.join(this.config.src.folder, this.config.assets.folder), this.config.dist.folder);
     }
 
-    saveExternalCode(this);
+    saveExternalCss(this);
+    saveExternalJs(this);
 
     this.buildPages(this.pages, this.languages);
 
