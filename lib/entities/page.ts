@@ -15,7 +15,6 @@ import * as path from 'path';
 import { Code, CssCode, JsCode } from '../tasks/code';
 
 export class PageData {
-  language: Language;
   css: PageCode;
   js: PageCode;
   otherLanguages: Language[];
@@ -29,24 +28,20 @@ export class PageData {
   link: (url: Url, text?: string, className?: string, activeClass?: string, attrs?: Attrs, language?: string) => string;
   languageLink: (language: string, text?: string, className?: string, activeClass?: string, attrs?: Attrs) => string;
 
-  constructor(page: Page, language: Language, app: App) {
-    this.language = language;
+  constructor(page: Page, public language: Language, app: App) {
     this.environment = app.environment;
     this.otherLanguages = app.languages.filter(item => item !== language);
     this.css = getPageCss(page, app);
     this.js = getPageJs(page, app);
     this.asset = (relativeUrl: Url) => assetHelper(relativeUrl, app.config);
     this.currentUrl = urlHelper(page.distPathWithExt, this.language.url, app.config);
-    this.url = (relativeUrl: Url, languageName = language.name) => urlHelper(
-      relativeUrl, languageName, app.config);
+    this.url = (relativeUrl: Url, languageName = language.name) => urlHelper(relativeUrl, languageName, app.config);
     this.languageUrl = (languageName: string) => urlHelper(page.distPathWithExt, languageName, app.config);
     this.isActive = (relativeUrl: Url) =>
       page.defaultLanguageUrl === createAbsoluteUrl(relativeUrl, app.config);
     this.i18n = (message: PropertyPath, otherwise = ''): string => this.language.translate(message, otherwise);
-    this.link = (
-      url: Url, content?: string, className?: string, activeClassName?: string, attrs?: Attrs, languageName = language.name): string => {
-      return HtmlFactory.createLink(this.url(url, languageName), content, className, activeClassName, this.isActive(url), attrs,
-        languageName);
+    this.link = (url: Url, content?: string, className?: string, activeClassName?: string, attrs?: Attrs, languageName = language.name): string => {
+      return HtmlFactory.createLink(this.url(url, languageName), content, className, activeClassName, this.isActive(url), attrs, languageName);
     };
     this.languageLink = (language: string, text?: string, className?: string, activeClass?: string, attributes?: Attrs): string => {
       return this.link(page.defaultLanguageUrl, text, className, activeClass, attributes, language);
