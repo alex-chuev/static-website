@@ -45,7 +45,10 @@ export class App extends AppData {
 
     this.buildPages(this.pages, this.languages);
 
-    generateSitemap(this);
+    if (this.config.sitemap.generate) {
+      generateSitemap(this);
+    }
+
     copyAssets(this);
     updateLanguages(this.languages);
   }
