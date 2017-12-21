@@ -1,28 +1,9 @@
-import { Config } from '../interfaces/config';
 import { Language } from '../entities/language';
-import * as File from 'vinyl';
-import * as gulp from 'gulp';
-import * as debug from 'gulp-debug';
-import { StreamArray } from '../entities/stream-array';
-import * as path from 'path';
-import ReadWriteStream = NodeJS.ReadWriteStream;
 import { sortObject } from '../helpers/object-helpers';
-import { EOL } from 'os';
+import { outputJsonSync } from 'fs-extra';
 
-export function updateTranslations(config: Config, languages: Language[]): ReadWriteStream {
-  return new StreamArray(createUpdatedLanguageFiles(languages))
-    .pipe(gulp.dest(path.join(config.src.folder, config.translations.folder)))
-    .pipe(debug({title: 'Updated languages:'}));
-}
-
-function createUpdatedLanguageFiles(languages: Language[]): File[] {
-  return languages
+export function updateTranslations(languages: Language[]) {
+  languages
     .filter(language => language.updated)
-    .map(language => {
-      const file = language.file.clone({
-        contents: false,
-      });
-      file.contents = new Buffer(JSON.stringify(sortObject(language.translation), null, 2) + EOL);
-      return file;
-    });
+    .forEach(language => outputJsonSync(language.file, sortObject(language.translation), {spaces: 2}));
 }

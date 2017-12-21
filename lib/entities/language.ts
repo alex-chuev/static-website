@@ -3,6 +3,7 @@ import { Url } from '../types';
 import { Config } from '../interfaces/config';
 import * as _ from 'lodash';
 import { PropertyPath } from 'lodash';
+import * as path from "path";
 
 export class Language {
   url: Url;
@@ -12,8 +13,12 @@ export class Language {
     this.url = Language.getUrl(this.name, this.config);
   }
 
-  static getUrl(language: string, options: Config): string {
-    return language === options.translations.defaultLanguage ? '' : language;
+  static getUrl(language: string, config: Config): string {
+    return language === config.translations.defaultLanguage ? '' : language;
+  }
+
+  get file(): string {
+    return path.join(this.config.src.folder, this.config.translations.folder, `${this.name}.${this.config.translations.extension}`);
   }
 
   translate(message: PropertyPath, otherwise: any = ''): string {

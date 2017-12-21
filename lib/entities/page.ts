@@ -1,5 +1,4 @@
 import { Language } from './language';
-import * as File from 'vinyl';
 import { CodeType } from './code';
 import { Url } from '../types';
 import { createAbsoluteUrl } from '../helpers/url-helpers';
@@ -11,10 +10,6 @@ import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
 import { readFileSync } from "fs";
 import { BuildCache } from '../cache';
-
-export interface PageFile extends File {
-  data: PageData;
-}
 
 export class PageData {
   language: Language;

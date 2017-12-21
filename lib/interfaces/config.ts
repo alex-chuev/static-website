@@ -1,5 +1,3 @@
-import { ScriptsCompilerOptions } from './scripts-compiler-options';
-
 export interface Config {
   verbose: boolean,
   src: {
@@ -25,7 +23,7 @@ export interface Config {
   scripts: {
     extension: string,
     folder: string,
-    options: ScriptsCompilerOptions,
+    options: any,
   },
   dist: {
     folder: string,

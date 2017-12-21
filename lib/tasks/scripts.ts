@@ -1,6 +1,5 @@
 import * as typescript from 'gulp-typescript';
 import ReadWriteStream = NodeJS.ReadWriteStream;
-import { compileCode } from './code';
 import * as File from 'vinyl';
 import { Config } from '../interfaces/config';
 import * as path from 'path';
@@ -11,10 +10,6 @@ import { Page } from '../entities/page';
 import { minify } from 'uglify-js';
 import { transpileModule } from 'typescript';
 import { Environment } from '../interfaces/environment';
-
-export function compileScript(glob: string): ReadWriteStream {
-  return compileCode(glob, typescript());
-}
 
 export function onGlobalScriptFileChange(config: Config, event: any): Promise<File> {
   const file = path.join(config.src.folder, config.scripts.folder, `main.${config.scripts.extension}`);

@@ -2,7 +2,6 @@ import * as gulp from 'gulp';
 import * as gulpStylus from 'gulp-stylus';
 import * as stylus from 'stylus';
 import ReadWriteStream = NodeJS.ReadWriteStream;
-import { compileCode } from './code';
 import { Config } from '../interfaces/config';
 import * as path from "path";
 import { toPromise } from '../helpers/to-promise';
@@ -10,12 +9,6 @@ import * as File from 'vinyl';
 import { existsSync, readFileSync } from 'fs';
 import { Page } from '../entities/page';
 import { Environment } from '../interfaces/environment';
-
-export function compileStyle(glob: string): ReadWriteStream {
-  return compileCode(glob, gulpStylus({
-    compress: true
-  }));
-}
 
 export function onGlobalStyleFileChange(config: Config, event: any): Promise<File> {
   const file = path.join(config.src.folder, config.styles.folder, `main.${config.styles.extension}`);

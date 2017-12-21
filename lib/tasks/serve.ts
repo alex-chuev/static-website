@@ -4,7 +4,7 @@ import { Environment } from '../interfaces/environment';
 import { getConfig } from './config';
 import { build } from './build';
 import * as path from 'path';
-import { promiseCopyAssets } from './assets';
+import { copyAssets } from './assets';
 import { onGlobalStyleFileChange, onPageStyleFileChange } from './styles';
 import { onGlobalScriptFileChange, onPageScriptFileChange } from './scripts';
 
@@ -24,7 +24,10 @@ export function serve() {
       });
 
       gulp.watch(path.join(config.src.folder, config.assets.folder, `**/*`))
-        .on('change', () => promiseCopyAssets(config).then(() => browserSync.reload()));
+        .on('change', event => {
+          copyAssets(config);
+          browserSync.reload(event);
+        });
 
       gulp.watch(path.join(config.src.folder, config.styles.folder, `**/*.${config.styles.extension}`))
         .on('change', event => onGlobalStyleFileChange(config, event).then(file => browserSync.reload(file.path)));
