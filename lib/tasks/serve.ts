@@ -1,4 +1,4 @@
-import * as gulp from 'gulp';
+import * as chokidar from 'chokidar';
 import { create } from 'browser-sync';
 import { Environment } from '../interfaces/environment';
 import { getConfig } from './config';
@@ -23,22 +23,22 @@ export function serve() {
         }
       });
 
-      gulp.watch(path.join(config.src.folder, config.assets.folder, `**/*`))
+      chokidar.watch(path.join(config.src.folder, config.assets.folder, `**/*`))
         .on('change', event => {
           copyAssets(config);
           browserSync.reload(event);
         });
 
-      gulp.watch(path.join(config.src.folder, config.styles.folder, `**/*.${config.styles.extension}`))
+      chokidar.watch(path.join(config.src.folder, config.styles.folder, `**/*.${config.styles.extension}`))
         .on('change', event => onGlobalStyleFileChange(config, event).then(file => browserSync.reload(file.path)));
 
-      gulp.watch(path.join(config.src.folder, config.pages.folder, `**/*.${config.styles.extension}`))
+      chokidar.watch(path.join(config.src.folder, config.pages.folder, `**/*.${config.styles.extension}`))
         .on('change', event => onPageStyleFileChange(config, event).then(file => browserSync.reload(file.path)));
 
-      gulp.watch(path.join(config.src.folder, config.scripts.folder, `**/*.${config.scripts.extension}`))
+      chokidar.watch(path.join(config.src.folder, config.scripts.folder, `**/*.${config.scripts.extension}`))
         .on('change', event => onGlobalScriptFileChange(config, event).then(file => browserSync.reload(file.path)));
 
-      gulp.watch(path.join(config.src.folder, config.pages.folder, `**/*.${config.scripts.extension}`))
+      chokidar.watch(path.join(config.src.folder, config.pages.folder, `**/*.${config.scripts.extension}`))
         .on('change', event => onPageScriptFileChange(config, event).then(file => browserSync.reload(file.path)));
     });
 }

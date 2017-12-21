@@ -6,6 +6,7 @@
   "main": "build/cli/app.js",
   "dependencies": {
     "browser-sync": "^2.18.13",
+    "chokidar": "^1.7.0",
     "commander": "^2.12.2",
     "fs-extra": "^4.0.2",
     "glob": "^7.1.2",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@types/browser-sync": "0.0.37",
     "@types/chai": "^4.0.6",
+    "@types/chokidar": "^1.7.4",
     "@types/commander": "^2.12.2",
     "@types/fs-extra": "^4.0.5",
     "@types/glob": "^5.0.34",
