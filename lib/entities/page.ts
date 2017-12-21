@@ -8,7 +8,7 @@ import { removeExtension } from '../helpers/path-helpers';
 import { Environment } from '../interfaces/environment';
 import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 import { BuildCache } from '../cache';
 import { Config } from '../interfaces/config';
 import * as path from 'path';

@@ -3,7 +3,7 @@ import { Url } from '../types';
 import { Config } from '../interfaces/config';
 import * as _ from 'lodash';
 import { PropertyPath } from 'lodash';
-import * as path from "path";
+import * as path from 'path';
 
 export class Language {
   url: Url;
