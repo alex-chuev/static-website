@@ -1,6 +1,7 @@
 import * as path from 'path';
 import { copySync, pathExistsSync, removeSync } from 'fs-extra';
 import { App } from '../app';
+import { Config } from '../interfaces/config';
 
 export function copyAssets(app: App) {
   if (pathExistsSync(path.join(app.config.src.folder, app.config.assets.folder))) {
@@ -28,4 +29,8 @@ export function getAssetDistPath(srcPath: string, app: App): string {
   const relativePath = path.relative(path.join(app.config.src.folder, app.config.assets.folder), srcPath);
 
   return path.join(app.config.dist.folder, relativePath);
+}
+
+export function getAssetsGlob(config: Config): string {
+  return path.join(config.src.folder, config.assets.folder, `**/*`);
 }
