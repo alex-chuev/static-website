@@ -3,7 +3,7 @@ import { defaultConfig } from '../../default-config';
 import { copySync, outputJsonSync } from 'fs-extra';
 import * as _ from 'lodash';
 import { Config } from '../../interfaces/config';
-import { parseLanguages } from '../utils/parse-languages';
+import { parseLanguages } from './parse-languages';
 import { FilePath } from '../../types';
 import { CreateAnswers } from '../commands/answers/create';
 

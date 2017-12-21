@@ -23,6 +23,7 @@
     "lodash": "^4.17.4",
     "map-stream": "0.0.7",
     "pug": "^2.0.0-rc.4",
+    "sitemap": "^1.13.0",
     "stream-to-array": "^2.3.0",
     "stylus": "^0.54.5",
     "through2": "^2.0.3",
