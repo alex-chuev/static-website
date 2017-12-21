@@ -1,12 +1,13 @@
 import { Environment } from '../interfaces/environment';
 import { getLanguages } from './languages';
-import { Config } from '../interfaces/config';
 import { BuildCache } from '../cache';
 import { getPages } from './pages';
 import { getGlobalCss, getPageCss } from './styles';
 import { getGlobalJs, getPageJs } from './scripts';
+import { getConfig } from './config';
 
-export function createBuildCache(config: Config, environment: Environment): BuildCache {
+export function createBuildCache(environment: Environment): BuildCache {
+  const config = getConfig();
   const languages = getLanguages(config);
   const globalInlineCss = getGlobalCss(config, environment, true);
   const globalInlineJs = getGlobalJs(config, environment, true);

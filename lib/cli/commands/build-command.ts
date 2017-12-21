@@ -1,8 +1,10 @@
 import { build } from '../../tasks/build';
-import { getConfig } from '../../tasks/config';
+import { createBuildCache } from '../../tasks/cache';
 
 export function buildCommand() {
-  build(getConfig(), {
+  const cache = createBuildCache({
     production: true,
   });
+
+  build(cache);
 }

@@ -1,30 +1,31 @@
 import * as chokidar from 'chokidar';
 import { create } from 'browser-sync';
-import { Environment } from '../interfaces/environment';
-import { getConfig } from './config';
 import { build } from './build';
 import * as path from 'path';
-import { copyAssets } from './assets';
+import { copyAsset, unlinkAsset } from './assets';
+import { createBuildCache } from './cache';
 
 export function serve() {
-  const config = getConfig();
-  const environment: Environment = {
+  const cache = createBuildCache({
     production: false,
-  };
+  });
+
+  build(cache);
+
   const browserSync = create();
+  browserSync.init({
+    server: {
+      baseDir: cache.config.dist.folder,
+    },
+    files: path.join(cache.config.dist.folder, '**/*'),
+    watchOptions: {
+      ignoreInitial: true,
+    },
+    reloadDebounce: 200,
+  });
 
-  build(config, environment)
-    .then(() => {
-      browserSync.init({
-        server: {
-          baseDir: config.dist.folder,
-        }
-      });
-
-      chokidar.watch(path.join(config.src.folder, config.assets.folder, `**/*`))
-        .on('change', event => {
-          copyAssets(config);
-          browserSync.reload(event);
-        });
-    });
+  chokidar.watch(path.join(cache.config.src.folder, cache.config.assets.folder, `**/*`), {ignoreInitial: true})
+    .on('add', file => copyAsset(file, cache))
+    .on('change', file => copyAsset(file, cache))
+    .on('unlink', file => unlinkAsset(file, cache));
 }
