@@ -1,51 +1,31 @@
-import * as stylus from 'stylus';
 import { Config } from '../interfaces/config';
 import * as path from 'path';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 import { Page } from '../entities/page';
 import { Environment } from '../interfaces/environment';
+import { CssCode } from './code';
 
-export function getPageInlineCss(config: Config, environment: Environment, pages: Page[]): WeakMap<Page, string> {
+export function getPageCss(config: Config, environment: Environment, pages: Page[], inline = false): WeakMap<Page, CssCode> {
+  const basePath = path.join(config.src.folder, config.pages.folder);
+
   return pages
     .reduce((map, page) => {
-      const code = getCss(config, environment, `${page.fullPathWithoutExt}.inline.${config.styles.extension}`);
-      if (code) {
-        map.set(page, code);
-      }
-      return map;
+      const relativePath = `${page.relativePathWithoutExt}${inline ? '.inline' : ''}.${config.styles.extension}`;
+      const code = getCss(basePath, relativePath, config, environment);
+
+      return code ? map.set(page, code) : map;
     }, new WeakMap());
 }
 
-export function getPageExternalCss(config: Config, environment: Environment, pages: Page[]): WeakMap<Page, string> {
-  return pages
-    .reduce((map, page) => {
-      const code = getCss(config, environment, `${page.fullPathWithoutExt}.${config.styles.extension}`);
-      if (code) {
-        map.set(page, code);
-      }
-      return map;
-    }, new WeakMap());
+export function getGlobalCss(config: Config, environment: Environment, inline = false): CssCode {
+  const basePath = path.join(config.src.folder, config.styles.folder);
+  const relativePath = `main${inline ? '.inline' : ''}.${config.styles.extension}`;
+
+  return getCss(basePath, relativePath, config, environment);
 }
 
-export function getGlobalInlineCss(config: Config, environment: Environment): string {
-  return getCss(config, environment, path.join(config.src.folder, config.styles.folder, `main.inline.${config.styles.extension}`));
-}
-
-export function getGlobalExternalCss(config: Config, environment: Environment): string {
-  return getCss(config, environment, path.join(config.src.folder, config.styles.folder, `main.${config.styles.extension}`));
-}
-
-export function getCss(config: Config, environment: Environment, filename: string): string {
-  if (existsSync(filename)) {
-    let code: string;
-
-    stylus(readFileSync(filename, 'utf-8'))
-      .set('filename', filename)
-      .set('compress', environment.production)
-      .render(function (error, css) {
-        code = css;
-      });
-
-    return code;
+export function getCss(basePath: string, relativePath: string, config: Config, environment: Environment): CssCode {
+  if (existsSync(path.join(basePath, relativePath))) {
+    return new CssCode(basePath, relativePath, config, environment);
   }
 }

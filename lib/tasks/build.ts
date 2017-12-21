@@ -33,5 +33,5 @@ export function buildPage(page: Page, language: Language, cache: BuildCache) {
   const data = new PageData(page, language, cache);
   const code = pug.render(page.content, {...data, filename: page.fullPath});
 
-  outputFileSync(path.join(config.dist.folder, language.url, page.defaultLanguageUrl), code);
+  outputFileSync(path.join(config.dist.folder, language.url, page.distPathWithExt), code);
 }

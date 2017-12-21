@@ -20,13 +20,13 @@ function generateSitemapContent(config: Config, pages: Page[], languages: Langua
   return sitemap.createSitemap({
     hostname: config.sitemap.domain,
     urls: _.flatMap(pages, page => _.map(languages, language => {
-      const url = urlHelper(page.defaultLanguageUrl, language.name, config);
+      const url = urlHelper(page.distPathWithExt, language.name, config);
       const links = languages
         .filter(item => language !== item)
         .map(item => {
           return {
             lang: item.name,
-            url: urlHelper(page.defaultLanguageUrl, language.name, config),
+            url: urlHelper(page.distPathWithExt, item.name, config),
           };
         });
 

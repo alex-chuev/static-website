@@ -3,20 +3,20 @@ import { getLanguages } from './languages';
 import { Config } from '../interfaces/config';
 import { BuildCache } from '../cache';
 import { getPages } from './pages';
-import { getGlobalExternalCss, getGlobalInlineCss, getPageExternalCss, getPageInlineCss } from './styles';
-import { getGlobalExternalJs, getGlobalInlineJs, getPageExternalJs, getPageInlineJs } from './scripts';
+import { getGlobalCss, getPageCss } from './styles';
+import { getGlobalJs, getPageJs } from './scripts';
 
 export function createBuildCache(config: Config, environment: Environment): BuildCache {
   const languages = getLanguages(config);
-  const globalInlineCss = getGlobalInlineCss(config, environment);
-  const globalInlineJs = getGlobalInlineJs(config, environment);
-  const globalExternalCss = getGlobalExternalCss(config, environment);
-  const globalExternalJs = getGlobalExternalJs(config, environment);
+  const globalInlineCss = getGlobalCss(config, environment, true);
+  const globalInlineJs = getGlobalJs(config, environment, true);
+  const globalExternalCss = getGlobalCss(config, environment);
+  const globalExternalJs = getGlobalJs(config, environment);
   const pages = getPages(config);
-  const pageInlineCss = getPageInlineCss(config, environment, pages);
-  const pageInlineJs = getPageInlineJs(config, environment, pages);
-  const pageExternalCss = getPageExternalCss(config, environment, pages);
-  const pageExternalJs = getPageExternalJs(config, environment, pages);
+  const pageInlineCss = getPageCss(config, environment, pages, true);
+  const pageInlineJs = getPageJs(config, environment, pages, true);
+  const pageExternalCss = getPageCss(config, environment, pages);
+  const pageExternalJs = getPageJs(config, environment, pages);
 
   return new BuildCache({
     config,

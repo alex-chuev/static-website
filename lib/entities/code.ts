@@ -1,6 +1,6 @@
 import { Url } from '../types';
 
-export class CodeType {
+export class PageCode {
   inline: string[] = [];
   external: Url[] = [];
 }

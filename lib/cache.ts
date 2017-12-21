@@ -2,20 +2,21 @@ import { Config } from './interfaces/config';
 import { Environment } from './interfaces/environment';
 import { Language } from './entities/language';
 import { Page } from './entities/page';
+import { CssCode, JsCode } from './tasks/code';
 
 class BuildCacheData {
   config: Config;
   environment: Environment;
   languages: Language[];
-  globalInlineCss: string;
-  globalInlineJs: string;
-  globalExternalCss: string;
-  globalExternalJs: string;
+  globalInlineCss: CssCode;
+  globalInlineJs: JsCode;
+  globalExternalCss: CssCode;
+  globalExternalJs: JsCode;
   pages: Page[];
-  pageInlineCss: WeakMap<Page, string>;
-  pageInlineJs: WeakMap<Page, string>;
-  pageExternalCss: WeakMap<Page, string>;
-  pageExternalJs: WeakMap<Page, string>;
+  pageInlineCss: WeakMap<Page, CssCode>;
+  pageInlineJs: WeakMap<Page, JsCode>;
+  pageExternalCss: WeakMap<Page, CssCode>;
+  pageExternalJs: WeakMap<Page, JsCode>;
 }
 
 export class BuildCache extends BuildCacheData {
