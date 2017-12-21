@@ -1,13 +1,39 @@
+import * as _ from 'lodash';
 import * as path from 'path';
-import * as sitemap from 'gulp-sitemap';
-import * as debug from 'gulp-debug';
-import * as gulp from 'gulp';
+import * as sitemap from 'sitemap';
+import { BuildCache } from '../cache';
+import { urlHelper } from '../helpers/template-helpers';
+import { outputFileSync } from 'fs-extra';
+import { Language } from '../entities/language';
+import { Page } from '../entities/page';
 import { Config } from '../interfaces/config';
-import ReadWriteStream = NodeJS.ReadWriteStream;
 
-export function generateSitemap(config: Config): ReadWriteStream {
-  return gulp.src(path.join(config.dist.folder, '**/*.html'), {read: false})
-    .pipe(sitemap({siteUrl: config.sitemap.domain + config.dist.url}))
-    .pipe(gulp.dest(config.dist.folder))
-    .pipe(debug({title: 'Sitemap:'}));
+export function generateSitemap(cache: BuildCache) {
+  const config = cache.config;
+  const content = generateSitemapContent(config, cache.pages, cache.languages);
+  const dist = path.join(config.dist.folder, 'sitemap.xml');
+
+  outputFileSync(dist, content);
+}
+
+function generateSitemapContent(config: Config, pages: Page[], languages: Language[]): string {
+  return sitemap.createSitemap({
+    hostname: config.sitemap.domain,
+    urls: _.flatMap(pages, page => _.map(languages, language => {
+      const url = urlHelper(page.defaultLanguageUrl, language.name, config);
+      const links = languages
+        .filter(item => language !== item)
+        .map(item => {
+          return {
+            lang: item.name,
+            url: urlHelper(page.defaultLanguageUrl, language.name, config),
+          };
+        });
+
+      return {
+        url,
+        links,
+      }
+    })),
+  });
 }

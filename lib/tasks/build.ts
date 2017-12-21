@@ -7,6 +7,7 @@ import { Language } from '../entities/language';
 import { Page, PageData } from '../entities/page';
 import { BuildCache } from '../cache';
 import * as pug from 'pug';
+import { generateSitemap } from './sitemap';
 
 export async function build(config: Config, environment: Environment): Promise<void> {
   const cache = createBuildCache(config, environment);
@@ -20,6 +21,7 @@ export async function build(config: Config, environment: Environment): Promise<v
   }
 
   buildPages(cache.pages, cache.languages, cache);
+  generateSitemap(cache);
 }
 
 export function buildPages(pages: Page[], languages: Language[], cache: BuildCache) {
@@ -29,8 +31,7 @@ export function buildPages(pages: Page[], languages: Language[], cache: BuildCac
 export function buildPage(page: Page, language: Language, cache: BuildCache) {
   const config = cache.config;
   const data = new PageData(page, language, cache);
-  const code = pug.render(page.content, {...data, filename: page.file});
-  const file = path.relative(path.join(config.src.folder, config.pages.folder), page.id);
+  const code = pug.render(page.content, {...data, filename: page.fullPath});
 
-  outputFileSync(path.join(config.dist.folder, language.url, `${file}.html`), code);
+  outputFileSync(path.join(config.dist.folder, language.url, page.defaultLanguageUrl), code);
 }

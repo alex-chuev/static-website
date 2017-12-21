@@ -34,7 +34,7 @@ function compileScriptFile(config: Config, file: string, base: string): ReadWrit
 export function getPageInlineJs(config: Config, environment: Environment, pages: Page[]): WeakMap<Page, string> {
   return pages
     .reduce((map, page) => {
-      const code = getJs(config, environment, `${page.id}.inline.${config.scripts.extension}`);
+      const code = getJs(config, environment, `${page.fullPathWithoutExt}.inline.${config.scripts.extension}`);
       if (code) {
         map.set(page, code);
       }
@@ -45,7 +45,7 @@ export function getPageInlineJs(config: Config, environment: Environment, pages:
 export function getPageExternalJs(config: Config, environment: Environment, pages: Page[]): WeakMap<Page, string> {
   return pages
     .reduce((map, page) => {
-      const code = getJs(config, environment, `${page.id}.${config.scripts.extension}`);
+      const code = getJs(config, environment, `${page.fullPathWithoutExt}.${config.scripts.extension}`);
       if (code) {
         map.set(page, code);
       }

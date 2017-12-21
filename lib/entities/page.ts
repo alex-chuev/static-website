@@ -10,6 +10,8 @@ import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
 import { readFileSync } from "fs";
 import { BuildCache } from '../cache';
+import { Config } from '../interfaces/config';
+import * as path from 'path';
 
 export class PageData {
   language: Language;
@@ -46,11 +48,11 @@ export class PageData {
     }
 
     this.asset = (relativeUrl: Url) => assetHelper(relativeUrl, cache.config);
-    this.currentUrl = urlHelper(`${page.id}.html`, this.language.url, cache.config);
-    this.currentDefaultLanguageUrl = createAbsoluteUrl(`${page.id}.html`, cache.config);
+    this.currentUrl = urlHelper(page.defaultLanguageUrl, this.language.url, cache.config);
+    this.currentDefaultLanguageUrl = page.defaultLanguageUrl;
     this.url = (relativeUrl: Url, languageName = language.name) => urlHelper(
       relativeUrl, languageName, cache.config);
-    this.languageUrl = (languageName: string) => urlHelper(`${page.id}.html`, languageName, cache.config);
+    this.languageUrl = (languageName: string) => urlHelper(page.defaultLanguageUrl, languageName, cache.config);
     this.isActive = (relativeUrl: Url) =>
       this.currentDefaultLanguageUrl === createAbsoluteUrl(relativeUrl, cache.config);
     this.i18n = (message: PropertyPath, otherwise = ''): string => this.language.translate(message, otherwise);
@@ -60,18 +62,22 @@ export class PageData {
         languageName);
     };
     this.languageLink = (language: string, text?: string, className?: string, activeClass?: string, attributes?: Attrs): string => {
-      return this.link(createAbsoluteUrl(`${page.id}.html`, cache.config), text, className, activeClass, attributes, language);
+      return this.link(this.currentDefaultLanguageUrl, text, className, activeClass, attributes, language);
     }
 
   }
 }
 
 export class Page {
-  id: string;
   content: string;
+  fullPathWithoutExt: string;
+  relativePathWithoutExt: string;
+  defaultLanguageUrl: string;
 
-  constructor(public file: string) {
-    this.id = removeExtension(this.file);
-    this.content = readFileSync(this.file, 'utf-8');
+  constructor(public fullPath: string, config: Config) {
+    this.fullPathWithoutExt = removeExtension(this.fullPath);
+    this.relativePathWithoutExt = path.relative(path.join(config.src.folder, config.pages.folder), this.fullPathWithoutExt);
+    this.content = readFileSync(this.fullPath, 'utf-8');
+    this.defaultLanguageUrl = createAbsoluteUrl(`${this.relativePathWithoutExt}.html`, config);
   }
 }

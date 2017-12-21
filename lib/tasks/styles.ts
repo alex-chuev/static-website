@@ -35,7 +35,7 @@ function compileStyleFile(config: Config, file: string, base: string): ReadWrite
 export function getPageInlineCss(config: Config, environment: Environment, pages: Page[]): WeakMap<Page, string> {
   return pages
     .reduce((map, page) => {
-      const code = getCss(config, environment, `${page.id}.inline.${config.styles.extension}`);
+      const code = getCss(config, environment, `${page.fullPathWithoutExt}.inline.${config.styles.extension}`);
       if (code) {
         map.set(page, code);
       }
@@ -46,7 +46,7 @@ export function getPageInlineCss(config: Config, environment: Environment, pages
 export function getPageExternalCss(config: Config, environment: Environment, pages: Page[]): WeakMap<Page, string> {
   return pages
     .reduce((map, page) => {
-      const code = getCss(config, environment, `${page.id}.${config.styles.extension}`);
+      const code = getCss(config, environment, `${page.fullPathWithoutExt}.${config.styles.extension}`);
       if (code) {
         map.set(page, code);
       }
