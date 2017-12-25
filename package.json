@@ -42,7 +42,7 @@
     "test": "mocha build/**/*.spec.js",
     "test-watch": "npm run test -- --watch --watch-extensions .js",
     "build": "tsc",
-    "watch": "tsc -w --inlineSourceMap true",
+    "watch": "tsc -w",
     "cli": "node build/cli/app.js",
     "cli-serve": "npm run cli -- serve",
     "cli-build": "npm run cli -- build"
