@@ -1,7 +1,12 @@
 import * as path from 'path';
-import { ConfigDefaults } from './config-defaults';
+import { AppConfigDefaults } from './app-config-defaults';
+import { existsSync, readJsonSync } from 'fs-extra';
 
-export class Config extends ConfigDefaults {
+export class AppConfig extends AppConfigDefaults {
+  constructor(file = 'static-website.json') {
+    super(existsSync(file) ? readJsonSync(file) : undefined);
+  }
+
   get assetsFolder(): string {
     return path.join(this.src.folder, this.assets.folder);
   }
@@ -26,7 +31,15 @@ export class Config extends ConfigDefaults {
     return path.join(this.src.folder, this.scripts.folder);
   }
 
+  get scriptsBase(): string {
+    return path.join(this.scriptsFolder, 'main');
+  }
+
   get stylesFolder(): string {
     return path.join(this.src.folder, this.styles.folder);
+  }
+
+  get stylesBase(): string {
+    return path.join(this.stylesFolder, 'main');
   }
 }

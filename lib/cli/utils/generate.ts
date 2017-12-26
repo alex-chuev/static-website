@@ -2,7 +2,7 @@ import * as path from 'path';
 import { copySync, outputJsonSync } from 'fs-extra';
 import { parseLanguages } from './parse-languages';
 import { CreateAnswers } from '../commands/answers/create';
-import { ConfigDefaults } from '../../entities/config-defaults';
+import { AppConfigDefaults } from '../../entities/app-config-defaults';
 
 interface Params {
   dir: string;
@@ -18,8 +18,8 @@ export function generate(answers: CreateAnswers, params: Params) {
   createLanguageFiles(answers, target, configData);
 }
 
-function getConfigData(answers: CreateAnswers, params: Params): ConfigDefaults {
-  return new ConfigDefaults({
+function getConfigData(answers: CreateAnswers, params: Params): AppConfigDefaults {
+  return new AppConfigDefaults({
     translations: {
       defaultLanguage: answers.defaultLanguage,
     },
@@ -38,7 +38,7 @@ function getConfigData(answers: CreateAnswers, params: Params): ConfigDefaults {
   });
 }
 
-function createConfigFile(params: Params, configData: ConfigDefaults) {
+function createConfigFile(params: Params, configData: AppConfigDefaults) {
   outputJsonSync(path.join(params.dir, 'static-website.json'), configData, {
     spaces: 2,
   });
@@ -48,7 +48,7 @@ function copyTemplate(target: string) {
   copySync(path.join(__dirname, '../../../templates/basic'), target);
 }
 
-function createLanguageFiles(answers: CreateAnswers, target: string, config: ConfigDefaults) {
+function createLanguageFiles(answers: CreateAnswers, target: string, config: AppConfigDefaults) {
   parseLanguages(answers.languages).forEach(language => {
     const languagePath = path.join(target, config.translations.folder, `${language}.json`);
 

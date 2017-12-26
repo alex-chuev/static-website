@@ -37,6 +37,6 @@ export interface ConfigData {
   },
   sitemap: {
     generate: boolean,
-    domain: string,
+    hostname: string,
   },
 }

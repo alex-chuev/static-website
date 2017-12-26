@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { ConfigData } from '../interfaces/config-data';
 
-export class ConfigDefaults implements ConfigData {
+export class AppConfigDefaults implements ConfigData {
   verbose = true;
   src = {
     folder: 'src',
@@ -40,7 +40,7 @@ export class ConfigDefaults implements ConfigData {
   };
   sitemap = {
     generate: true,
-    domain: '',
+    hostname: '',
   };
 
   constructor(data?: any) {
