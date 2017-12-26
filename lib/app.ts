@@ -10,7 +10,7 @@ import { generateSitemap } from './tasks/sitemap';
 import * as pug from 'pug';
 import { updateLanguages } from './tasks/languages';
 import { WatchEvent } from './interfaces/watch-event';
-import * as isInside from 'is-inside';
+import isInside from 'is-inside';
 import { WatchAction } from './enums/watch-action';
 
 class AppData {
