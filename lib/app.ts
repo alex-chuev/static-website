@@ -9,9 +9,6 @@ import * as path from 'path';
 import { generateSitemap } from './tasks/sitemap';
 import * as pug from 'pug';
 import { updateLanguages } from './tasks/languages';
-import { WatchEvent } from './interfaces/watch-event';
-import isInside from 'is-inside';
-import { WatchAction } from './enums/watch-action';
 
 class AppData {
   config: Config;
@@ -70,42 +67,6 @@ export class App extends AppData {
 
     outputFileSync(path.join(this.config.dist.folder, language.url, page.distPathWithExt), code);
   }
-
-  onWatchEvent(event: WatchEvent) {
-    if (isInside(event.file, this.assetsFolder)) {
-      this.onAssetsEvent(event);
-    } else if (isInside(event.file, this.translationsFolder)) {
-      this.onTranslationsEvent(event);
-    } else if (isInside(event.file, this.pagesFolder)) {
-      this.onPagesEvent(event);
-    } else if (isInside(event.file, this.scriptsFolder)) {
-      this.onScriptsEvent(event);
-    } else if (isInside(event.file, this.stylesFolder)) {
-      this.onStylesEvent(event);
-    } else {
-      this.buildPages();
-    }
-  }
-
-  onAssetsEvent(event: WatchEvent) {
-    switch (event.action) {
-      case WatchAction.Add:
-      case WatchAction.Change:
-    }
-  }
-
-  onTranslationsEvent(event: WatchEvent) {
-  }
-
-  onPagesEvent(event: WatchEvent) {
-  }
-
-  onScriptsEvent(event: WatchEvent) {
-  }
-
-  onStylesEvent(event: WatchEvent) {
-  }
-
 
   get assetsFolder(): string {
     return path.join(this.config.src.folder, this.config.assets.folder);

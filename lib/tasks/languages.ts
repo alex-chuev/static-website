@@ -2,6 +2,8 @@ import * as path from 'path';
 import { Language } from '../entities/language';
 import { Config } from '../interfaces/config';
 import * as glob from 'glob';
+import { WatchEvent } from '../interfaces/watch-event';
+import { WatchAction } from '../enums/watch-action';
 
 export function getLanguages(config: Config): Language[] {
   return glob.sync(getTranslationsGlob(config))
@@ -18,4 +20,13 @@ export function updateLanguages(languages: Language[]) {
 
 export function getTranslationsGlob(config: Config): string {
   return path.join(config.src.folder, config.translations.folder, `*.${config.translations.extension}`);
+}
+
+export function onTranslationsWatchEvent(event: WatchEvent) {
+  switch (event.action) {
+    case WatchAction.Add:
+    case WatchAction.Change:
+    case WatchAction.Unlink:
+      break;
+  }
 }

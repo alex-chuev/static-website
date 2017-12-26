@@ -1,14 +1,15 @@
 import * as chokidar from 'chokidar';
 import { create } from 'browser-sync';
 import * as path from 'path';
-import { copyAsset, getAssetsGlob, unlinkAsset } from './assets';
+import isInside from 'is-inside';
 import { createApp } from './app';
-import { getGlobalJs, getPageJs } from './scripts';
-import { saveExternalCss, saveExternalJs } from './code';
-import { getGlobalCss, getPageCss } from './styles';
-import { getLanguages, getTranslationsGlob } from './languages';
-import { getPages } from './pages';
 import { WatchAction } from '../enums/watch-action';
+import { WatchEvent } from '../interfaces/watch-event';
+import { onAssetsWatchEvent } from './assets';
+import { onScriptsWatchEvent } from './scripts';
+import { onStylesWatchEvent } from './styles';
+import { onTranslationsWatchEvent } from './languages';
+import { onPagesWatchEvent } from './pages';
 
 export function serve() {
   const app = createApp({
@@ -30,15 +31,10 @@ export function serve() {
   });
 
   chokidar.watch(path.join(app.config.src.folder, '**/*'))
-    .on('add', file => app.onWatchEvent({file, action: WatchAction.Add}))
-    .on('change', file => app.onWatchEvent({file, action: WatchAction.Change}))
-    .on('unlink', file => app.onWatchEvent({file, action: WatchAction.Unlink}));
+    .on('add', file => onWatchEvent({app, file, action: WatchAction.Add}))
+    .on('change', file => onWatchEvent({app, file, action: WatchAction.Change}))
+    .on('unlink', file => onWatchEvent({app, file, action: WatchAction.Unlink}));
 
-  // chokidar.watch(getAssetsGlob(app.config), {ignoreInitial: true})
-  //   .on('add', file => copyAsset(file, app))
-  //   .on('change', file => copyAsset(file, app))
-  //   .on('unlink', file => unlinkAsset(file, app));
-  //
   // chokidar.watch(path.join(app.config.src.folder, app.config.scripts.folder, `**/*.${app.config.scripts.extension}`), {ignoreInitial: true})
   //   .on('change', file => {
   //     app.inlineJs = getGlobalJs(app.config, app.environment, true);
@@ -80,4 +76,20 @@ export function serve() {
   //
   //     app.buildPages(app.pages, app.languages);
   //   });
+}
+
+function onWatchEvent(event: WatchEvent) {
+  if (isInside(event.file, event.app.assetsFolder)) {
+    onAssetsWatchEvent(event);
+  } else if (isInside(event.file, event.app.translationsFolder)) {
+    onTranslationsWatchEvent(event);
+  } else if (isInside(event.file, event.app.pagesFolder)) {
+    onPagesWatchEvent(event);
+  } else if (isInside(event.file, event.app.scriptsFolder)) {
+    onScriptsWatchEvent(event);
+  } else if (isInside(event.file, event.app.stylesFolder)) {
+    onStylesWatchEvent(event);
+  } else {
+    event.app.buildPages();
+  }
 }
