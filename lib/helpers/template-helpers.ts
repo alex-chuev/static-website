@@ -1,5 +1,5 @@
 import { Url } from '../types';
-import { Config } from '../interfaces/config';
+import { Config } from '../entities/config';
 import { createAbsoluteUrl } from './url-helpers';
 import * as path from 'path';
 import { Language } from '../entities/language';

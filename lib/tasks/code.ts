@@ -1,9 +1,9 @@
-import { Config } from '../interfaces/config';
+import { Config } from '../entities/config';
 import { Environment } from '../interfaces/environment';
 import * as stylus from 'stylus';
 import { readFileSync } from 'fs';
 import { minify } from 'uglify-js';
-import { transpileModule } from 'typescript';
+import { ScriptTarget, transpileModule } from 'typescript';
 import * as path from 'path';
 import { removeExtension } from '../helpers/path-helpers';
 import { createAbsoluteUrl } from '../helpers/url-helpers';
@@ -47,7 +47,11 @@ export class JsCode extends Code {
   ext = 'js';
 
   getContent() {
-    const content = transpileModule(readFileSync(this.fullPath, 'utf-8'), this.config.scripts.options).outputText;
+    const content = transpileModule(readFileSync(this.fullPath, 'utf-8'), {
+      compilerOptions: {
+        target: ScriptTarget.ES5,
+      },
+    }).outputText;
     this.content = this.environment.production ? minify(content).code : content;
   }
 }

@@ -1,4 +1,4 @@
-export interface Config {
+export interface ConfigData {
   verbose: boolean,
   src: {
     folder: string,
@@ -23,7 +23,6 @@ export interface Config {
   scripts: {
     extension: string,
     folder: string,
-    options: any,
   },
   dist: {
     folder: string,

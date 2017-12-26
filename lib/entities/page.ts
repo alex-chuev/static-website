@@ -10,7 +10,7 @@ import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
 import { readFileSync } from 'fs';
 import { App } from '../app';
-import { Config } from '../interfaces/config';
+import { Config } from './config';
 import * as path from 'path';
 import { Code, CssCode, JsCode } from '../tasks/code';
 
@@ -111,7 +111,7 @@ export class Page {
   distPathWithExt: string;
 
   constructor(public fullPath: string, config: Config) {
-    this.relativePathWithoutExt = path.relative(path.join(config.src.folder, config.pages.folder), removeExtension(this.fullPath));
+    this.relativePathWithoutExt = path.relative(config.pagesFolder, removeExtension(this.fullPath));
     this.content = readFileSync(this.fullPath, 'utf-8');
     this.distPathWithExt = `${this.relativePathWithoutExt}.html`;
     this.defaultLanguageUrl = createAbsoluteUrl(this.distPathWithExt, config);

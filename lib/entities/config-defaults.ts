@@ -1,49 +1,51 @@
-import { Config } from './interfaces/config';
+import * as _ from 'lodash';
+import { ConfigData } from '../interfaces/config-data';
 
-export const defaultConfig: Config = {
-  verbose: true,
-  src: {
+export class ConfigDefaults implements ConfigData {
+  verbose = true;
+  src = {
     folder: 'src',
-  },
-  assets: {
+  };
+  assets = {
     folder: 'assets',
-  },
-  translations: {
+  };
+  translations = {
     folder: 'languages',
     defaultLanguage: 'en',
     extension: 'json',
     generate: true,
-  },
-  pages: {
+  };
+  pages = {
     folder: 'pages',
     extension: 'pug',
-  },
-  styles: {
+  };
+  styles = {
     extension: 'styl',
     folder: 'styles',
-  },
-  scripts: {
+  };
+  scripts = {
     extension: 'ts',
     folder: 'scripts',
-    options: {
-      compilerOptions: {
-        target: 'es5',
-      },
-    },
-  },
-  dist: {
+  };
+  dist = {
     folder: 'dist',
     encoding: 'utf-8',
     clean: true,
     url: '/',
-  },
-  serve: {
+  };
+  serve = {
     host: 'localhost',
     port: 5000,
     open: true,
-  },
-  sitemap: {
+  };
+  sitemap = {
     generate: true,
     domain: '',
-  },
-};
+  };
+
+  constructor(data?: any) {
+    if (data) {
+      _.merge(this, data);
+    }
+  }
+}

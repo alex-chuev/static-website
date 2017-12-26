@@ -1,28 +1,25 @@
 import * as path from 'path';
-import { defaultConfig } from '../../default-config';
 import { copySync, outputJsonSync } from 'fs-extra';
-import * as _ from 'lodash';
-import { Config } from '../../interfaces/config';
 import { parseLanguages } from './parse-languages';
-import { FilePath } from '../../types';
 import { CreateAnswers } from '../commands/answers/create';
+import { ConfigDefaults } from '../../entities/config-defaults';
 
-interface Data {
+interface Params {
   dir: string;
   src: string;
 }
 
-export function generate(answers: CreateAnswers, data: Data) {
-  const config = getConfig(answers, data);
-  const target = path.join(data.dir, data.src);
+export function generate(answers: CreateAnswers, params: Params) {
+  const configData = getConfigData(answers, params);
+  const target = path.join(params.dir, params.src);
 
-  createConfigFile(data, config);
+  createConfigFile(params, configData);
   copyTemplate(target);
-  createLanguageFiles(answers, target, config);
+  createLanguageFiles(answers, target, configData);
 }
 
-function getConfig(answers: CreateAnswers, data: Data): Config {
-  return _.defaultsDeep({
+function getConfigData(answers: CreateAnswers, params: Params): ConfigDefaults {
+  return new ConfigDefaults({
     translations: {
       defaultLanguage: answers.defaultLanguage,
     },
@@ -36,22 +33,22 @@ function getConfig(answers: CreateAnswers, data: Data): Config {
       extension: answers.scriptsExtension,
     },
     src: {
-      folder: data.src,
+      folder: params.src,
     },
-  }, defaultConfig);
+  });
 }
 
-function createConfigFile(data: Data, config: Config) {
-  outputJsonSync(path.join(data.dir, 'static-website.json'), config, {
+function createConfigFile(params: Params, configData: ConfigDefaults) {
+  outputJsonSync(path.join(params.dir, 'static-website.json'), configData, {
     spaces: 2,
   });
 }
 
-function copyTemplate(target: FilePath) {
+function copyTemplate(target: string) {
   copySync(path.join(__dirname, '../../../templates/basic'), target);
 }
 
-function createLanguageFiles(answers: CreateAnswers, target: FilePath, config: Config) {
+function createLanguageFiles(answers: CreateAnswers, target: string, config: ConfigDefaults) {
   parseLanguages(answers.languages).forEach(language => {
     const languagePath = path.join(target, config.translations.folder, `${language}.json`);
 

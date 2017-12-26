@@ -6,7 +6,7 @@ import { urlHelper } from '../helpers/template-helpers';
 import { outputFileSync } from 'fs-extra';
 import { Language } from '../entities/language';
 import { Page } from '../entities/page';
-import { Config } from '../interfaces/config';
+import { Config } from '../entities/config';
 
 export function generateSitemap(app: App) {
   const config = app.config;

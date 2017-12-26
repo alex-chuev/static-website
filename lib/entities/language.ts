@@ -1,6 +1,6 @@
 import { Translation } from '../interfaces/translation';
 import { Url } from '../types';
-import { Config } from '../interfaces/config';
+import { Config } from './config';
 import * as _ from 'lodash';
 import { PropertyPath } from 'lodash';
 import * as path from 'path';

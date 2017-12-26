@@ -1,9 +1,9 @@
-import { Config } from './interfaces/config';
+import { Config } from './entities/config';
 import { Environment } from './interfaces/environment';
 import { Language } from './entities/language';
 import { Page, PageData } from './entities/page';
 import { CssCode, JsCode, saveExternalCss, saveExternalJs, savePageExternalCode } from './tasks/code';
-import { copySync, emptyDirSync, outputFileSync, pathExistsSync } from 'fs-extra';
+import { emptyDirSync, outputFileSync } from 'fs-extra';
 import { copyAssets } from './tasks/assets';
 import * as path from 'path';
 import { generateSitemap } from './tasks/sitemap';
@@ -37,10 +37,6 @@ export class App extends AppData {
       emptyDirSync(this.config.dist.folder);
     }
 
-    if (pathExistsSync(path.join(this.config.src.folder, this.config.assets.folder))) {
-      copySync(path.join(this.config.src.folder, this.config.assets.folder), this.config.dist.folder);
-    }
-
     saveExternalCss(this);
     saveExternalJs(this);
 
@@ -66,26 +62,6 @@ export class App extends AppData {
     savePageExternalCode(page, this);
 
     outputFileSync(path.join(this.config.dist.folder, language.url, page.distPathWithExt), code);
-  }
-
-  get assetsFolder(): string {
-    return path.join(this.config.src.folder, this.config.assets.folder);
-  }
-
-  get translationsFolder(): string {
-    return path.join(this.config.src.folder, this.config.translations.folder);
-  }
-
-  get pagesFolder(): string {
-    return path.join(this.config.src.folder, this.config.pages.folder);
-  }
-
-  get scriptsFolder(): string {
-    return path.join(this.config.src.folder, this.config.scripts.folder);
-  }
-
-  get stylesFolder(): string {
-    return path.join(this.config.src.folder, this.config.styles.folder);
   }
 
 }

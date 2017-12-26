@@ -1,4 +1,4 @@
-import { Config } from '../interfaces/config';
+import { Config } from '../entities/config';
 import { Url } from '../types';
 
 const indexRegExp = /index\.html$/g;

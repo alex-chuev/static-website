@@ -79,15 +79,15 @@ export function serve() {
 }
 
 function onWatchEvent(event: WatchEvent) {
-  if (isInside(event.file, event.app.assetsFolder)) {
+  if (isInside(event.file, event.app.config.assetsFolder)) {
     onAssetsWatchEvent(event);
-  } else if (isInside(event.file, event.app.translationsFolder)) {
+  } else if (isInside(event.file, event.app.config.translationsFolder)) {
     onTranslationsWatchEvent(event);
-  } else if (isInside(event.file, event.app.pagesFolder)) {
+  } else if (isInside(event.file, event.app.config.pagesFolder)) {
     onPagesWatchEvent(event);
-  } else if (isInside(event.file, event.app.scriptsFolder)) {
+  } else if (isInside(event.file, event.app.config.scriptsFolder)) {
     onScriptsWatchEvent(event);
-  } else if (isInside(event.file, event.app.stylesFolder)) {
+  } else if (isInside(event.file, event.app.config.stylesFolder)) {
     onStylesWatchEvent(event);
   } else {
     event.app.buildPages();

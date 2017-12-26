@@ -1,12 +1,11 @@
-import * as path from 'path';
 import { Language } from '../entities/language';
-import { Config } from '../interfaces/config';
+import { Config } from '../entities/config';
 import * as glob from 'glob';
 import { WatchEvent } from '../interfaces/watch-event';
 import { WatchAction } from '../enums/watch-action';
 
 export function getLanguages(config: Config): Language[] {
-  return glob.sync(getTranslationsGlob(config))
+  return glob.sync(config.translationsGlob)
     .map(file => getLanguage(file, config));
 }
 
@@ -16,10 +15,6 @@ export function getLanguage(file: string, config: Config): Language {
 
 export function updateLanguages(languages: Language[]) {
   languages.forEach(language => language.save());
-}
-
-export function getTranslationsGlob(config: Config): string {
-  return path.join(config.src.folder, config.translations.folder, `*.${config.translations.extension}`);
 }
 
 export function onTranslationsWatchEvent(event: WatchEvent) {
