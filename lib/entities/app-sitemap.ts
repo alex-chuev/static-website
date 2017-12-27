@@ -16,7 +16,11 @@ export class AppSitemap {
 
   dist() {
     if (this.config.sitemap.generate) {
-      outputFileSync(this.file, this.generateContent());
+      try {
+        outputFileSync(this.file, this.generateContent());
+      } catch (error) {
+        console.error('Could not create sitemap due to an error:', error.message);
+      }
     }
   }
 
