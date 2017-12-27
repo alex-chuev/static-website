@@ -34,7 +34,7 @@ export class AppSitemap {
       return {
         url,
         links,
-      }
+      };
     }));
 
     return sitemap.createSitemap({hostname, urls}).toString();

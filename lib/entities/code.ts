@@ -37,15 +37,15 @@ export abstract class Code {
 
   get url(): string {
     return createAbsoluteUrl(`${this.pageId}.${this.ext}`, this.config);
-  };
+  }
 
   get distPath(): string {
     return path.join(this.config.dist.folder, `${this.pageId}.${this.ext}`);
-  };
+  }
 
   get external(): boolean {
     return false === this.inline;
-  };
+  }
 
   dist() {
     outputFileSync(this.distPath, this.content);

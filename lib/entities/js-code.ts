@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 import { ScriptTarget, transpileModule } from 'typescript';
 import { minify } from 'uglify-js';
 import { Code } from './code';

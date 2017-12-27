@@ -49,7 +49,7 @@ export class PageData {
     const isActive = this.isActive(url);
 
     return HtmlFactory.createLink(href, content, className, activeClass, isActive, attrs, lang);
-  };
+  }
 
   languageLink = (language: string, text?: string, className?: string, activeClass?: string, attributes?: Attrs): string => {
     return this.link(this.page.defaultLanguageUrl, text, className, activeClass, attributes, language);

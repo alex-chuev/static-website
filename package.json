@@ -37,12 +37,14 @@
     "@types/uglify-js": "^2.6.29",
     "chai": "^4.1.2",
     "mocha": "^3.2.0",
-    "sinon": "^4.1.2"
+    "sinon": "^4.1.2",
+    "tslint": "^5.8.0"
   },
   "scripts": {
     "test": "mocha build/**/*.spec.js",
     "test-watch": "npm run test -- --watch --watch-extensions .js",
     "build": "tsc",
+    "lint": "tslint --config tslint.json --project tsconfig.json lib/**/*.ts",
     "watch": "tsc -w",
     "cli": "node build/cli/app.js",
     "cli-serve": "npm run cli -- serve",

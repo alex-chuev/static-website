@@ -1,5 +1,5 @@
 import { copySync, pathExistsSync, removeSync } from 'fs-extra';
-import * as path from "path";
+import * as path from 'path';
 import { WatchEvent } from '../interfaces/watch-event';
 import { WatchAction } from '../enums/watch-action';
 import { AppConfig } from './app-config';

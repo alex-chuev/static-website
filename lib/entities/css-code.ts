@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 import * as stylus from 'stylus';
 import { Code } from './code';
 
