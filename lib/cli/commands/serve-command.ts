@@ -101,12 +101,12 @@ export function serveCommand() {
       case WatchAction.Add:
         app.pages.build(app.pages.items, [
           app.languages.addLanguage(event.file),
-        ], false);
+        ]);
         break;
       case WatchAction.Change:
         app.pages.build(app.pages.items, [
           app.languages.updateLanguage(event.file),
-        ], false);
+        ]);
         break;
       case WatchAction.Unlink:
         app.pages.unlinkDistPages(app.pages.items, app.languages.removeLanguages(event.file));

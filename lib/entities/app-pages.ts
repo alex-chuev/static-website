@@ -29,14 +29,12 @@ export class AppPages {
       .forEach(page => this.items.push(page));
   }
 
-  build(pages: Page[] = this.items, languages: Language[] = this.languages.items, distCode = true) {
-    pages.forEach(page => {
-      if (distCode) {
-        page.distCode();
-      }
+  distCode() {
+    this.items.forEach(page => page.distCode());
+  }
 
-      languages.forEach(language => this.buildPage(page, language));
-    });
+  build(pages: Page[] = this.items, languages: Language[] = this.languages.items) {
+    pages.forEach(page => languages.forEach(language => this.buildPage(page, language)));
 
     this.languages.save();
   }
