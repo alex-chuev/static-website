@@ -7,12 +7,14 @@ import { outputFileSync } from 'fs-extra';
 import { Page } from './page';
 import { PageId } from '../types';
 import { CodeParams } from '../interfaces/code-params';
+import { removeExtension } from '../helpers/path-helpers';
 
 export abstract class Code {
   content: string;
   pageId: PageId;
   host: string;
   file: string;
+  relativeWithoutExt: string;
   config: AppConfig;
   environment: Environment;
 
@@ -29,6 +31,7 @@ export abstract class Code {
   constructor(params: CodeParams) {
     this.host = params.host;
     this.file = params.file;
+    this.relativeWithoutExt = removeExtension(path.relative(this.host, this.file));
     this.config = params.config;
     this.environment = params.environment;
     this.pageId = Page.createPageId(this.file, this.config);
@@ -36,11 +39,11 @@ export abstract class Code {
   }
 
   get url(): string {
-    return createAbsoluteUrl(`${this.pageId}.${this.ext}`, this.config);
+    return createAbsoluteUrl(`${this.relativeWithoutExt}.${this.ext}`, this.config);
   }
 
   get distPath(): string {
-    return path.join(this.config.dist.folder, `${this.pageId}.${this.ext}`);
+    return path.join(this.config.dist.folder, `${this.relativeWithoutExt}.${this.ext}`);
   }
 
   get external(): boolean {

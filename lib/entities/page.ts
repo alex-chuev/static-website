@@ -19,7 +19,7 @@ export class Page {
   js: JsCodes;
 
   static createPageId(file: string, config: AppConfig): PageId {
-    return removeExtension(path.relative(file, config.pagesFolder));
+    return removeExtension(path.relative(config.pagesFolder, file));
   }
 
   constructor(public fullPath: string, private config: AppConfig, private environment: Environment) {
