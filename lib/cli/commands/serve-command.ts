@@ -27,7 +27,9 @@ export function serveCommand() {
     reloadDebounce: 200,
   });
 
-  chokidar.watch(path.join(app.config.src.folder, '**/*'))
+  chokidar.watch(path.join(app.config.src.folder, '**/*'), {
+    ignoreInitial: true,
+  })
     .on(WatchAction.Add, file => onWatchEvent({file, action: WatchAction.Add}))
     .on(WatchAction.Change, file => onWatchEvent({file, action: WatchAction.Change}))
     .on(WatchAction.Unlink, file => onWatchEvent({file, action: WatchAction.Unlink}));

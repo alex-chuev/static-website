@@ -9,7 +9,7 @@ import { AppLanguages } from './app-languages';
 import { PageData } from './page-data';
 import * as path from 'path';
 import * as pug from 'pug';
-import { outputFileSync } from 'fs-extra';
+import { distContent } from '../helpers/dist-helpers';
 import { CssCodes } from './css-codes';
 import { JsCodes } from './js-codes';
 
@@ -30,7 +30,11 @@ export class AppPages {
   }
 
   dist(pages: Page[] = this.items, languages: Language[] = this.languages.items) {
-    pages.forEach(page => languages.forEach(language => this.buildPage(page, language)));
+    pages.forEach(page => {
+      page.distCode();
+
+      languages.forEach(language => this.buildPage(page, language));
+    });
 
     this.languages.save();
   }
@@ -46,10 +50,9 @@ export class AppPages {
       this.js,
     );
     const code = pug.render(page.content, {...data, filename: page.fullPath});
+    const distPath = path.join(this.config.dist.folder, language.url, page.distPathWithExt);
 
-    page.distCode();
-
-    outputFileSync(path.join(this.config.dist.folder, language.url, page.distPathWithExt), code);
+    distContent(code, distPath);
   }
 
   onWatchEvent(event: WatchEvent) {

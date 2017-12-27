@@ -3,7 +3,7 @@ import { Environment } from '../interfaces/environment';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { createAbsoluteUrl } from '../helpers/url-helpers';
-import { outputFileSync } from 'fs-extra';
+import { distContent } from '../helpers/dist-helpers';
 import { Page } from './page';
 import { PageId } from '../types';
 import { CodeParams } from '../interfaces/code-params';
@@ -51,6 +51,6 @@ export abstract class Code {
   }
 
   dist() {
-    outputFileSync(this.distPath, this.content);
+    distContent(this.content, this.distPath);
   }
 }

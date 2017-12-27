@@ -11,6 +11,10 @@ export class AppConfig extends AppConfigDefaults {
     return path.join(this.src.folder, this.assets.folder);
   }
 
+  get assetsGlob(): string {
+    return path.join(this.assetsFolder, `**/*`);
+  }
+
   get translationsFolder(): string {
     return path.join(this.src.folder, this.translations.folder);
   }

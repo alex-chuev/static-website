@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as sitemap from 'sitemap';
 import { urlHelper } from '../helpers/template-helpers';
-import { outputFileSync } from 'fs-extra';
+import { distContent } from '../helpers/dist-helpers';
 import { AppConfig } from './app-config';
 import { AppPages } from './app-pages';
 import { AppLanguages } from './app-languages';
@@ -17,9 +17,9 @@ export class AppSitemap {
   dist() {
     if (this.config.sitemap.generate) {
       try {
-        outputFileSync(this.file, this.generateContent());
+        distContent(this.generateContent(), this.file);
       } catch (error) {
-        console.error('Could not create sitemap due to an error:', error.message);
+        console.log('Could not create sitemap due to an error:', error.message);
       }
     }
   }

@@ -1,8 +1,9 @@
-import { copySync, pathExistsSync, removeSync } from 'fs-extra';
 import * as path from 'path';
+import * as glob from 'glob';
 import { WatchEvent } from '../interfaces/watch-event';
 import { WatchAction } from '../enums/watch-action';
 import { AppConfig } from './app-config';
+import { distFile, unlinkDistFile } from '../helpers/dist-helpers';
 
 export class AppAssets {
 
@@ -10,17 +11,15 @@ export class AppAssets {
   }
 
   dist() {
-    if (pathExistsSync(this.config.assetsFolder)) {
-      copySync(this.config.assetsFolder, this.config.dist.folder);
-    }
+    glob.sync(this.config.assetsGlob).forEach(file => this.distFile(file));
   }
 
   distFile(file: string) {
-    copySync(file, this.getDistPath(file));
+    distFile(file, this.getDistPath(file));
   }
 
-  unlinkDistFile(file: string) {
-    removeSync(this.getDistPath(file));
+  unlinkAsset(file: string) {
+    unlinkDistFile(this.getDistPath(file));
   }
 
   private getDistPath(file: string): string {
@@ -34,7 +33,7 @@ export class AppAssets {
         this.distFile(event.file);
         break;
       case WatchAction.Unlink:
-        this.unlinkDistFile(event.file);
+        this.unlinkAsset(event.file);
         break;
     }
   }
