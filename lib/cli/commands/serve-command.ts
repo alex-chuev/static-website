@@ -78,7 +78,7 @@ export function serveCommand() {
 
   function onWatchEvent(event: WatchEvent) {
     if (isInside(event.file, app.config.assetsFolder)) {
-      app.assets.onWatchEvent(event);
+      onAssetsWatchEvent(event);
     } else if (isInside(event.file, app.config.translationsFolder)) {
       onTranslationsWatchEvent(event);
     } else if (isInside(event.file, app.config.pagesFolder)) {
@@ -91,6 +91,19 @@ export function serveCommand() {
       app.pages.build();
     }
   }
+
+  function onAssetsWatchEvent(event: WatchEvent) {
+    switch (event.action) {
+      case WatchAction.Add:
+      case WatchAction.Change:
+        app.assets.distFile(event.file);
+        break;
+      case WatchAction.Unlink:
+        app.assets.unlinkAsset(event.file);
+        break;
+    }
+  }
+
 
   function onTranslationsWatchEvent(event: WatchEvent) {
     if (path.extname(event.file) !== `.${config.translations.extension}`) {

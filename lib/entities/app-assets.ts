@@ -26,16 +26,4 @@ export class AppAssets {
     return path.join(this.config.dist.folder, path.relative(this.config.assetsFolder, file));
   }
 
-  onWatchEvent(event: WatchEvent) {
-    switch (event.action) {
-      case WatchAction.Add:
-      case WatchAction.Change:
-        this.distFile(event.file);
-        break;
-      case WatchAction.Unlink:
-        this.unlinkAsset(event.file);
-        break;
-    }
-  }
-
 }
