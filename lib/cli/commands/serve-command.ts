@@ -1,7 +1,7 @@
 import * as chokidar from 'chokidar';
 import { create } from 'browser-sync';
 import * as path from 'path';
-import isInside from 'is-inside';
+import { isInside } from 'is-inside';
 import { WatchAction } from '../../enums/watch-action';
 import { WatchEvent } from '../../interfaces/watch-event';
 import { App } from '../../entities/app';
