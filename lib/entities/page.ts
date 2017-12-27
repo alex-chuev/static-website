@@ -33,7 +33,11 @@ export class Page {
   }
 
   distCode() {
-    Code.getExternal(this.css.items.concat(this.js.items), this.environment)
-      .forEach(code => code.dist());
+    this.externalCode.forEach(code => code.dist());
   }
+
+  get externalCode(): Code[] {
+    return Code.getExternal(this.css.items.concat(this.js.items), this.environment);
+  }
+
 }

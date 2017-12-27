@@ -9,7 +9,7 @@ import { AppLanguages } from './app-languages';
 import { PageData } from './page-data';
 import * as path from 'path';
 import * as pug from 'pug';
-import { distContent } from '../helpers/dist-helpers';
+import { distContent, unlinkDistFile } from '../helpers/dist-helpers';
 import { CssCodes } from './css-codes';
 import { JsCodes } from './js-codes';
 
@@ -29,9 +29,11 @@ export class AppPages {
       .forEach(page => this.items.push(page));
   }
 
-  dist(pages: Page[] = this.items, languages: Language[] = this.languages.items) {
+  build(pages: Page[] = this.items, languages: Language[] = this.languages.items, distCode = true) {
     pages.forEach(page => {
-      page.distCode();
+      if (distCode) {
+        page.distCode();
+      }
 
       languages.forEach(language => this.buildPage(page, language));
     });
@@ -50,9 +52,20 @@ export class AppPages {
       this.js,
     );
     const code = pug.render(page.content, {...data, filename: page.fullPath});
-    const distPath = path.join(this.config.dist.folder, language.url, page.distPathWithExt);
 
-    distContent(code, distPath);
+    distContent(code, this.getDistPath(page, language));
+  }
+
+  unlinkDistPages(pages: Page[], languages: Language[]) {
+    pages.forEach(page => languages.forEach(language => this.unlinkDistPage(page, language)));
+  }
+
+  unlinkDistPage(page: Page, language: Language) {
+    unlinkDistFile(this.getDistPath(page, language));
+  }
+
+  private getDistPath(page: Page, language: Language) {
+    return path.join(this.config.dist.folder, language.url, page.distPathWithExt);
   }
 
   onWatchEvent(event: WatchEvent) {

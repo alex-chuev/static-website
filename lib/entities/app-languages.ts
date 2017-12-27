@@ -1,8 +1,10 @@
+import * as _ from 'lodash';
 import { WatchEvent } from '../interfaces/watch-event';
 import { WatchAction } from '../enums/watch-action';
 import * as glob from 'glob';
 import { Language } from './language';
 import { AppConfig } from './app-config';
+import * as path from 'path';
 
 export class AppLanguages {
 
@@ -10,8 +12,30 @@ export class AppLanguages {
 
   constructor(private config: AppConfig) {
     glob.sync(this.config.translationsGlob)
-      .map(file => new Language(file, this.config))
-      .forEach(language => this.items.push(language));
+      .forEach(file => this.addLanguage(file));
+  }
+
+  addLanguage(file: string): Language {
+    file = this.preparePath(file);
+
+    const language = new Language(file, this.config);
+    this.items.push(language);
+    return language;
+  }
+
+  removeLanguages(file: string): Language[] {
+    file = this.preparePath(file);
+
+    return _.remove(this.items, item => item.file === file);
+  }
+
+  updateLanguage(file: string): Language {
+    this.removeLanguages(file);
+    return this.addLanguage(file);
+  }
+
+  private preparePath(file: string): string {
+    return path.resolve(file);
   }
 
   save() {
@@ -23,14 +47,6 @@ export class AppLanguages {
       language.translate(message, value);
       language.save();
     });
-  }
-
-  onWatchEvent(event: WatchEvent) {
-    switch (event.action) {
-      case WatchAction.Add:
-      case WatchAction.Change:
-      case WatchAction.Unlink:
-    }
   }
 
 }

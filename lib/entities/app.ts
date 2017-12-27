@@ -31,8 +31,8 @@ export class App {
     this.assets.dist();
     this.css.dist();
     this.js.dist();
-    this.pages.dist();
-    this.sitemap.dist();
+    this.pages.build();
+    this.sitemap.generate();
   }
 
   private prepareDist() {

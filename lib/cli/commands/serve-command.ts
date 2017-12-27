@@ -80,7 +80,7 @@ export function serveCommand() {
     if (isInside(event.file, app.config.assetsFolder)) {
       app.assets.onWatchEvent(event);
     } else if (isInside(event.file, app.config.translationsFolder)) {
-      app.languages.onWatchEvent(event);
+      onTranslationsWatchEvent(event);
     } else if (isInside(event.file, app.config.pagesFolder)) {
       app.pages.onWatchEvent(event);
     } else if (isInside(event.file, app.config.scriptsFolder)) {
@@ -88,7 +88,29 @@ export function serveCommand() {
     } else if (isInside(event.file, app.config.stylesFolder)) {
       app.css.onWatchEvent(event);
     } else {
-      app.pages.dist();
+      app.pages.build();
+    }
+  }
+
+  function onTranslationsWatchEvent(event: WatchEvent) {
+    if (path.extname(event.file) !== `.${config.translations.extension}`) {
+      return;
+    }
+
+    switch (event.action) {
+      case WatchAction.Add:
+        app.pages.build(app.pages.items, [
+          app.languages.addLanguage(event.file),
+        ], false);
+        break;
+      case WatchAction.Change:
+        app.pages.build(app.pages.items, [
+          app.languages.updateLanguage(event.file),
+        ], false);
+        break;
+      case WatchAction.Unlink:
+        app.pages.unlinkDistPages(app.pages.items, app.languages.removeLanguages(event.file));
+        break;
     }
   }
 }

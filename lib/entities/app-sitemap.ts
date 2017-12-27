@@ -14,7 +14,7 @@ export class AppSitemap {
   constructor(private config: AppConfig, private pages: AppPages, private languages: AppLanguages) {
   }
 
-  dist() {
+  generate() {
     if (this.config.sitemap.generate) {
       try {
         distContent(this.generateContent(), this.file);
