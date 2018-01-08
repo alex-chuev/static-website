@@ -50,7 +50,10 @@
     "cli-serve": "npm run cli -- serve",
     "cli-build": "npm run cli -- build"
   },
-  "bin": "build/cli/app.js",
+  "bin": {
+    "swc": "build/cli/app.js",
+    "static-website": "build/cli/app.js"
+  },
   "author": "Alex Chuev <alex@chuev.com>",
   "license": "ISC",
   "keywords": [
