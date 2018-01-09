@@ -35,48 +35,6 @@ export function serveCommand() {
     .on(WatchAction.Change, file => onWatchEvent({file, action: WatchAction.Change}))
     .on(WatchAction.Unlink, file => onWatchEvent({file, action: WatchAction.Unlink}));
 
-  // chokidar.watch(path.join(app.config.src.folder, app.config.scripts.folder, `**/*.${app.config.scripts.extension}`), {ignoreInitial: true})
-  //   .on('change', file => {
-  //     app.js = getGlobalJs(app.config, app.environment, true);
-  //     app.externalJs = getGlobalJs(app.config, app.environment);
-  //     saveExternalJs(app);
-  //   });
-  //
-  // chokidar.watch(path.join(app.config.src.folder, app.config.styles.folder, `**/*.${app.config.styles.extension}`), {ignoreInitial: true})
-  //   .on('change', file => {
-  //     app.css = getCss(app.config, app.environment, true);
-  //     app.externalCss = getCss(app.config, app.environment);
-  //     saveExternalCss(app);
-  //   });
-  //
-  // chokidar.watch(getTranslationsGlob(app.config), {ignoreInitial: true})
-  //   .on('change', file => {
-  //     app.languages = getLanguages(app.config);
-  //     app.buildPages(app.pages, app.languages);
-  //   });
-  //
-  // chokidar.watch(path.join(app.config.src.folder, app.config.pages.folder, `**/*.${app.config.pages.extension}`), {ignoreInitial: true})
-  //   .on('change', file => {
-  //     app.pages = getPages(app.config);
-  //     app.buildPages(app.pages, app.languages);
-  //   });
-  //
-  // chokidar.watch(path.join(app.config.src.folder, app.config.pages.folder, `**/*.${app.config.styles.extension}`), {ignoreInitial: true})
-  //   .on('change', file => {
-  //     app.pageInlineCss = getPageCss(app.config, app.environment, app.pages, true);
-  //     app.pageExternalCss = getPageCss(app.config, app.environment, app.pages);
-  //
-  //     app.buildPages(app.pages, app.languages);
-  //   });
-  //
-  // chokidar.watch(path.join(app.config.src.folder, app.config.pages.folder, `**/*.${app.config.scripts.extension}`), {ignoreInitial: true})
-  //   .on('change', file => {
-  //     app.pageInlineJs = getPageJs(app.config, app.environment, app.pages, true);
-  //     app.pageExternalJs = getPageJs(app.config, app.environment, app.pages);
-  //
-  //     app.buildPages(app.pages, app.languages);
-  //   });
-
   function onWatchEvent(event: WatchEvent) {
     if (isInside(event.file, app.config.assetsFolder)) {
       onAssetsWatchEvent(event);
