@@ -10,7 +10,7 @@ import { CssCodes } from './css-codes';
 import { JsCodes } from './js-codes';
 
 export class Page {
-  pageId: PageId;
+  id: PageId;
   fullPathWithoutExt: string;
   content: string;
   distPathWithExt: string;
@@ -23,10 +23,10 @@ export class Page {
   }
 
   constructor(public fullPath: string, private config: AppConfig, private environment: Environment) {
-    this.pageId = Page.createPageId(this.fullPath, config);
+    this.id = Page.createPageId(this.fullPath, config);
     this.fullPathWithoutExt = removeExtension(this.fullPath);
     this.content = readFileSync(this.fullPath, 'utf-8');
-    this.distPathWithExt = `${this.pageId}.html`;
+    this.distPathWithExt = `${this.id}.html`;
     this.defaultLanguageUrl = createAbsoluteUrl(this.distPathWithExt, config);
     this.css = new CssCodes(this.config.pagesFolder, this.fullPathWithoutExt, this.config, this.environment);
     this.js = new JsCodes(this.config.pagesFolder, this.fullPathWithoutExt, this.config, this.environment);

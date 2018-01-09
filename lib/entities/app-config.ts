@@ -50,4 +50,16 @@ export class AppConfig extends AppConfigDefaults {
   isTranslationFile(file: string): boolean {
     return path.extname(file) !== `.${this.translations.extension}`;
   }
+
+  isStyleFile(file: string): boolean {
+    return path.extname(file) !== `.${this.styles.extension}`;
+  }
+
+  isScriptFile(file: string): boolean {
+    return path.extname(file) !== `.${this.scripts.extension}`;
+  }
+
+  isPageFile(file: string): boolean {
+    return path.extname(file) !== `.${this.scripts.extension}`;
+  }
 }

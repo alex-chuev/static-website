@@ -3,7 +3,7 @@ import { Environment } from '../interfaces/environment';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { createAbsoluteUrl } from '../helpers/url-helpers';
-import { distContent } from '../helpers/dist-helpers';
+import { distContent, undistFile } from '../helpers/dist-helpers';
 import { Page } from './page';
 import { PageId } from '../types';
 import { CodeParams } from '../interfaces/code-params';
@@ -35,6 +35,11 @@ export abstract class Code {
     this.config = params.config;
     this.environment = params.environment;
     this.pageId = Page.createPageId(this.file, this.config);
+
+    this.updateContent();
+  }
+
+  updateContent() {
     this.content = this.compile();
   }
 
@@ -52,5 +57,9 @@ export abstract class Code {
 
   dist() {
     distContent(this.content, this.distPath);
+  }
+
+  undist() {
+    undistFile(this.distPath);
   }
 }

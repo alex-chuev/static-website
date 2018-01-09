@@ -1,5 +1,3 @@
-import { WatchEvent } from '../interfaces/watch-event';
-import { WatchAction } from '../enums/watch-action';
 import * as glob from 'glob';
 import { Page } from './page';
 import { Environment } from '../interfaces/environment';
@@ -12,6 +10,8 @@ import * as pug from 'pug';
 import { distContent, undistFile } from '../helpers/dist-helpers';
 import { CssCodes } from './css-codes';
 import { JsCodes } from './js-codes';
+import * as _ from 'lodash';
+import { PageId } from '../types';
 
 export class AppPages {
 
@@ -24,13 +24,29 @@ export class AppPages {
     private css: CssCodes,
     private js: JsCodes,
   ) {
-    glob.sync(this.config.pagesGlob)
-      .map(file => new Page(file, this.config, this.environment))
-      .forEach(page => this.items.push(page));
+    glob.sync(this.config.pagesGlob).forEach(file => this.addPage(file));
   }
 
-  distCode() {
-    this.items.forEach(page => page.distCode());
+  addPage(file: string): Page {
+    const page = new Page(file, this.config, this.environment);
+    this.items.push(page);
+    return page;
+  }
+
+  getPage(file: string): Page {
+    return this.items.find(item => item.fullPath === file);
+  }
+
+  getPageById(id: PageId): Page {
+    return this.items.find(item => item.id === id);
+  }
+
+  removePages(file: string): Page[] {
+    return _.remove(this.items, item => item.fullPath === file);
+  }
+
+  distCode(pages = this.items) {
+    pages.forEach(page => page.distCode());
   }
 
   build(pages: Page[] = this.items, languages: Language[] = this.languages.items) {
@@ -54,7 +70,7 @@ export class AppPages {
     distContent(code, this.getDistPath(page, language));
   }
 
-  undistPages(pages: Page[], languages: Language[]) {
+  undistPages(pages: Page[], languages: Language[] = this.languages.items) {
     pages.forEach(page => languages.forEach(language => this.undistPage(page, language)));
   }
 
@@ -65,13 +81,4 @@ export class AppPages {
   private getDistPath(page: Page, language: Language) {
     return path.join(this.config.dist.folder, language.url, page.distPathWithExt);
   }
-
-  onWatchEvent(event: WatchEvent) {
-    switch (event.action) {
-      case WatchAction.Add:
-      case WatchAction.Change:
-      case WatchAction.Unlink:
-    }
-  }
-
 }
