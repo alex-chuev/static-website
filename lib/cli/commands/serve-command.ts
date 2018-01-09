@@ -43,11 +43,51 @@ export function serveCommand() {
     } else if (isInside(event.file, app.config.pagesFolder)) {
       onPagesWatchEvent(event);
     } else if (isInside(event.file, app.config.scriptsFolder)) {
-      app.js.onWatchEvent(event);
+      onScriptsWatchEvent(event);
     } else if (isInside(event.file, app.config.stylesFolder)) {
-      app.css.onWatchEvent(event);
+      onStylesWatchEvent(event);
     } else {
       app.pages.build();
+    }
+  }
+
+  function onStylesWatchEvent(event: WatchEvent) {
+    switch (event.action) {
+      case WatchAction.Add:
+        const addedCode = app.css.addCode(event.file);
+        addedCode.dist();
+        app.pages.build();
+        break;
+      case WatchAction.Change:
+        const updatedCode = app.css.getCode(event.file);
+        updatedCode.updateContent();
+        updatedCode.dist();
+        break;
+      case WatchAction.Unlink:
+        const removedCode = app.css.removeCode(event.file);
+        removedCode.forEach(code => code.undist());
+        app.pages.build();
+        break;
+    }
+  }
+
+  function onScriptsWatchEvent(event: WatchEvent) {
+    switch (event.action) {
+      case WatchAction.Add:
+        const addedCode = app.js.addCode(event.file);
+        addedCode.dist();
+        app.pages.build();
+        break;
+      case WatchAction.Change:
+        const updatedCode = app.js.getCode(event.file);
+        updatedCode.updateContent();
+        updatedCode.dist();
+        break;
+      case WatchAction.Unlink:
+        const removedCode = app.js.removeCode(event.file);
+        removedCode.forEach(code => code.undist());
+        app.pages.build();
+        break;
     }
   }
 

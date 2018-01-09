@@ -42,14 +42,6 @@ export class Codes {
     return code;
   }
 
-  onWatchEvent(event: WatchEvent) {
-    switch (event.action) {
-      case WatchAction.Add:
-      case WatchAction.Change:
-      case WatchAction.Unlink:
-    }
-  }
-
   dist() {
     Code.getExternal(this.items, this.environment).forEach(item => item.dist());
   }
