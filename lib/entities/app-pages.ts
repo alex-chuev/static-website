@@ -9,7 +9,7 @@ import { AppLanguages } from './app-languages';
 import { PageData } from './page-data';
 import * as path from 'path';
 import * as pug from 'pug';
-import { distContent, unlinkDistFile } from '../helpers/dist-helpers';
+import { distContent, undistFile } from '../helpers/dist-helpers';
 import { CssCodes } from './css-codes';
 import { JsCodes } from './js-codes';
 
@@ -54,12 +54,12 @@ export class AppPages {
     distContent(code, this.getDistPath(page, language));
   }
 
-  unlinkDistPages(pages: Page[], languages: Language[]) {
-    pages.forEach(page => languages.forEach(language => this.unlinkDistPage(page, language)));
+  undistPages(pages: Page[], languages: Language[]) {
+    pages.forEach(page => languages.forEach(language => this.undistPage(page, language)));
   }
 
-  unlinkDistPage(page: Page, language: Language) {
-    unlinkDistFile(this.getDistPath(page, language));
+  undistPage(page: Page, language: Language) {
+    undistFile(this.getDistPath(page, language));
   }
 
   private getDistPath(page: Page, language: Language) {

@@ -7,7 +7,7 @@ export function distFile(srcPath: string, distPath: string) {
   }
 }
 
-export function unlinkDistFile(distPath: string) {
+export function undistFile(distPath: string) {
   if (pathExistsSync(distPath)) {
     removeSync(distPath);
     distLog(distPath, '-');

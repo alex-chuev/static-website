@@ -46,4 +46,8 @@ export class AppConfig extends AppConfigDefaults {
   get stylesBase(): string {
     return path.join(this.stylesFolder, 'main');
   }
+
+  isTranslationFile(file: string): boolean {
+    return path.extname(file) !== `.${this.translations.extension}`;
+  }
 }

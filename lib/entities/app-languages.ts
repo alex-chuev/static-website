@@ -16,7 +16,7 @@ export class AppLanguages {
   }
 
   addLanguage(file: string): Language {
-    file = this.preparePath(file);
+    file = this.createAbsolutePath(file);
 
     const language = new Language(file, this.config);
     this.items.push(language);
@@ -24,7 +24,7 @@ export class AppLanguages {
   }
 
   removeLanguages(file: string): Language[] {
-    file = this.preparePath(file);
+    file = this.createAbsolutePath(file);
 
     return _.remove(this.items, item => item.file === file);
   }
@@ -34,7 +34,7 @@ export class AppLanguages {
     return this.addLanguage(file);
   }
 
-  private preparePath(file: string): string {
+  private createAbsolutePath(file: string): string {
     return path.resolve(file);
   }
 

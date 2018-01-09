@@ -1,9 +1,7 @@
 import * as path from 'path';
 import * as glob from 'glob';
-import { WatchEvent } from '../interfaces/watch-event';
-import { WatchAction } from '../enums/watch-action';
 import { AppConfig } from './app-config';
-import { distFile, unlinkDistFile } from '../helpers/dist-helpers';
+import { distFile, undistFile } from '../helpers/dist-helpers';
 
 export class AppAssets {
 
@@ -19,7 +17,7 @@ export class AppAssets {
   }
 
   unlinkAsset(file: string) {
-    unlinkDistFile(this.getDistPath(file));
+    undistFile(this.getDistPath(file));
   }
 
   private getDistPath(file: string): string {

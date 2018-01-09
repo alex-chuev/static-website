@@ -106,23 +106,22 @@ export function serveCommand() {
 
 
   function onTranslationsWatchEvent(event: WatchEvent) {
-    if (path.extname(event.file) !== `.${config.translations.extension}`) {
+    if (false === config.isTranslationFile(event.file)) {
       return;
     }
 
     switch (event.action) {
       case WatchAction.Add:
-        app.pages.build(app.pages.items, [
-          app.languages.addLanguage(event.file),
-        ]);
+        const addedLanguage = app.languages.addLanguage(event.file);
+        app.pages.build(app.pages.items, [addedLanguage]);
         break;
       case WatchAction.Change:
-        app.pages.build(app.pages.items, [
-          app.languages.updateLanguage(event.file),
-        ]);
+        const updatedLanguage = app.languages.updateLanguage(event.file);
+        app.pages.build(app.pages.items, [updatedLanguage]);
         break;
       case WatchAction.Unlink:
-        app.pages.unlinkDistPages(app.pages.items, app.languages.removeLanguages(event.file));
+        const removedLanguages = app.languages.removeLanguages(event.file);
+        app.pages.undistPages(app.pages.items, removedLanguages);
         break;
     }
   }
