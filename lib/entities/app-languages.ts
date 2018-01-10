@@ -12,30 +12,22 @@ export class AppLanguages {
 
   constructor(private config: AppConfig) {
     glob.sync(this.config.translationsGlob)
-      .forEach(file => this.addLanguage(file));
+      .forEach(file => this.addLanguage(path.resolve(file)));
   }
 
-  addLanguage(file: string): Language {
-    file = this.createAbsolutePath(file);
-
-    const language = new Language(file, this.config);
+  addLanguage(absolutePath: string): Language {
+    const language = new Language(absolutePath, this.config);
     this.items.push(language);
     return language;
   }
 
-  removeLanguages(file: string): Language[] {
-    file = this.createAbsolutePath(file);
-
-    return _.remove(this.items, item => item.file === file);
+  removeLanguages(absolutePath: string): Language[] {
+    return _.remove(this.items, item => item.absolutePath === absolutePath);
   }
 
-  updateLanguage(file: string): Language {
-    this.removeLanguages(file);
-    return this.addLanguage(file);
-  }
-
-  private createAbsolutePath(file: string): string {
-    return path.resolve(file);
+  updateLanguage(absolutePath: string): Language {
+    this.removeLanguages(absolutePath);
+    return this.addLanguage(absolutePath);
   }
 
   save() {

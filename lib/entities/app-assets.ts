@@ -9,19 +9,20 @@ export class AppAssets {
   }
 
   dist() {
-    glob.sync(this.config.assetsGlob).forEach(file => this.distFile(file));
+    glob.sync(this.config.assetsGlob)
+      .forEach(relativePath => this.distFile(path.resolve(relativePath)));
   }
 
-  distFile(file: string) {
-    distFile(file, this.getDistPath(file));
+  distFile(absolutePath: string) {
+    distFile(absolutePath, this.getDistPath(absolutePath));
   }
 
-  unlinkAsset(file: string) {
-    undistFile(this.getDistPath(file));
+  unlinkAsset(absolutePath: string) {
+    undistFile(this.getDistPath(absolutePath));
   }
 
-  private getDistPath(file: string): string {
-    return path.join(this.config.dist.folder, path.relative(this.config.assetsFolder, file));
+  private getDistPath(absolutePath: string): string {
+    return path.join(this.config.dist.folder, path.relative(this.config.assetsFolder, absolutePath));
   }
 
 }

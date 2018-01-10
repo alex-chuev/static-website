@@ -3,7 +3,7 @@ import { AppConfig } from '../entities/app-config';
 
 export interface CodeParams {
   host: string;
-  file: string;
+  absolutePath: string;
   config: AppConfig;
   environment: Environment;
 }

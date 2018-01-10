@@ -6,8 +6,8 @@ export class CssCode extends Code {
   compile() {
     let content;
 
-    stylus(readFileSync(this.file, 'utf-8'))
-      .set('filename', this.file)
+    stylus(readFileSync(this.absolutePath, 'utf-8'))
+      .set('filename', this.absolutePath)
       .set('compress', this.environment.production)
       .render((error, js) => content = js);
 
@@ -19,6 +19,6 @@ export class CssCode extends Code {
   }
 
   get inline(): boolean {
-    return this.file.indexOf(`.inline.${this.config.styles.extension}`) !== -1;
+    return this.absolutePath.indexOf(`.inline.${this.config.styles.extension}`) !== -1;
   }
 }

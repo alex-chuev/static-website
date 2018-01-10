@@ -16,9 +16,9 @@ export class Language {
     return language === config.translations.defaultLanguage ? '' : language;
   }
 
-  constructor(public file: string, private config: AppConfig) {
-    this.name = path.parse(this.file).name;
-    this.translation = readJsonSync(this.file);
+  constructor(public absolutePath: string, private config: AppConfig) {
+    this.name = path.parse(this.absolutePath).name;
+    this.translation = readJsonSync(this.absolutePath);
     this.url = Language.getUrl(this.name, this.config);
   }
 
@@ -35,7 +35,7 @@ export class Language {
 
   save() {
     if (this.updated) {
-      outputJsonSync(this.file, sortObject(this.translation), {spaces: 2});
+      outputJsonSync(this.absolutePath, sortObject(this.translation), {spaces: 2});
       this.updated = false;
     }
   }

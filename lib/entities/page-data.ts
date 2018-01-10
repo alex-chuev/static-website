@@ -34,11 +34,11 @@ export class PageData {
 
   asset = (relativeUrl: Url) => assetHelper(relativeUrl, this.config);
 
-  currentUrl = urlHelper(this.page.distPathWithExt, this.language.url, this.config);
+  currentUrl = urlHelper(this.page.relativeDistPath, this.language.url, this.config);
 
   url = (relativeUrl: Url, languageName = this.language.name) => urlHelper(relativeUrl, languageName, this.config);
 
-  languageUrl = (languageName: string) => urlHelper(this.page.distPathWithExt, languageName, this.config);
+  languageUrl = (languageName: string) => urlHelper(this.page.relativeDistPath, languageName, this.config);
 
   isActive = (relativeUrl: Url) => this.page.defaultLanguageUrl === createAbsoluteUrl(relativeUrl, this.config);
 
@@ -49,9 +49,9 @@ export class PageData {
     const isActive = this.isActive(url);
 
     return HtmlFactory.createLink(href, content, className, activeClass, isActive, attrs, lang);
-  }
+  };
 
   languageLink = (language: string, text?: string, className?: string, activeClass?: string, attributes?: Attrs): string => {
     return this.link(this.page.defaultLanguageUrl, text, className, activeClass, attributes, language);
-  }
+  };
 }

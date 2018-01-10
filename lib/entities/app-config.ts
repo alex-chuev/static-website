@@ -3,8 +3,8 @@ import { AppConfigDefaults } from './app-config-defaults';
 import { existsSync, readJsonSync } from 'fs-extra';
 
 export class AppConfig extends AppConfigDefaults {
-  constructor(file = 'static-website.json') {
-    super(existsSync(file) ? readJsonSync(file) : undefined);
+  constructor(filePath = 'static-website.json') {
+    super(existsSync(filePath) ? readJsonSync(filePath) : undefined);
   }
 
   get assetsFolder(): string {
@@ -47,19 +47,19 @@ export class AppConfig extends AppConfigDefaults {
     return path.join(this.stylesFolder, 'main');
   }
 
-  isTranslationFile(file: string): boolean {
-    return path.extname(file) !== `.${this.translations.extension}`;
+  isTranslationFile(absolutePath: string): boolean {
+    return path.extname(absolutePath) !== `.${this.translations.extension}`;
   }
 
-  isStyleFile(file: string): boolean {
-    return path.extname(file) !== `.${this.styles.extension}`;
+  isStyleFile(absolutePath: string): boolean {
+    return path.extname(absolutePath) !== `.${this.styles.extension}`;
   }
 
-  isScriptFile(file: string): boolean {
-    return path.extname(file) !== `.${this.scripts.extension}`;
+  isScriptFile(absolutePath: string): boolean {
+    return path.extname(absolutePath) !== `.${this.scripts.extension}`;
   }
 
-  isPageFile(file: string): boolean {
-    return path.extname(file) !== `.${this.scripts.extension}`;
+  isPageFile(absolutePath: string): boolean {
+    return path.extname(absolutePath) !== `.${this.scripts.extension}`;
   }
 }

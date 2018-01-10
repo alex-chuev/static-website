@@ -5,7 +5,7 @@ import { Code } from './code';
 
 export class JsCode extends Code {
   compile() {
-    const content = transpileModule(readFileSync(this.file, 'utf-8'), {
+    const content = transpileModule(readFileSync(this.absolutePath, 'utf-8'), {
       compilerOptions: {
         target: ScriptTarget.ES5,
       },
@@ -18,6 +18,6 @@ export class JsCode extends Code {
   }
 
   get inline(): boolean {
-    return this.file.indexOf(`.inline.${this.config.scripts.extension}`) !== -1;
+    return this.absolutePath.indexOf(`.inline.${this.config.scripts.extension}`) !== -1;
   }
 }

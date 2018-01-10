@@ -1,11 +1,10 @@
-import { WatchEvent } from '../interfaces/watch-event';
-import { WatchAction } from '../enums/watch-action';
 import * as glob from 'glob';
 import { AppConfig } from './app-config';
 import { Code } from './code';
 import { Environment } from '../interfaces/environment';
 import { CodeConstructor } from '../interfaces/code-constructor';
 import * as _ from 'lodash';
+import * as path from 'path';
 
 export class Codes {
 
@@ -20,20 +19,20 @@ export class Codes {
     protected environment: Environment,
   ) {
     glob.sync(`${base}?(.inline).${ext}`)
-      .map(file => this.addCode(file));
+      .map(file => this.addCode(path.resolve(file)));
   }
 
-  removeCode(file: string): Code[] {
-    return _.remove(this.items, item => item.file === file);
+  removeCode(absolutePath: string): Code[] {
+    return _.remove(this.items, item => item.absolutePath === absolutePath);
   }
 
-  getCode(file: string): Code {
-    return this.items.find(item => item.file === file);
+  getCode(absolutePath: string): Code {
+    return this.items.find(item => item.absolutePath === absolutePath);
   }
 
-  addCode(file: string): Code {
+  addCode(absolutePath: string): Code {
     const code = new this.codeConstructor({
-      file,
+      absolutePath,
       host: this.host,
       config: this.config,
       environment: this.environment,

@@ -13,7 +13,7 @@ export abstract class Code {
   content: string;
   pageId: PageId;
   host: string;
-  file: string;
+  absolutePath: string;
   relativeWithoutExt: string;
   config: AppConfig;
   environment: Environment;
@@ -30,11 +30,11 @@ export abstract class Code {
 
   constructor(params: CodeParams) {
     this.host = params.host;
-    this.file = params.file;
-    this.relativeWithoutExt = removeExtension(path.relative(this.host, this.file));
+    this.absolutePath = params.absolutePath;
+    this.relativeWithoutExt = removeExtension(path.relative(this.host, this.absolutePath));
     this.config = params.config;
     this.environment = params.environment;
-    this.pageId = Page.createPageId(this.file, this.config);
+    this.pageId = Page.createPageId(this.absolutePath);
 
     this.updateContent();
   }

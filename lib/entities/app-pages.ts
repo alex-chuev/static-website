@@ -24,25 +24,26 @@ export class AppPages {
     private css: CssCodes,
     private js: JsCodes,
   ) {
-    glob.sync(this.config.pagesGlob).forEach(file => this.addPage(file));
+    glob.sync(this.config.pagesGlob)
+      .forEach(file => this.addPage(path.resolve(file)));
   }
 
-  addPage(file: string): Page {
-    const page = new Page(file, this.config, this.environment);
+  addPage(absolutePath: string): Page {
+    const page = new Page(absolutePath, this.config, this.environment);
     this.items.push(page);
     return page;
   }
 
-  getPage(file: string): Page {
-    return this.items.find(item => item.fullPath === file);
+  getPage(absolutePath: string): Page {
+    return this.items.find(item => item.absolutePath === absolutePath);
   }
 
   getPageById(id: PageId): Page {
     return this.items.find(item => item.id === id);
   }
 
-  removePages(file: string): Page[] {
-    return _.remove(this.items, item => item.fullPath === file);
+  removePages(absolutePath: string): Page[] {
+    return _.remove(this.items, item => item.absolutePath === absolutePath);
   }
 
   distCode(pages = this.items) {
@@ -65,7 +66,7 @@ export class AppPages {
       this.css,
       this.js,
     );
-    const code = pug.render(page.content, {...data, filename: page.fullPath});
+    const code = pug.render(page.content, {...data, filename: page.absolutePath});
 
     distContent(code, this.getDistPath(page, language));
   }
@@ -79,6 +80,6 @@ export class AppPages {
   }
 
   private getDistPath(page: Page, language: Language) {
-    return path.join(this.config.dist.folder, language.url, page.distPathWithExt);
+    return path.join(this.config.dist.folder, language.url, page.relativeDistPath);
   }
 }

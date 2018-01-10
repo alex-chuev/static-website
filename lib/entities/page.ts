@@ -11,25 +11,25 @@ import { JsCodes } from './js-codes';
 
 export class Page {
   id: PageId;
-  fullPathWithoutExt: string;
+  absolutePathWithoutExt: string;
   content: string;
-  distPathWithExt: string;
+  relativeDistPath: string;
   defaultLanguageUrl: string;
   css: CssCodes;
   js: JsCodes;
 
-  static createPageId(file: string, config: AppConfig): PageId {
-    return removeExtension(path.relative(config.pagesFolder, file));
+  static createPageId(absolutePath: string): PageId {
+    return removeExtension(absolutePath);
   }
 
-  constructor(public fullPath: string, private config: AppConfig, private environment: Environment) {
-    this.id = Page.createPageId(this.fullPath, config);
-    this.fullPathWithoutExt = removeExtension(this.fullPath);
-    this.content = readFileSync(this.fullPath, 'utf-8');
-    this.distPathWithExt = `${this.id}.html`;
-    this.defaultLanguageUrl = createAbsoluteUrl(this.distPathWithExt, config);
-    this.css = new CssCodes(this.config.pagesFolder, this.fullPathWithoutExt, this.config, this.environment);
-    this.js = new JsCodes(this.config.pagesFolder, this.fullPathWithoutExt, this.config, this.environment);
+  constructor(public absolutePath: string, private config: AppConfig, private environment: Environment) {
+    this.id = Page.createPageId(this.absolutePath);
+    this.absolutePathWithoutExt = removeExtension(this.absolutePath);
+    this.relativeDistPath = path.relative(config.pagesFolder, this.absolutePathWithoutExt) + '.html';
+    this.content = readFileSync(this.absolutePath, 'utf-8');
+    this.defaultLanguageUrl = createAbsoluteUrl(this.relativeDistPath, config);
+    this.css = new CssCodes(this.config.pagesFolder, this.absolutePathWithoutExt, this.config, this.environment);
+    this.js = new JsCodes(this.config.pagesFolder, this.absolutePathWithoutExt, this.config, this.environment);
   }
 
   distCode() {

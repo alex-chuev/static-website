@@ -9,7 +9,7 @@ import { AppLanguages } from './app-languages';
 
 export class AppSitemap {
 
-  file = path.join(this.config.dist.folder, 'sitemap.xml');
+  distPath = path.join(this.config.dist.folder, 'sitemap.xml');
 
   constructor(private config: AppConfig, private pages: AppPages, private languages: AppLanguages) {
   }
@@ -17,7 +17,7 @@ export class AppSitemap {
   generate() {
     if (this.config.sitemap.generate) {
       try {
-        distContent(this.generateContent(), this.file);
+        distContent(this.generateContent(), this.distPath);
       } catch (error) {
         console.log('Could not create sitemap due to an error:', error.message);
       }
@@ -27,12 +27,12 @@ export class AppSitemap {
   private generateContent(): string {
     const hostname = this.config.sitemap.hostname;
     const urls = _.flatMap(this.pages.items, page => _.map(this.languages.items, language => {
-      const url = urlHelper(page.distPathWithExt, language.name, this.config);
+      const url = urlHelper(page.relativeDistPath, language.name, this.config);
       const otherLanguages = _.filter(this.languages.items, item => item !== language);
 
       const links = otherLanguages.map(item => ({
         lang: item.name,
-        url: urlHelper(page.distPathWithExt, item.name, this.config),
+        url: urlHelper(page.relativeDistPath, item.name, this.config),
       }));
 
       return {
