@@ -36,6 +36,10 @@ export function serveCommand() {
     .on(WatchAction.Unlink, file => onWatchEvent({absolutePath: path.resolve(file), action: WatchAction.Unlink}));
 
   function onWatchEvent(event: WatchEvent) {
+    if (event.absolutePath.indexOf('___jb_tmp___') !== -1) {
+      return;
+    }
+
     if (isInside(event.absolutePath, app.config.assetsFolder)) {
       onAssetsWatchEvent(event);
     } else if (isInside(event.absolutePath, app.config.translationsFolder)) {
