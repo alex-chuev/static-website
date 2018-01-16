@@ -60,6 +60,6 @@ export class AppConfig extends AppConfigDefaults {
   }
 
   isPageFile(absolutePath: string): boolean {
-    return path.extname(absolutePath) !== `.${this.scripts.extension}`;
+    return path.extname(absolutePath) !== `.${this.pages.extension}`;
   }
 }
