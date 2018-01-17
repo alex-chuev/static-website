@@ -5,7 +5,7 @@ import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
 import { Url } from '../types';
 import { PageCodes } from './page-codes';
-import { assetHelper, urlHelper } from '../helpers/template-helpers';
+import { urlHelper } from '../helpers/template-helpers';
 import { Page } from './page';
 import { AppConfig } from './app-config';
 import { AppLanguages } from './app-languages';
@@ -32,7 +32,7 @@ export class PageData {
     this.js = new PageCodes(page.js.items.concat(appJsCodes.items), environment);
   }
 
-  asset = (relativeUrl: Url) => assetHelper(relativeUrl, this.config);
+  asset = (relativeUrl: Url) => createAbsoluteUrl(relativeUrl, this.config);
 
   currentUrl = urlHelper(this.page.relativeDistPath, this.language.url, this.config);
 
@@ -43,6 +43,18 @@ export class PageData {
   isActive = (relativeUrl: Url) => this.page.defaultLanguageUrl === createAbsoluteUrl(relativeUrl, this.config);
 
   i18n = (message: string, otherwise = ''): string => this.language.translate(message, otherwise);
+
+  exportMessages = (message: string, otherwise = '', variable = 'messages'): string => {
+    const str = JSON.stringify(this.i18n(message, otherwise));
+
+    return `<script>window['${variable}']=${str}</script>`;
+  };
+
+  registerMessages = (message: string, otherwise = '', func = 'registerMessages'): string => {
+    const str = JSON.stringify(this.i18n(message, otherwise));
+
+    return `<script>${func}(${str})</script>`;
+  };
 
   link = (url: Url, content?: string, className?: string, activeClass?: string, attrs?: Attrs, lang = this.language.name): string => {
     const href = this.url(url, lang);
