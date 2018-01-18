@@ -33,7 +33,7 @@ export class Language {
     return otherwise;
   }
 
-  save() {
+  saveUpdated() {
     if (this.updated) {
       outputJsonSync(this.absolutePath, sortObject(this.translation), {spaces: 2});
       this.updated = false;

@@ -8,7 +8,7 @@ export class AppConfig extends AppConfigDefaults {
   }
 
   get assetsFolder(): string {
-    return path.join(this.src.folder, this.assets.folder);
+    return path.resolve(path.join(this.src.folder, this.assets.folder));
   }
 
   get assetsGlob(): string {
@@ -16,7 +16,7 @@ export class AppConfig extends AppConfigDefaults {
   }
 
   get translationsFolder(): string {
-    return path.join(this.src.folder, this.translations.folder);
+    return path.resolve(path.join(this.src.folder, this.translations.folder));
   }
 
   get translationsGlob(): string {
@@ -24,15 +24,39 @@ export class AppConfig extends AppConfigDefaults {
   }
 
   get pagesFolder(): string {
-    return path.join(this.src.folder, this.pages.folder);
+    return path.resolve(path.join(this.src.folder, this.pages.folder));
   }
 
   get pagesGlob(): string {
     return path.join(this.pagesFolder, `**/*.${this.pages.extension}`);
   }
 
+  get layoutsGlob(): string {
+    return path.join(this.srcFolder, 'layouts', `*.${this.pages.extension}`);
+  }
+
+  get srcFolder(): string {
+    return path.resolve(this.src.folder);
+  }
+
+  get pagesStylesGlob(): string {
+    return path.join(this.pagesFolder, `**/*?(.inline).${this.styles.extension}`);
+  }
+
+  get pagesScriptsGlob(): string {
+    return path.join(this.pagesFolder, `**/*?(.inline).${this.scripts.extension}`);
+  }
+
   get scriptsFolder(): string {
-    return path.join(this.src.folder, this.scripts.folder);
+    return path.resolve(path.join(this.src.folder, this.scripts.folder));
+  }
+
+  get stylesGlob(): string {
+    return path.join(this.stylesFolder, `**/*.${this.styles.extension}`);
+  }
+
+  get scriptsGlob(): string {
+    return path.join(this.scriptsFolder, `**/*.${this.scripts.extension}`);
   }
 
   get scriptsBase(): string {
@@ -40,26 +64,11 @@ export class AppConfig extends AppConfigDefaults {
   }
 
   get stylesFolder(): string {
-    return path.join(this.src.folder, this.styles.folder);
+    return path.resolve(path.join(this.src.folder, this.styles.folder));
   }
 
   get stylesBase(): string {
     return path.join(this.stylesFolder, 'main');
   }
 
-  isTranslationFile(absolutePath: string): boolean {
-    return path.extname(absolutePath) !== `.${this.translations.extension}`;
-  }
-
-  isStyleFile(absolutePath: string): boolean {
-    return path.extname(absolutePath) !== `.${this.styles.extension}`;
-  }
-
-  isScriptFile(absolutePath: string): boolean {
-    return path.extname(absolutePath) !== `.${this.scripts.extension}`;
-  }
-
-  isPageFile(absolutePath: string): boolean {
-    return path.extname(absolutePath) !== `.${this.pages.extension}`;
-  }
 }

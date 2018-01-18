@@ -22,11 +22,11 @@ export class Codes {
       .map(file => this.addCode(path.resolve(file)));
   }
 
-  removeCode(absolutePath: string): Code[] {
-    return _.remove(this.items, item => item.absolutePath === absolutePath);
+  removeCodeByAbsolutePath(absolutePath: string): Code {
+    return _.first(_.remove(this.items, item => item.absolutePath === absolutePath));
   }
 
-  getCode(absolutePath: string): Code {
+  getCodeByAbsolutePath(absolutePath: string): Code {
     return this.items.find(item => item.absolutePath === absolutePath);
   }
 

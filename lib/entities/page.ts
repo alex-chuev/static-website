@@ -9,6 +9,8 @@ import { Code } from './code';
 import { CssCodes } from './css-codes';
 import { JsCodes } from './js-codes';
 
+const idRegExp = /(\.inline)?\.\w+$/;
+
 export class Page {
   id: PageId;
   absolutePathWithoutExt: string;
@@ -19,17 +21,21 @@ export class Page {
   js: JsCodes;
 
   static createPageId(absolutePath: string): PageId {
-    return removeExtension(absolutePath);
+    return absolutePath.replace(idRegExp, '');
   }
 
   constructor(public absolutePath: string, private config: AppConfig, private environment: Environment) {
     this.id = Page.createPageId(this.absolutePath);
     this.absolutePathWithoutExt = removeExtension(this.absolutePath);
     this.relativeDistPath = path.relative(config.pagesFolder, this.absolutePathWithoutExt) + '.html';
-    this.content = readFileSync(this.absolutePath, 'utf-8');
     this.defaultLanguageUrl = createAbsoluteUrl(this.relativeDistPath, config);
     this.css = new CssCodes(this.config.pagesFolder, this.absolutePathWithoutExt, this.config, this.environment);
     this.js = new JsCodes(this.config.pagesFolder, this.absolutePathWithoutExt, this.config, this.environment);
+    this.updateContent();
+  }
+
+  updateContent() {
+    this.content = readFileSync(this.absolutePath, 'utf-8');
   }
 
   distCode() {

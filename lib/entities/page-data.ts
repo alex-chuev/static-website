@@ -48,22 +48,22 @@ export class PageData {
     const str = JSON.stringify(this.i18n(message, otherwise));
 
     return `<script>window['${variable}']=${str}</script>`;
-  };
+  }
 
   registerMessages = (message: string, otherwise = '', func = 'registerMessages'): string => {
     const str = JSON.stringify(this.i18n(message, otherwise));
 
     return `<script>${func}(${str})</script>`;
-  };
+  }
 
   link = (url: Url, content?: string, className?: string, activeClass?: string, attrs?: Attrs, lang = this.language.name): string => {
     const href = this.url(url, lang);
     const isActive = this.isActive(url);
 
     return HtmlFactory.createLink(href, content, className, activeClass, isActive, attrs, lang);
-  };
+  }
 
   languageLink = (language: string, text?: string, className?: string, activeClass?: string, attributes?: Attrs): string => {
     return this.link(this.page.defaultLanguageUrl, text, className, activeClass, attributes, language);
-  };
+  }
 }

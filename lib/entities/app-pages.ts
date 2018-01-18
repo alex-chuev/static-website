@@ -34,7 +34,7 @@ export class AppPages {
     return page;
   }
 
-  getPage(absolutePath: string): Page {
+  getPageByAbsolutePath(absolutePath: string): Page {
     return this.items.find(item => item.absolutePath === absolutePath);
   }
 
@@ -51,12 +51,18 @@ export class AppPages {
   }
 
   build(pages: Page[] = this.items, languages: Language[] = this.languages.items) {
-    pages.forEach(page => languages.forEach(language => this.buildPage(page, language)));
-
-    this.languages.save();
+    languages.forEach(language => this.buildLanguage(language, pages));
   }
 
-  buildPage(page: Page, language: Language) {
+  buildLanguage(language: Language, pages: Page[] = this.items) {
+    pages.forEach(page => this.buildLanguagePage(page, language));
+  }
+
+  buildPage(page: Page, languages: Language[] = this.languages.items) {
+    languages.forEach(language => this.buildLanguagePage(page, language));
+  }
+
+  private buildLanguagePage(page: Page, language: Language) {
     const data = new PageData(
       page,
       language,
@@ -69,6 +75,8 @@ export class AppPages {
     const code = pug.render(page.content, {...data, filename: page.absolutePath});
 
     distContent(code, this.getDistPath(page, language));
+
+    language.saveUpdated();
   }
 
   undistPages(pages: Page[], languages: Language[] = this.languages.items) {

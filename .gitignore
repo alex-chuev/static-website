@@ -1,8 +1,8 @@
-.idea/
-node_modules/
-dist/
-serve/
-src/
-static-website.json
-build/
+/.idea/
+/node_modules/
+/dist/
+/serve/
+/src/
+/static-website.json
+/build/
 npm-debug.log
