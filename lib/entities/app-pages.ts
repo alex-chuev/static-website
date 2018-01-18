@@ -1,6 +1,5 @@
 import * as glob from 'glob';
 import { Page } from './page';
-import { Environment } from '../interfaces/environment';
 import { AppConfig } from './app-config';
 import { Language } from './language';
 import { AppLanguages } from './app-languages';
@@ -19,7 +18,6 @@ export class AppPages {
 
   constructor(
     private config: AppConfig,
-    private environment: Environment,
     private languages: AppLanguages,
     private css: CssCodes,
     private js: JsCodes,
@@ -29,7 +27,7 @@ export class AppPages {
   }
 
   addPage(absolutePath: string): Page {
-    const page = new Page(absolutePath, this.config, this.environment);
+    const page = new Page(absolutePath, this.config);
     this.items.push(page);
     return page;
   }
@@ -67,7 +65,6 @@ export class AppPages {
       page,
       language,
       this.config,
-      this.environment,
       this.languages,
       this.css,
       this.js,

@@ -10,7 +10,7 @@ export class JsCode extends Code {
         target: ScriptTarget.ES5,
       },
     }).outputText;
-    return this.environment.production ? minify(content).code : content;
+    return this.config.production ? minify(content).code : content;
   }
 
   get ext(): string {

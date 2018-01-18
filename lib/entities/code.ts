@@ -1,5 +1,4 @@
 import { AppConfig } from './app-config';
-import { Environment } from '../interfaces/environment';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { createAbsoluteUrl } from '../helpers/url-helpers';
@@ -16,7 +15,6 @@ export abstract class Code {
   absolutePath: string;
   relativeWithoutExt: string;
   config: AppConfig;
-  environment: Environment;
 
   protected abstract compile(): string;
 
@@ -24,8 +22,8 @@ export abstract class Code {
 
   abstract get inline(): boolean;
 
-  static getExternal(codes: Code[], environment: Environment): Code[] {
-    return environment.production ? _.filter(codes, code => code.external) : codes;
+  static getExternal(codes: Code[], config: AppConfig): Code[] {
+    return config.production ? _.filter(codes, code => code.external) : codes;
   }
 
   constructor(params: CodeParams) {
@@ -33,7 +31,6 @@ export abstract class Code {
     this.absolutePath = params.absolutePath;
     this.relativeWithoutExt = removeExtension(path.relative(this.host, this.absolutePath));
     this.config = params.config;
-    this.environment = params.environment;
     this.pageId = Page.createPageId(this.absolutePath);
 
     this.updateContent();

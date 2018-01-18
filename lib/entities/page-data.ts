@@ -1,4 +1,3 @@
-import { Environment } from '../interfaces/environment';
 import { createAbsoluteUrl } from '../helpers/url-helpers';
 import { Language } from './language';
 import { Attrs } from '../interfaces/attributes';
@@ -23,13 +22,12 @@ export class PageData {
     public page: Page,
     public language: Language,
     public config: AppConfig,
-    public environment: Environment,
     public languages: AppLanguages,
     appCssCodes: CssCodes,
     appJsCodes: JsCodes,
   ) {
-    this.css = new PageCodes(page.css.items.concat(appCssCodes.items), environment);
-    this.js = new PageCodes(page.js.items.concat(appJsCodes.items), environment);
+    this.css = new PageCodes(page.css.items.concat(appCssCodes.items), this.config.production);
+    this.js = new PageCodes(page.js.items.concat(appJsCodes.items), this.config.production);
   }
 
   asset = (relativeUrl: Url) => createAbsoluteUrl(relativeUrl, this.config);

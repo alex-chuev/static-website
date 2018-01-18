@@ -8,7 +8,7 @@ export class CssCode extends Code {
 
     stylus(readFileSync(this.absolutePath, 'utf-8'))
       .set('filename', this.absolutePath)
-      .set('compress', this.environment.production)
+      .set('compress', this.config.production)
       .render((error, js) => content = js);
 
     return content;

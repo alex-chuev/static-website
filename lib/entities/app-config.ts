@@ -3,8 +3,8 @@ import { AppConfigDefaults } from './app-config-defaults';
 import { existsSync, readJsonSync } from 'fs-extra';
 
 export class AppConfig extends AppConfigDefaults {
-  constructor(filePath = 'static-website.json') {
-    super(existsSync(filePath) ? readJsonSync(filePath) : undefined);
+  constructor(public production = true, configPath = 'static-website.json') {
+    super(existsSync(configPath) ? readJsonSync(configPath) : undefined);
   }
 
   get assetsFolder(): string {

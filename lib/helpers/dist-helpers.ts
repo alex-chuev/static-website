@@ -19,6 +19,6 @@ export function distContent(content: string, distPath: string) {
   distLog(distPath);
 }
 
-export function distLog(distPath: string, prefix = '>') {
+function distLog(distPath: string, prefix = '>') {
   console.log(prefix, distPath);
 }

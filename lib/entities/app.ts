@@ -1,5 +1,4 @@
 import { AppConfig } from './app-config';
-import { Environment } from '../interfaces/environment';
 import { emptyDirSync } from 'fs-extra';
 import { AppAssets } from './app-assets';
 import { AppLanguages } from './app-languages';
@@ -11,18 +10,17 @@ import { JsCodes } from './js-codes';
 export class App {
   assets = new AppAssets(this.config);
   languages = new AppLanguages(this.config);
-  css = new CssCodes(this.config.stylesFolder, this.config.stylesBase, this.config, this.environment);
-  js = new JsCodes(this.config.scriptsFolder, this.config.scriptsBase, this.config, this.environment);
+  css = new CssCodes(this.config.stylesFolder, this.config.stylesBase, this.config);
+  js = new JsCodes(this.config.scriptsFolder, this.config.scriptsBase, this.config);
   pages = new AppPages(
     this.config,
-    this.environment,
     this.languages,
     this.css,
     this.js,
   );
   sitemap = new AppSitemap(this.config, this.pages, this.languages);
 
-  constructor(public config: AppConfig, public environment: Environment) {
+  constructor(public config = new AppConfig()) {
   }
 
   build() {

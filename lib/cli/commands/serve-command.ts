@@ -4,10 +4,7 @@ import { watch } from '../../serve/watch';
 import { serve } from '../../serve/serve';
 
 export function serveCommand() {
-  const environment = {
-    production: false,
-  };
-  const app = new App(new AppConfig(), environment);
+  const app = new App(new AppConfig(false));
   app.build();
   serve(app);
   watch(app);
