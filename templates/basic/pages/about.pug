@@ -1,9 +1,7 @@
 extends ../layouts/main
 
 block head
-  title=i18n('meta.title')
-  meta(name="description" content=i18n('meta.description'))
-  meta(name="keywords" content=i18n('meta.keywords'))
+  +meta('meta')
 
 block content
   h1=i18n('content')

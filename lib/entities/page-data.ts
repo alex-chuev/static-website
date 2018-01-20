@@ -17,6 +17,8 @@ class PageCodes {
   inline: string[];
 
   constructor(codes: StaticCode[], config: AppConfig) {
+    codes = _.sortBy<StaticCode>(codes, code => code.external ? -1 : 1);
+
     const external = StaticCode.getExternal(codes, config);
     const inline = _.difference(codes, external);
 

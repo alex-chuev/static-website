@@ -1,0 +1,6 @@
+mixin meta(message)
+  - var meta = i18n(message, {title: '', description: '', keywords: ''})
+
+  title=meta.title
+  meta(name="description" content=meta.description)
+  meta(name="keywords" content=meta.keywords)
