@@ -2,13 +2,13 @@
 
 import * as program from 'commander';
 import * as inquirer from 'inquirer';
-import { initQuestions } from './commands/questions/init-questions';
+import { initQuestions } from './questions/init-questions';
 import { initCommand } from './commands/init-command';
 import { buildCommand } from './commands/build-command';
-import { createQuestions } from './commands/questions/create-questions';
+import { createQuestions } from './questions/create-questions';
 import { newCommand } from './commands/new-command';
-import { CreateAnswers } from './commands/answers/create';
-import { InitAnswers } from './commands/answers/init';
+import { CreateAnswers } from './interfaces/create-answers';
+import { InitAnswers } from './interfaces/init-answers';
 import { serveCommand } from './commands/serve-command';
 import { i18nCommand } from './commands/i18n-command';
 

@@ -1,4 +1,4 @@
-import { AppConfig } from '../entities/app-config';
+import { AppConfig } from '../entities/app/app-config';
 import { Url } from '../types';
 
 const indexRegExp = /index\.html$/g;

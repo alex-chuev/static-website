@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as sitemap from 'sitemap';
-import { urlHelper } from '../helpers/template-helpers';
-import { distContent } from '../helpers/dist-helpers';
+import { urlHelper } from '../../helpers/template-helpers';
+import { distContent } from '../../helpers/dist-helpers';
 import { AppConfig } from './app-config';
 import { AppPages } from './app-pages';
 import { AppLanguages } from './app-languages';
@@ -15,12 +15,10 @@ export class AppSitemap {
   }
 
   generate() {
-    if (this.config.sitemap.generate) {
-      try {
-        distContent(this.generateContent(), this.distPath);
-      } catch (error) {
-        console.log('Could not create sitemap due to an error:', error.message);
-      }
+    try {
+      distContent(this.generateContent(), this.distPath);
+    } catch (error) {
+      console.log('Could not create sitemap due to an error:', error.message);
     }
   }
 

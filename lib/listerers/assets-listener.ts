@@ -1,22 +1,23 @@
 import { Listener } from './listener';
 import * as minimatch from 'minimatch';
+import { FileObject } from '../entities/file-object';
 
 export class AssetsListener extends Listener {
 
-  test(absolutePath: string): boolean {
-    return minimatch(absolutePath, this.app.config.assetsGlob);
+  test(file: FileObject): boolean {
+    return minimatch(file.absolutePath, this.app.config.assetsGlob);
   }
 
-  add(absolutePath: string) {
-    this.app.assets.distFile(absolutePath);
+  add(file: FileObject) {
+    this.app.assets.distFile(file);
   }
 
-  change(absolutePath: string) {
-    this.add(absolutePath);
+  change(file: FileObject) {
+    this.add(file);
   }
 
-  unlink(absolutePath: string) {
-    this.app.assets.unlinkAsset(absolutePath);
+  unlink(file: FileObject) {
+    this.app.assets.unlinkAsset(file);
   }
 
 }

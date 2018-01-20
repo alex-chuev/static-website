@@ -11,7 +11,7 @@ npm i -g static-website
 To create a new project run the next command:
 
 ```bash
-static-website new <dir>
+swc new <dir>
 ```
 
 It will ask you some questions.
@@ -21,7 +21,7 @@ It will ask you some questions.
 If you want to init a static website in an existing project run the next command:
 
 ```bash
-static-website init
+swc init
 ```
 
 It also will ask you some questions.
@@ -31,7 +31,7 @@ It also will ask you some questions.
 It is very convenient to develop and see what happens in real time:
 
 ```bash
-static-website serve
+swc serve
 ```
 
 The command will be automatically rebuilding a project when there are some changes and serve the result using HTTP.
@@ -41,7 +41,7 @@ The command will be automatically rebuilding a project when there are some chang
 To build static website run the next command inside the project:
 
 ```bash
-static-website build
+swc build
 ```
 
 Directory `dist` will be created with static files inside.

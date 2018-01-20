@@ -1,8 +1,8 @@
 import * as path from 'path';
 import { copySync, outputJsonSync } from 'fs-extra';
 import { parseLanguages } from './parse-languages';
-import { CreateAnswers } from '../commands/answers/create';
-import { AppConfigDefaults } from '../../entities/app-config-defaults';
+import { CreateAnswers } from '../interfaces/create-answers';
+import { AppConfigDefaults } from '../../entities/app/app-config-defaults';
 
 interface Params {
   dir: string;

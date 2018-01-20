@@ -1,43 +1,45 @@
 import { Listener } from './listener';
-import { Page } from '../entities/page';
 import * as minimatch from 'minimatch';
+import { FileObject } from '../entities/file-object';
+import { Page } from '../entities/code/page';
+import { StaticCodesFactory } from '../factories/static-codes-factory';
 
 export abstract class PagesCodeListener extends Listener {
 
   page: Page;
 
-  abstract property: string;
   abstract glob: string;
 
-  test(absolutePath: string): boolean {
-    if (false === minimatch(absolutePath, this.glob)) {
+  test(file: FileObject): boolean {
+    if (false === minimatch(file.absolutePath, this.glob)) {
       return false;
     }
 
-    this.page = this.app.pages.getPageById(Page.createPageId(absolutePath));
+    this.page = this.app.pages.getPageById(Page.createPageId(file));
 
     return Boolean(this.page);
   }
 
-  add(absolutePath: string) {
-    const code = this.page[this.property].addCode(absolutePath);
+  add(file: FileObject) {
+    const code = StaticCodesFactory.createSingle(file, this.app.config.pagesFolder, this.app.config);
     code.dist();
+    this.page.codes.items.push(code);
     this.app.pages.buildPage(this.page);
   }
 
-  change(absolutePath: string) {
-    const code = this.page[this.property].getCodeByAbsolutePath(absolutePath);
+  change(file: FileObject) {
+    const code = this.page.codes.getCode(file);
 
     if (code) {
       code.updateContent();
       code.dist();
     } else {
-      this.add(absolutePath);
+      this.add(file);
     }
   }
 
-  unlink(absolutePath: string) {
-    const code = this.page[this.property].removeCodeByAbsolutePath(absolutePath);
+  unlink(file: FileObject) {
+    const code = this.page.codes.removeCode(file);
 
     if (code) {
       code.undist();

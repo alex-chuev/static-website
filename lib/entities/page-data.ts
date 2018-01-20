@@ -3,31 +3,43 @@ import { Language } from './language';
 import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
 import { Url } from '../types';
-import { PageCodes } from './page-codes';
 import { urlHelper } from '../helpers/template-helpers';
-import { Page } from './page';
-import { AppConfig } from './app-config';
-import { AppLanguages } from './app-languages';
-import { CssCodes } from './css-codes';
-import { JsCodes } from './js-codes';
+import { AppConfig } from './app/app-config';
+import { AppLanguages } from './app/app-languages';
 import * as _ from 'lodash';
+import { StaticCode } from './code/static-code';
+import { Page } from './code/page';
+import { StaticCodes } from './code/static-codes';
+
+class PageCodes {
+
+  external: Url[];
+  inline: string[];
+
+  constructor(codes: StaticCode[], config: AppConfig) {
+    const external = StaticCode.getExternal(codes, config);
+    const inline = _.difference(codes, external);
+
+    this.external = external.map(code => code.url);
+    this.inline = inline.map(code => code.content);
+  }
+
+}
 
 export class PageData {
-  otherLanguages = _.filter(this.languages.items, item => item !== this.language);
+  css = new PageCodes(this.codes.css.concat(this.page.codes.css), this.config);
+  js = new PageCodes(this.codes.js.concat(this.page.codes.js), this.config);
 
-  css: PageCodes;
-  js: PageCodes;
+  otherLanguages = _.filter(this.languages.items, item => item !== this.language);
+  file = this.page.file;
 
   constructor(
     public page: Page,
     public language: Language,
     public config: AppConfig,
     public languages: AppLanguages,
-    appCssCodes: CssCodes,
-    appJsCodes: JsCodes,
+    public codes: StaticCodes,
   ) {
-    this.css = new PageCodes(page.css.items.concat(appCssCodes.items), this.config.production);
-    this.js = new PageCodes(page.js.items.concat(appJsCodes.items), this.config.production);
   }
 
   asset = (relativeUrl: Url) => createAbsoluteUrl(relativeUrl, this.config);

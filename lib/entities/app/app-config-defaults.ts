@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
-import { ConfigData } from '../interfaces/config-data';
+import { ConfigData } from '../../interfaces/config-data';
 
 export class AppConfigDefaults implements ConfigData {
-  verbose = true;
+
   src = {
     folder: 'src',
   };
@@ -13,7 +13,6 @@ export class AppConfigDefaults implements ConfigData {
     folder: 'languages',
     defaultLanguage: 'en',
     extension: 'json',
-    generate: true,
   };
   pages = {
     folder: 'pages',
@@ -39,7 +38,6 @@ export class AppConfigDefaults implements ConfigData {
     open: true,
   };
   sitemap = {
-    generate: true,
     hostname: '',
   };
 
@@ -48,4 +46,5 @@ export class AppConfigDefaults implements ConfigData {
       _.merge(this, data);
     }
   }
+
 }

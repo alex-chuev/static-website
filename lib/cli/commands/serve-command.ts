@@ -1,5 +1,5 @@
-import { App } from '../../entities/app';
-import { AppConfig } from '../../entities/app-config';
+import { App } from '../../entities/app/app';
+import { AppConfig } from '../../entities/app/app-config';
 import { watch } from '../../serve/watch';
 import { serve } from '../../serve/serve';
 

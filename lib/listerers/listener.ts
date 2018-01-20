@@ -1,16 +1,17 @@
-import { App } from '../entities/app';
+import { App } from '../entities/app/app';
+import { FileObject } from '../entities/file-object';
 
 export abstract class Listener {
 
   constructor(public app: App) {
   }
 
-  abstract test(absolutePath: string): boolean;
+  abstract test(file: FileObject): boolean;
 
-  abstract add(absolutePath: string): void;
+  abstract add(file: FileObject): void;
 
-  abstract change(absolutePath: string): void;
+  abstract change(file: FileObject): void;
 
-  abstract unlink(absolutePath: string): void;
+  abstract unlink(file: FileObject): void;
 
 }

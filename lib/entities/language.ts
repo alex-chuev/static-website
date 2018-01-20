@@ -1,10 +1,9 @@
 import { Translation } from '../interfaces/translation';
 import { Url } from '../types';
-import { AppConfig } from './app-config';
+import { AppConfig } from './app/app-config';
 import * as _ from 'lodash';
-import * as path from 'path';
-import { outputJsonSync, readJsonSync } from 'fs-extra';
 import { sortObject } from '../helpers/object-helpers';
+import { FileObject } from './file-object';
 
 export class Language {
   name: string;
@@ -16,26 +15,34 @@ export class Language {
     return language === config.translations.defaultLanguage ? '' : language;
   }
 
-  constructor(public absolutePath: string, private config: AppConfig) {
-    this.name = path.parse(this.absolutePath).name;
-    this.translation = readJsonSync(this.absolutePath);
+  constructor(public file: FileObject, private config: AppConfig) {
+    this.name = this.file.name;
     this.url = Language.getUrl(this.name, this.config);
+
+    this.updateTranslation();
+  }
+
+  updateTranslation() {
+    this.translation = this.file.readJson();
+  }
+
+  addMessage(message: string, value: any) {
+    this.translate(message, value);
+    this.saveUpdated();
   }
 
   translate(message: string, otherwise: any = ''): string {
-    if (_.has(this.translation, message)) {
-      return _.get(this.translation, message);
-    } else if (this.config.translations.generate) {
-      this.updated = true;
+    if (false === _.has(this.translation, message)) {
       _.set(this.translation, message, otherwise);
+      this.updated = true;
     }
 
-    return otherwise;
+    return _.get(this.translation, message);
   }
 
   saveUpdated() {
     if (this.updated) {
-      outputJsonSync(this.absolutePath, sortObject(this.translation), {spaces: 2});
+      this.file.writeJson(sortObject(this.translation));
       this.updated = false;
     }
   }

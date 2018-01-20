@@ -1,34 +1,35 @@
 import { Listener } from './listener';
 import * as minimatch from 'minimatch';
+import { FileObject } from '../entities/file-object';
 
 export class PagesListener extends Listener {
 
-  test(absolutePath: string): boolean {
-    return minimatch(absolutePath, this.app.config.pagesGlob);
+  test(file: FileObject): boolean {
+    return minimatch(file.absolutePath, this.app.config.pagesGlob);
   }
 
-  add(absolutePath: string) {
-    const page = this.app.pages.addPage(absolutePath);
+  add(file: FileObject) {
+    const page = this.app.pages.addPage(file);
     page.distCode();
     this.app.pages.buildPage(page);
   }
 
-  change(absolutePath: string) {
-    const page = this.app.pages.getPageByAbsolutePath(absolutePath);
+  change(file: FileObject) {
+    const page = this.app.pages.getPage(file);
 
     if (page) {
       page.updateContent();
       this.app.pages.buildPage(page);
     } else {
-      this.add(absolutePath);
+      this.add(file);
     }
   }
 
-  unlink(absolutePath: string) {
-    const page = this.app.pages.removePages(absolutePath);
+  unlink(file: FileObject) {
+    const page = this.app.pages.removePage(file);
 
     if (page) {
-      this.app.pages.undistPages(page);
+      this.app.pages.undistPage(page);
     }
   }
 

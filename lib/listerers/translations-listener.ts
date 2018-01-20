@@ -1,28 +1,33 @@
 import { Listener } from './listener';
 import * as minimatch from 'minimatch';
+import { FileObject } from '../entities/file-object';
 
 export class TranslationsListener extends Listener {
 
-  test(absolutePath: string): boolean {
-    return minimatch(absolutePath, this.app.config.translationsGlob);
+  test(file: FileObject): boolean {
+    return minimatch(file.absolutePath, this.app.config.translationsGlob);
   }
 
-  add(absolutePath: string) {
-    this.app.pages.buildLanguage(this.app.languages.addLanguage(absolutePath));
+  add(file: FileObject) {
+    this.app.pages.buildLanguage(this.app.languages.addLanguage(file));
   }
 
-  change(absolutePath: string) {
-    const language = this.app.languages.updateLanguage(absolutePath);
+  change(file: FileObject) {
+    const language = this.app.languages.getLanguage(file);
 
     if (language) {
       this.app.pages.buildLanguage(language);
     } else {
-      this.add(absolutePath);
+      this.add(file);
     }
   }
 
-  unlink(absolutePath: string) {
-    this.app.pages.undistPages(this.app.pages.items, this.app.languages.removeLanguages(absolutePath));
+  unlink(file: FileObject) {
+    const language = this.app.languages.removeLanguage(file);
+
+    if (language) {
+      this.app.pages.undistLanguage(language);
+    }
   }
 
 }

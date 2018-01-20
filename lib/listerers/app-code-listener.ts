@@ -1,34 +1,37 @@
 import { Listener } from './listener';
 import * as minimatch from 'minimatch';
+import { FileObject } from '../entities/file-object';
+import { StaticCodesFactory } from '../factories/static-codes-factory';
 
 export abstract class AppCodeListener extends Listener {
 
-  abstract property: string;
+  abstract root: string;
   abstract glob: string;
 
-  test(absolutePath: string): boolean {
-    return minimatch(absolutePath, this.glob);
+  test(file: FileObject): boolean {
+    return minimatch(file.absolutePath, this.glob);
   }
 
-  add(absolutePath: string) {
-    const code = this.app[this.property].addCode(absolutePath);
-    code.dist();
+  add(file: FileObject) {
+    const code = StaticCodesFactory.createSingle(file, this.root, this.app.config);
+    this.app.codes.items.push(code);
     this.app.pages.build();
+    code.dist();
   }
 
-  change(absolutePath: string) {
-    const code = this.app[this.property].getCodeByAbsolutePath(absolutePath);
+  change(file: FileObject) {
+    const code = this.app.codes.getCode(file);
 
     if (code) {
       code.updateContent();
       code.dist();
     } else {
-      this.add(absolutePath);
+      this.add(file);
     }
   }
 
-  unlink(absolutePath: string) {
-    const code = this.app[this.property].removeCodeByAbsolutePath(absolutePath);
+  unlink(file: FileObject) {
+    const code = this.app.codes.removeCode(file);
 
     if (code) {
       code.undist();

@@ -1,5 +1,4 @@
 export interface ConfigData {
-  verbose: boolean;
   src: {
     folder: string,
   };
@@ -10,7 +9,6 @@ export interface ConfigData {
     folder: string,
     defaultLanguage: string,
     extension: string,
-    generate: boolean,
   };
   pages: {
     folder: string,
@@ -36,7 +34,6 @@ export interface ConfigData {
     open: boolean,
   };
   sitemap: {
-    generate: boolean,
     hostname: string,
   };
 }

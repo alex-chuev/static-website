@@ -1,21 +1,22 @@
 import { Listener } from './listener';
 import * as minimatch from 'minimatch';
+import { FileObject } from '../entities/file-object';
 
 export class LayoutsListener extends Listener {
 
-  test(absolutePath: string): boolean {
-    return minimatch(absolutePath, this.app.config.layoutsGlob);
+  test(file: FileObject): boolean {
+    return minimatch(file.absolutePath, this.app.config.layoutsGlob);
   }
 
-  add(absolutePath: string) {
+  add(file: FileObject) {
     this.app.pages.build();
   }
 
-  change(absolutePath: string) {
+  change(file: FileObject) {
     this.app.pages.build();
   }
 
-  unlink(absolutePath: string) {
+  unlink(file: FileObject) {
     this.app.pages.build();
   }
 

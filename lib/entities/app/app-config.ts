@@ -3,6 +3,7 @@ import { AppConfigDefaults } from './app-config-defaults';
 import { existsSync, readJsonSync } from 'fs-extra';
 
 export class AppConfig extends AppConfigDefaults {
+
   constructor(public production = true, configPath = 'static-website.json') {
     super(existsSync(configPath) ? readJsonSync(configPath) : undefined);
   }
@@ -52,23 +53,15 @@ export class AppConfig extends AppConfigDefaults {
   }
 
   get stylesGlob(): string {
-    return path.join(this.stylesFolder, `**/*.${this.styles.extension}`);
+    return path.join(this.stylesFolder, `**/*?(.inline).${this.styles.extension}`);
   }
 
   get scriptsGlob(): string {
-    return path.join(this.scriptsFolder, `**/*.${this.scripts.extension}`);
-  }
-
-  get scriptsBase(): string {
-    return path.join(this.scriptsFolder, 'main');
+    return path.join(this.scriptsFolder, `**/*?(.inline).${this.scripts.extension}`);
   }
 
   get stylesFolder(): string {
     return path.resolve(path.join(this.src.folder, this.styles.folder));
-  }
-
-  get stylesBase(): string {
-    return path.join(this.stylesFolder, 'main');
   }
 
 }
