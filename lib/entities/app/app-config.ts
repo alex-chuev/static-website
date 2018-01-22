@@ -53,11 +53,11 @@ export class AppConfig extends AppConfigDefaults {
   }
 
   get stylesGlob(): string {
-    return path.join(this.stylesFolder, `**/*?(.inline).${this.styles.extension}`);
+    return path.join(this.stylesFolder, `main?(.inline).${this.styles.extension}`);
   }
 
   get scriptsGlob(): string {
-    return path.join(this.scriptsFolder, `**/*?(.inline).${this.scripts.extension}`);
+    return path.join(this.scriptsFolder, `main?(.inline).${this.scripts.extension}`);
   }
 
   get stylesFolder(): string {
