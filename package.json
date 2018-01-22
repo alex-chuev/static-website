@@ -5,7 +5,10 @@
   "repository": "https://github.com/alex-chuev/static-website.git",
   "main": "build/cli/app.js",
   "dependencies": {
+    "@types/react": "^16.0.34",
+    "@types/react-dom": "^16.0.3",
     "browser-sync": "^2.18.13",
+    "browserify": "^15.2.0",
     "chokidar": "^1.7.0",
     "commander": "^2.12.2",
     "fs-extra": "^4.0.2",
@@ -15,8 +18,11 @@
     "minimatch": "^3.0.4",
     "path-is-inside": "^1.0.2",
     "pug": "^2.0.0-rc.4",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "sitemap": "^1.13.0",
     "stylus": "^0.54.5",
+    "tsify": "^3.0.4",
     "typescript": "^2.6.2",
     "uglify-js": "^3.2.2"
   },

@@ -1,4 +1,4 @@
-import { ScriptTarget, transpileModule } from 'typescript';
+import { execFileSync } from 'child_process';
 import { minify } from 'uglify-js';
 import { StaticCode } from './static-code';
 import { AppConfig } from '../app/app-config';
@@ -14,11 +14,10 @@ export class Script extends StaticCode {
   }
 
   compile(content: string): string {
-    const js = transpileModule(content, {
-      compilerOptions: {
-        target: ScriptTarget.ES5,
-      },
-    }).outputText;
+    const js = execFileSync('./node_modules/.bin/browserify', [this.file.absolutePath, '-p', '[tsify]'])
+      .toString();
+
+    console.log(js);
 
     return this.config.production ? minify(js).code : js;
   }
