@@ -1,5 +1,5 @@
 import { copySync, outputFileSync, pathExistsSync, removeSync } from 'fs-extra';
-import EventEmitter = NodeJS.EventEmitter;
+import { EventEmitter } from 'events';
 
 export class DistHelpers {
 

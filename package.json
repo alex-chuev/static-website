@@ -1,6 +1,6 @@
 {
   "name": "static-website",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Create a static multilingual website",
   "repository": "https://github.com/alex-chuev/static-website.git",
   "main": "build/cli/app.js",
