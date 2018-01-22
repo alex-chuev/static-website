@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as glob from 'glob';
 import { AppConfig } from './app-config';
-import { distFile, unlinkFile } from '../../helpers/dist-helpers';
+import { DistHelpers } from '../../helpers/dist-helpers';
 import { FileObject } from '../file-object';
 
 export class AppAssets {
@@ -15,11 +15,11 @@ export class AppAssets {
   }
 
   distFile(file: FileObject) {
-    distFile(file.absolutePath, this.getDistPath(file));
+    DistHelpers.file(file.absolutePath, this.getDistPath(file));
   }
 
   unlinkAsset(file: FileObject) {
-    unlinkFile(this.getDistPath(file));
+    DistHelpers.unlink(this.getDistPath(file));
   }
 
   private getDistPath(file: FileObject): string {

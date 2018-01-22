@@ -1,8 +1,7 @@
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as sitemap from 'sitemap';
-import { urlHelper } from '../../helpers/template-helpers';
-import { distContent } from '../../helpers/dist-helpers';
+import { DistHelpers } from '../../helpers/dist-helpers';
 import { AppConfig } from './app-config';
 import { AppPages } from './app-pages';
 import { AppLanguages } from './app-languages';
@@ -16,7 +15,7 @@ export class AppSitemap {
 
   generate() {
     try {
-      distContent(this.generateContent(), this.distPath);
+      DistHelpers.content(this.generateContent(), this.distPath);
     } catch (error) {
       console.log('Could not create sitemap due to an error:', error.message);
     }
@@ -25,12 +24,12 @@ export class AppSitemap {
   private generateContent(): string {
     const hostname = this.config.sitemap.hostname;
     const urls = _.flatMap(this.pages.items, page => _.map(this.languages.items, language => {
-      const url = urlHelper(page.relativeDistPath, language.name, this.config);
+      const url = page.createLanguageUrl(language);
       const otherLanguages = _.filter(this.languages.items, item => item !== language);
 
-      const links = otherLanguages.map(item => ({
-        lang: item.name,
-        url: urlHelper(page.relativeDistPath, item.name, this.config),
+      const links = otherLanguages.map(anotherLanguage => ({
+        lang: anotherLanguage.name,
+        url: page.createLanguageUrl(anotherLanguage),
       }));
 
       return {

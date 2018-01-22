@@ -11,13 +11,13 @@ export class Language {
   translation: Translation;
   updated = false;
 
-  static getUrl(language: string, config: AppConfig): string {
-    return language === config.translations.defaultLanguage ? '' : language;
+  static createUrlByName(languageName: string, config: AppConfig): string {
+    return languageName === config.translations.defaultLanguage ? '' : languageName;
   }
 
   constructor(public file: FileObject, private config: AppConfig) {
     this.name = this.file.name;
-    this.url = Language.getUrl(this.name, this.config);
+    this.url = Language.createUrlByName(this.name, this.config);
 
     this.updateTranslation();
   }

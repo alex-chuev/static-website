@@ -1,15 +1,15 @@
-import { createAbsoluteUrl } from '../helpers/url-helpers';
+import { UrlHelpers } from '../helpers/url-helpers';
 import { Language } from './language';
 import { Attrs } from '../interfaces/attributes';
 import { HtmlFactory } from '../factories/html-factory';
 import { Url } from '../types';
-import { urlHelper } from '../helpers/template-helpers';
 import { AppConfig } from './app/app-config';
 import { AppLanguages } from './app/app-languages';
 import * as _ from 'lodash';
 import { StaticCode } from './code/static-code';
 import { Page } from './code/page';
 import { StaticCodes } from './code/static-codes';
+import * as path from 'path';
 
 class PageCodes {
 
@@ -44,15 +44,19 @@ export class PageData {
   ) {
   }
 
-  asset = (relativeUrl: Url) => createAbsoluteUrl(relativeUrl, this.config);
+  asset = (relativeUrl: Url) => UrlHelpers.createAbsoluteUrl(relativeUrl, this.config);
 
-  currentUrl = urlHelper(this.page.relativeDistPath, this.language.url, this.config);
+  currentUrl = this.page.createLanguageUrl(this.language);
 
-  url = (relativeUrl: Url, languageName = this.language.name) => urlHelper(relativeUrl, languageName, this.config);
+  url = (relativeUrl: Url, languageName = this.language.name) => {
+    const languageUrl = Language.createUrlByName(languageName, this.config);
 
-  languageUrl = (languageName: string) => urlHelper(this.page.relativeDistPath, languageName, this.config);
+    return UrlHelpers.createAbsoluteUrl(path.join(languageUrl, relativeUrl), this.config)
+  }
 
-  isActive = (relativeUrl: Url) => this.page.defaultLanguageUrl === createAbsoluteUrl(relativeUrl, this.config);
+  languageUrl = (languageName: string) => this.url(this.page.relativeDistPath, languageName);
+
+  isActive = (relativeUrl: Url) => this.page.defaultLanguageUrl === UrlHelpers.createAbsoluteUrl(relativeUrl, this.config);
 
   i18n = (message: string, otherwise = ''): string => this.language.translate(message, otherwise);
 
@@ -78,4 +82,5 @@ export class PageData {
   languageLink = (language: string, text?: string, className?: string, activeClass?: string, attributes?: Attrs): string => {
     return this.link(this.page.defaultLanguageUrl, text, className, activeClass, attributes, language);
   }
+
 }

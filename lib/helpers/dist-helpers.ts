@@ -1,24 +1,34 @@
 import { copySync, outputFileSync, pathExistsSync, removeSync } from 'fs-extra';
+import EventEmitter = NodeJS.EventEmitter;
 
-export function distFile(srcPath: string, distPath: string) {
-  if (pathExistsSync(srcPath)) {
-    copySync(srcPath, distPath);
-    distLog(distPath);
+export class DistHelpers {
+
+  static onDist = new EventEmitter();
+
+  static file(srcPath: string, distPath: string) {
+    if (pathExistsSync(srcPath)) {
+      copySync(srcPath, distPath);
+      this.onDist.emit(distPath);
+      this.log(distPath);
+    }
   }
-}
 
-export function unlinkFile(distPath: string) {
-  if (pathExistsSync(distPath)) {
-    removeSync(distPath);
-    distLog(distPath, '-');
+  static unlink(distPath: string) {
+    if (pathExistsSync(distPath)) {
+      removeSync(distPath);
+      this.onDist.emit(distPath);
+      this.log(distPath, '-');
+    }
   }
-}
 
-export function distContent(content: string, distPath: string) {
-  outputFileSync(distPath, content);
-  distLog(distPath);
-}
+  static content(content: string, distPath: string) {
+    outputFileSync(distPath, content);
+    this.onDist.emit(distPath);
+    this.log(distPath);
+  }
 
-function distLog(distPath: string, prefix = '>') {
-  console.log(prefix, distPath);
+  private static log(distPath: string, prefix = '>') {
+    console.log(prefix, distPath);
+  }
+
 }

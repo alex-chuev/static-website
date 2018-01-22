@@ -1,13 +1,13 @@
 import { Code } from './code';
 import { PageId, Url } from '../../types';
 import { AppConfig } from '../app/app-config';
-import { createAbsoluteUrl } from '../../helpers/url-helpers';
+import { UrlHelpers } from '../../helpers/url-helpers';
 import { PageData } from '../page-data';
 import * as pug from 'pug';
 import { StaticCode } from './static-code';
 import { FileObject } from '../file-object';
 import { StaticCodes } from './static-codes';
-import { distContent, unlinkFile } from '../../helpers/dist-helpers';
+import { DistHelpers } from '../../helpers/dist-helpers';
 import { Language } from '../language';
 import * as path from 'path';
 
@@ -43,7 +43,11 @@ export class Page extends Code {
   }
 
   private distLanguage(content: string, language: Language) {
-    distContent(content, this.getDistPath(language));
+    DistHelpers.content(content, this.getDistPath(language));
+  }
+
+  createLanguageUrl(language: Language): string {
+    return UrlHelpers.createAbsoluteUrl(path.join(language.url, this.relativeDistPath), this.config);
   }
 
   getDistPath(language: Language) {
@@ -51,7 +55,7 @@ export class Page extends Code {
   }
 
   get defaultLanguageUrl(): Url {
-    return createAbsoluteUrl(this.relativeDistPath, this.config);
+    return UrlHelpers.createAbsoluteUrl(this.relativeDistPath, this.config);
   }
 
   distCode() {
@@ -59,7 +63,7 @@ export class Page extends Code {
   }
 
   undistLanguage(language: Language) {
-    unlinkFile(this.getDistPath(language));
+    DistHelpers.unlink(this.getDistPath(language));
   }
 
   get externalCode(): StaticCode[] {

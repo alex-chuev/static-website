@@ -1,8 +1,8 @@
 import * as path from 'path';
 import { AppConfig } from '../app/app-config';
 import { PathHelpers } from '../../helpers/path-helpers';
-import { createAbsoluteUrl } from '../../helpers/url-helpers';
-import { distContent, unlinkFile } from '../../helpers/dist-helpers';
+import { UrlHelpers } from '../../helpers/url-helpers';
+import { DistHelpers } from '../../helpers/dist-helpers';
 import { FileObject } from '../file-object';
 
 export abstract class Code {
@@ -21,11 +21,11 @@ export abstract class Code {
   }
 
   get url(): string {
-    return createAbsoluteUrl(this.relativeDistPath, this.config);
+    return UrlHelpers.createAbsoluteUrl(this.relativeDistPath, this.config);
   }
 
   dist() {
-    distContent(this.content, this.distPath);
+    DistHelpers.content(this.content, this.distPath);
   }
 
   get distPath(): string {
@@ -53,7 +53,7 @@ export abstract class Code {
   }
 
   undist() {
-    unlinkFile(this.distPath);
+    DistHelpers.unlink(this.distPath);
   }
 
 }
