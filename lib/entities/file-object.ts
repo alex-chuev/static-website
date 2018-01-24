@@ -17,6 +17,10 @@ export class FileObject {
     return path.parse(this.absolutePath).name;
   }
 
+  get extension(): string {
+    return PathHelpers.getExtension(this.absolutePath);
+  }
+
   read(): string {
     return readFileSync(this.absolutePath, 'utf-8');
   }

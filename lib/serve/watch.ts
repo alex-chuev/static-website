@@ -1,12 +1,10 @@
 import { App } from '../entities/app/app';
-import { AppStylesCodeListener } from '../listerers/app-styles-code-listener';
 import { PagesListener } from '../listerers/pages-listener';
-import { AppScriptsCodeListener } from '../listerers/app-scripts-code-listener';
+import { AppCodeListener } from '../listerers/app-code-listener';
 import { Listener } from '../listerers/listener';
 import { TranslationsListener } from '../listerers/translations-listener';
 import { AssetsListener } from '../listerers/assets-listener';
-import { PagesStylesListener } from '../listerers/pages-styles-listener';
-import { PagesScriptsListener } from '../listerers/pages-scripts-listener';
+import { PagesCodeListener } from '../listerers/pages-code-listener';
 import * as chokidar from 'chokidar';
 import * as path from 'path';
 import { FSWatcher } from 'chokidar';
@@ -24,10 +22,8 @@ export function watch(app: App): FSWatcher {
     new AssetsListener(app),
     new TranslationsListener(app),
     new PagesListener(app),
-    new PagesStylesListener(app),
-    new PagesScriptsListener(app),
-    new AppStylesCodeListener(app),
-    new AppScriptsCodeListener(app),
+    new PagesCodeListener(app),
+    new AppCodeListener(app),
     new LayoutsListener(app),
   ];
 

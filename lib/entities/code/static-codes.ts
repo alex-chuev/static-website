@@ -1,9 +1,6 @@
 import { AppConfig } from '../app/app-config';
-import { StaticCodesFactory } from '../../factories/static-codes-factory';
+import * as glob from 'glob';
 import { StaticCode } from './static-code';
-import { Style } from './style';
-import { Script } from './script';
-import { StaticCodePathConfig } from '../../interfaces/static-code-path';
 import { FileObject } from '../file-object';
 import * as _ from 'lodash';
 
@@ -11,20 +8,22 @@ export class StaticCodes {
 
   items: StaticCode[] = [];
 
-  constructor(pathConfigs: StaticCodePathConfig[], config: AppConfig) {
-    this.items = StaticCodesFactory.create(pathConfigs, config);
+  constructor(root: string, pattern: string, private config: AppConfig) {
+    this.items = glob.sync(pattern)
+      .map(filePath => new FileObject(filePath))
+      .map(file => new StaticCode(file, root, config));
   }
 
   dist() {
     this.items.forEach(item => item.dist());
   }
 
-  get css(): Style[] {
-    return this.items.filter(item => item instanceof Style);
+  get css(): StaticCode[] {
+    return this.items.filter(item => item.file.extension === 'css');
   }
 
-  get js(): Script[] {
-    return this.items.filter(item => item instanceof Script);
+  get js(): StaticCode[] {
+    return this.items.filter(item => item.file.extension === 'js');
   }
 
   getCode(file: FileObject): StaticCode {

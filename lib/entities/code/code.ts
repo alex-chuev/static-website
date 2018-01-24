@@ -5,11 +5,8 @@ import { UrlHelpers } from '../../helpers/url-helpers';
 import { DistHelpers } from '../../helpers/dist-helpers';
 import { FileObject } from '../file-object';
 
-export abstract class Code {
+export class Code {
 
-  abstract compile(content: string, data?: any): string;
-
-  abstract distExt: string;
   content: string;
 
   constructor(public file: FileObject, public root: string, public config: AppConfig) {
@@ -33,7 +30,7 @@ export abstract class Code {
   }
 
   get relativeDistPath(): string {
-    return `${this.relativePathWithoutExt}.${this.distExt}`;
+    return `${this.relativePathWithoutExt}.${this.file.extension}`;
   }
 
   get relativePathWithoutExt(): string {

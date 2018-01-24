@@ -19,8 +19,6 @@ export class Page extends Code {
 
   codes: StaticCodes;
 
-  distExt = 'html';
-
   static createPageId(file: FileObject): PageId {
     return file.absolutePath.replace(idRegExp, '');
   }
@@ -28,10 +26,13 @@ export class Page extends Code {
   constructor(file: FileObject, config: AppConfig) {
     super(file, config.pagesFolder, config);
 
-    this.codes = new StaticCodes([
-      {root: config.pagesFolder, pattern: `${this.file.absolutePathWithoutExt}?(.inline).${this.config.styles.extension}`},
-      {root: config.pagesFolder, pattern: `${this.file.absolutePathWithoutExt}?(.inline).${this.config.scripts.extension}`},
-    ], config);
+    const pattern = `${this.file.absolutePathWithoutExt}?(.inline).+(js|css)`;
+
+    this.codes = new StaticCodes(config.pagesFolder, pattern, config);
+  }
+
+  get relativeDistPath(): string {
+    return `${this.relativePathWithoutExt}.html`;
   }
 
   build(data: PageData, language: Language) {

@@ -4,13 +4,13 @@ import { AppAssets } from './app-assets';
 import { AppLanguages } from './app-languages';
 import { AppPages } from './app-pages';
 import { AppSitemap } from './app-sitemap';
-import { AppStaticCodes } from './app-static-codes';
+import { StaticCodes } from '../code/static-codes';
 
 export class App {
 
   assets = new AppAssets(this.config);
   languages = new AppLanguages(this.config);
-  codes = new AppStaticCodes(this.config);
+  codes = new StaticCodes(this.config.appCodeFolder, this.config.appCodeGlob, this.config);
   pages = new AppPages(this.config, this.languages, this.codes);
   sitemap = new AppSitemap(this.config, this.pages, this.languages);
 

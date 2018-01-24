@@ -19,11 +19,9 @@ export class AppConfigDefaults implements ConfigData {
     extension: 'pug',
   };
   styles = {
-    extension: 'styl',
     folder: 'styles',
   };
   scripts = {
-    extension: 'ts',
     folder: 'scripts',
   };
   dist = {

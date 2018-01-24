@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import { PageId } from '../../types';
 import { Page } from '../code/page';
 import { FileObject } from '../file-object';
-import { AppStaticCodes } from './app-static-codes';
+import { StaticCodes } from '../code/static-codes';
 
 export class AppPages {
 
@@ -16,7 +16,7 @@ export class AppPages {
   constructor(
     private config: AppConfig,
     private languages: AppLanguages,
-    private codes: AppStaticCodes,
+    private codes: StaticCodes,
   ) {
     glob.sync(this.config.pagesGlob)
       .forEach(filePath => this.addPage(new FileObject(filePath)));

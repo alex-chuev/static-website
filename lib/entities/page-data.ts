@@ -51,7 +51,7 @@ export class PageData {
   url = (relativeUrl: Url, languageName = this.language.name) => {
     const languageUrl = Language.createUrlByName(languageName, this.config);
 
-    return UrlHelpers.createAbsoluteUrl(path.join(languageUrl, relativeUrl), this.config)
+    return UrlHelpers.createAbsoluteUrl(path.join(languageUrl, relativeUrl), this.config);
   }
 
   languageUrl = (languageName: string) => this.url(this.page.relativeDistPath, languageName);

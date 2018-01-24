@@ -40,28 +40,16 @@ export class AppConfig extends AppConfigDefaults {
     return path.resolve(this.src.folder);
   }
 
-  get pagesStylesGlob(): string {
-    return path.join(this.pagesFolder, `**/*?(.inline).${this.styles.extension}`);
+  get pagesCodeGlob(): string {
+    return path.join(this.pagesFolder, `**/*?(.inline).+(css|js)`);
   }
 
-  get pagesScriptsGlob(): string {
-    return path.join(this.pagesFolder, `**/*?(.inline).${this.scripts.extension}`);
+  get appCodeFolder(): string {
+    return path.resolve(this.src.folder);
   }
 
-  get scriptsFolder(): string {
-    return path.resolve(path.join(this.src.folder, this.scripts.folder));
-  }
-
-  get stylesGlob(): string {
-    return path.join(this.stylesFolder, `main?(.inline).${this.styles.extension}`);
-  }
-
-  get scriptsGlob(): string {
-    return path.join(this.scriptsFolder, `main?(.inline).${this.scripts.extension}`);
-  }
-
-  get stylesFolder(): string {
-    return path.resolve(path.join(this.src.folder, this.styles.folder));
+  get appCodeGlob(): string {
+    return path.join(this.appCodeFolder, `main?(.inline).+(css|js)`);
   }
 
 }

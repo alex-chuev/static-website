@@ -1,19 +1,16 @@
 import { Listener } from './listener';
 import * as minimatch from 'minimatch';
 import { FileObject } from '../entities/file-object';
-import { StaticCodesFactory } from '../factories/static-codes-factory';
+import { StaticCode } from '../entities/code/static-code';
 
-export abstract class AppCodeListener extends Listener {
-
-  abstract root: string;
-  abstract glob: string;
+export class AppCodeListener extends Listener {
 
   test(file: FileObject): boolean {
-    return minimatch(file.absolutePath, this.glob);
+    return minimatch(file.absolutePath, this.app.config.appCodeGlob);
   }
 
   add(file: FileObject) {
-    const code = StaticCodesFactory.createSingle(file, this.root, this.app.config);
+    const code = new StaticCode(file, this.app.config.appCodeFolder, this.app.config);
     this.app.codes.items.push(code);
     this.app.pages.build();
     code.dist();

@@ -2,16 +2,14 @@ import { Listener } from './listener';
 import * as minimatch from 'minimatch';
 import { FileObject } from '../entities/file-object';
 import { Page } from '../entities/code/page';
-import { StaticCodesFactory } from '../factories/static-codes-factory';
+import { StaticCode } from '../entities/code/static-code';
 
-export abstract class PagesCodeListener extends Listener {
+export class PagesCodeListener extends Listener {
 
   page: Page;
 
-  abstract glob: string;
-
   test(file: FileObject): boolean {
-    if (false === minimatch(file.absolutePath, this.glob)) {
+    if (false === minimatch(file.absolutePath, this.app.config.pagesCodeGlob)) {
       return false;
     }
 
@@ -21,7 +19,7 @@ export abstract class PagesCodeListener extends Listener {
   }
 
   add(file: FileObject) {
-    const code = StaticCodesFactory.createSingle(file, this.app.config.pagesFolder, this.app.config);
+    const code = new StaticCode(file, this.app.config.pagesFolder, this.app.config);
     code.dist();
     this.page.codes.items.push(code);
     this.app.pages.buildPage(this.page);

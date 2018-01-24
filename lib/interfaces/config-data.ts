@@ -15,11 +15,9 @@ export interface ConfigData {
     extension: string,
   };
   styles: {
-    extension: string,
     folder: string,
   };
   scripts: {
-    extension: string,
     folder: string,
   };
   dist: {
