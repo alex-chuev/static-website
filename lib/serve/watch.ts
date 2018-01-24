@@ -7,9 +7,11 @@ import { AssetsListener } from '../listerers/assets-listener';
 import { PagesCodeListener } from '../listerers/pages-code-listener';
 import * as chokidar from 'chokidar';
 import * as path from 'path';
+import * as glob from 'glob';
 import { FSWatcher } from 'chokidar';
 import { LayoutsListener } from '../listerers/layouts-listener';
 import { FileObject } from '../entities/file-object';
+import { TypescriptListener } from '../listerers/typescript-listener';
 
 enum WatchAction {
   Add = 'add',
@@ -18,6 +20,8 @@ enum WatchAction {
 }
 
 export function watch(app: App): FSWatcher {
+  const typescriptListener = new TypescriptListener(app);
+
   const listeners: Listener[] = [
     new AssetsListener(app),
     new TranslationsListener(app),
@@ -25,7 +29,11 @@ export function watch(app: App): FSWatcher {
     new PagesCodeListener(app),
     new AppCodeListener(app),
     new LayoutsListener(app),
+    typescriptListener,
   ];
+
+  glob.sync(path.join(app.config.src.folder, '**/*.ts'))
+    .forEach(file => typescriptListener.add(new FileObject(file)));
 
   return chokidar.watch(path.join(app.config.src.folder, '**/*'), {ignoreInitial: true})
     .on(WatchAction.Add, file => onWatchEvent(new FileObject(file), WatchAction.Add))
