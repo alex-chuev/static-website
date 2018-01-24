@@ -16,16 +16,6 @@ swc new <dir>
 
 It will ask you some questions.
 
-## Initialization
-
-If you want to init a static website in an existing project run the next command:
-
-```bash
-swc init
-```
-
-It also will ask you some questions.
-
 ## Serve
 
 It is very convenient to develop and see what happens in real time:

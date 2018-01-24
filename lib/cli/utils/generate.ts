@@ -4,21 +4,15 @@ import { parseLanguages } from './parse-languages';
 import { CreateAnswers } from '../interfaces/create-answers';
 import { AppConfigDefaults } from '../../entities/app/app-config-defaults';
 
-interface Params {
-  dir: string;
-  src: string;
+export function generate(answers: CreateAnswers, dir: string) {
+  const configData = getConfigData(answers);
+
+  createConfigFile(dir, configData);
+  copyTemplate(dir);
+  createLanguageFiles(answers, dir, configData);
 }
 
-export function generate(answers: CreateAnswers, params: Params) {
-  const configData = getConfigData(answers, params);
-  const target = path.join(params.dir, params.src);
-
-  createConfigFile(params, configData);
-  copyTemplate(target);
-  createLanguageFiles(answers, target, configData);
-}
-
-function getConfigData(answers: CreateAnswers, params: Params): AppConfigDefaults {
+function getConfigData(answers: CreateAnswers): AppConfigDefaults {
   return new AppConfigDefaults({
     translations: {
       defaultLanguage: answers.defaultLanguage,
@@ -32,25 +26,22 @@ function getConfigData(answers: CreateAnswers, params: Params): AppConfigDefault
     scripts: {
       extension: answers.scriptsExtension,
     },
-    src: {
-      folder: params.src,
-    },
   });
 }
 
-function createConfigFile(params: Params, configData: AppConfigDefaults) {
-  outputJsonSync(path.join(params.dir, 'static-website.json'), configData, {
+function createConfigFile(dir: string, configData: AppConfigDefaults) {
+  outputJsonSync(path.join(dir, 'static-website.json'), configData, {
     spaces: 2,
   });
 }
 
-function copyTemplate(target: string) {
-  copySync(path.join(__dirname, '../../../templates/basic'), target);
+function copyTemplate(dir: string) {
+  copySync(path.join(__dirname, '../../../templates/basic'), dir);
 }
 
-function createLanguageFiles(answers: CreateAnswers, target: string, config: AppConfigDefaults) {
+function createLanguageFiles(answers: CreateAnswers, dir: string, config: AppConfigDefaults) {
   parseLanguages(answers.languages).forEach(language => {
-    const languagePath = path.join(target, config.translations.folder, `${language}.json`);
+    const languagePath = path.join(dir, 'src', config.translations.folder, `${language}.json`);
 
     outputJsonSync(languagePath, {
       meta: {
