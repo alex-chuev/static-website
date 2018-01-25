@@ -1,9 +1,7 @@
-const removeExtensionRegExp = /\.[^/\\.]+$/;
-
 export class PathHelpers {
 
   static removeExtension(filePath: string): string {
-    return filePath.replace(removeExtensionRegExp, '');
+    return filePath.slice(0, filePath.lastIndexOf('.'));
   }
 
   static getExtension(filePath: string): string {
