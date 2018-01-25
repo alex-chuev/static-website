@@ -5,6 +5,7 @@
   "repository": "https://github.com/alex-chuev/static-website.git",
   "main": "build/cli/app.js",
   "dependencies": {
+    "awesome-typescript-loader": "^3.4.1",
     "browser-sync": "^2.18.13",
     "chokidar": "^1.7.0",
     "commander": "^2.12.2",
@@ -16,9 +17,11 @@
     "path-is-inside": "^1.0.2",
     "pug": "^2.0.0-rc.4",
     "sitemap": "^1.13.0",
+    "source-map-loader": "^0.2.3",
     "stylus": "^0.54.5",
     "typescript": "^2.6.2",
-    "uglify-js": "^3.2.2"
+    "uglify-js": "^3.2.2",
+    "webpack": "^3.10.0"
   },
   "devDependencies": {
     "@types/browser-sync": "0.0.37",
@@ -36,6 +39,7 @@
     "@types/sinon": "^4.0.0",
     "@types/stylus": "^0.48.28",
     "@types/uglify-js": "^2.6.29",
+    "@types/webpack": "^3.8.3",
     "chai": "^4.1.2",
     "mocha": "^3.2.0",
     "sinon": "^4.1.2",

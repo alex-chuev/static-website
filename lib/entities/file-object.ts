@@ -21,6 +21,22 @@ export class FileObject {
     return PathHelpers.getExtension(this.absolutePath);
   }
 
+  get slashPath(): string {
+    return this.slash(this.relative(this.absolutePath));
+  }
+
+  get slashPathWithoutExt(): string {
+    return this.slash(this.relative(this.absolutePathWithoutExt));
+  }
+
+  private relative(filePath: string): string {
+    return path.relative(process.cwd(), filePath);
+  }
+
+  private slash(filePath: string): string {
+    return './' + filePath.replace(/\\+/g, '/');
+  }
+
   read(): string {
     return readFileSync(this.absolutePath, 'utf-8');
   }
