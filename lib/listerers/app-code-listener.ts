@@ -20,8 +20,7 @@ export class AppCodeListener extends Listener {
     const code = this.app.codes.getCode(file);
 
     if (code) {
-      code.updateContent();
-      code.dist();
+      code.updateAndDistIfChanged();
     } else {
       this.add(file);
     }

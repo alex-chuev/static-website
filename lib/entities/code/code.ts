@@ -21,6 +21,15 @@ export class Code {
     return UrlHelpers.createAbsoluteUrl(this.relativeDistPath, this.config);
   }
 
+  updateAndDistIfChanged() {
+    const content = this.file.read();
+
+    if (content !== this.content) {
+      this.content = content;
+      this.dist();
+    }
+  }
+
   dist() {
     DistHelpers.content(this.content, this.distPath);
   }

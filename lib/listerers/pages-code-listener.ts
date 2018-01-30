@@ -29,8 +29,7 @@ export class PagesCodeListener extends Listener {
     const code = this.page.codes.getCode(file);
 
     if (code) {
-      code.updateContent();
-      code.dist();
+      code.updateAndDistIfChanged();
     } else {
       this.add(file);
     }
