@@ -1,9 +1,11 @@
 import { AppConfig } from '../app/app-config';
-import { AppTypescriptCompiler } from './typescript-compiler';
+import { TypescriptCompiler } from './typescript-compiler';
+import { StylusCompiler } from './stylus-compiler';
 
 export class Compiler {
 
-  typescriptCompiler = new AppTypescriptCompiler(this.config);
+  typescriptCompiler = new TypescriptCompiler(this.config);
+  stylusCompiler = new StylusCompiler(this.config);
 
   constructor(private config: AppConfig) {
   }
@@ -15,6 +17,7 @@ export class Compiler {
   compile(): Promise<void[]> {
     return Promise.all([
       this.typescriptCompiler.compile(),
+      this.stylusCompiler.compile(),
     ]);
   }
 

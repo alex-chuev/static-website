@@ -10,7 +10,7 @@ import { Page } from '../code/page';
 import * as minimatch from 'minimatch';
 import { PageId } from '../../types';
 
-export class AppTypescriptCompiler {
+export class TypescriptCompiler {
 
   private files: FileObject[] = [];
   private watcher: Compiler.Watching;

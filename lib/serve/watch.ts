@@ -12,6 +12,7 @@ import { FSWatcher } from 'chokidar';
 import { LayoutsListener } from '../listerers/layouts-listener';
 import { FileObject } from '../entities/file-object';
 import { TypescriptListener } from '../listerers/typescript-listener';
+import { StylusListener } from '../listerers/stylus-listener';
 
 enum WatchAction {
   Add = 'add',
@@ -28,6 +29,7 @@ export function watch(app: App, compiler: Compiler): FSWatcher {
     new AppCodeListener(app),
     new LayoutsListener(app),
     new TypescriptListener(app, compiler),
+    new StylusListener(app, compiler),
   ];
 
   return chokidar.watch(path.join(app.config.src.folder, '**/*'), {ignoreInitial: true})
