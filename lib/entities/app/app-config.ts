@@ -52,4 +52,12 @@ export class AppConfig extends AppConfigDefaults {
     return path.join(this.appCodeFolder, `main?(.inline).+(css|js)`);
   }
 
+  get appTypescriptGlob(): string {
+    return path.join(this.appCodeFolder, `main?(.inline).+(tsx|ts)`);
+  }
+
+  get pagesTypescriptGlob(): string {
+    return path.join(this.pagesFolder, `**/*?(.inline).+(tsx|ts)`);
+  }
+
 }

@@ -5,7 +5,6 @@ import { AppLanguages } from './app-languages';
 import { AppPages } from './app-pages';
 import { AppSitemap } from './app-sitemap';
 import { StaticCodes } from '../code/static-codes';
-import { AppScriptsBuilder } from './app-scripts-builder';
 
 export class App {
 
@@ -14,7 +13,6 @@ export class App {
   codes = new StaticCodes(this.config.appCodeFolder, this.config.appCodeGlob, this.config);
   pages = new AppPages(this.config, this.languages, this.codes);
   sitemap = new AppSitemap(this.config, this.pages, this.languages);
-  scriptsBuilder = new AppScriptsBuilder(this.config);
 
   constructor(public config = new AppConfig()) {
   }

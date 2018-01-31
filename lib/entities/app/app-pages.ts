@@ -18,8 +18,13 @@ export class AppPages {
     private languages: AppLanguages,
     private codes: StaticCodes,
   ) {
-    glob.sync(this.config.pagesGlob)
-      .forEach(filePath => this.addPage(new FileObject(filePath)));
+    AppPages.getPageFiles(this.config)
+      .forEach(file => this.addPage(file));
+  }
+
+  static getPageFiles(config: AppConfig): FileObject[] {
+    return glob.sync(config.pagesGlob)
+      .map(filePath => new FileObject(filePath));
   }
 
   addPage(file: FileObject): Page {

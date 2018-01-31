@@ -12,5 +12,6 @@ export function serve(app: App): BrowserSyncInstance {
       ignoreInitial: true,
     },
     reloadDebounce: 200,
+    logLevel: 'silent',
   });
 }

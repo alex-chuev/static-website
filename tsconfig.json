@@ -19,5 +19,8 @@
     "node_modules",
     "src/**/*.ts",
     "templates"
-  ]
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "silent": true
+  }
 }

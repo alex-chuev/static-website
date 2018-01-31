@@ -15,7 +15,11 @@ export class StaticCodes {
   }
 
   dist() {
-    this.items.forEach(item => item.dist());
+    this.externalCode.forEach(item => item.dist());
+  }
+
+  get externalCode(): StaticCode[] {
+    return StaticCode.getExternal(this.items, this.config);
   }
 
   get css(): StaticCode[] {
